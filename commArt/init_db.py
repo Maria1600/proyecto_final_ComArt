@@ -14,7 +14,7 @@ def init_db():
 
     #Tabla de usuarios LUEGO SE LE PONE CHECK A EL DNI ESTA EN PROCESAMIENTO (DEBATIENDO CONMIGO MISMA SI)
     cursor.execute("""
-    CREATE TABLE usuarios (
+    CREATE TABLE IF NOT EXISTS usuarios (
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
         dni TEXT UNIQUE NOT NULL,
         correo TEXT UNIQUE NOT NULL,
@@ -27,7 +27,7 @@ def init_db():
 
     #Tabla entidad debil artistas
     cursor.execute("""
-    CREATE TABLE artistas (
+    CREATE TABLE IF NOT EXISTS artistas (
         id_artista INTEGER PRIMARY KEY,
         FOREIGN KEY (id_artista) REFERENCES usuarios(id_usuario)
             ON DELETE CASCADE
