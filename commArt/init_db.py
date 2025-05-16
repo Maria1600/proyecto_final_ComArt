@@ -12,16 +12,15 @@ def init_db():
 
     # --------------------------- Crear las tablas si no existen ------------------------------------
 
-    #Tabla de usuarios LUEGO SE LE PONE CHECK A EL DNI ESTA EN PROCESAMIENTO (DEBATIENDO CONMIGO MISMA SI)
+    #Tabla de usuarios
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS usuarios (
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
-        dni TEXT UNIQUE NOT NULL,
         correo TEXT UNIQUE NOT NULL,
         username TEXT NOT NULL,
-        contraseña TEXT NOT NULL,
+        contrasenia TEXT NOT NULL,
         fecha_nacimiento TIMESTAMP NOT NULL,
-        activo INTEGER CHECK(activo IN (1,0))
+        activo INTEGER CHECK(activo IN (1,0)) NOT NULL
     )
     """)
 
@@ -34,7 +33,16 @@ def init_db():
     )
     """)
 
-    #HACE FALTA CREAR TABLA INTERMEDIA PARA HACER LA RELACION DE SI MISMO DE USUARIO SEGUIR
+    #Tabla intermedia seguir
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS seguir (
+        id_seguidor INTEGER NOT NULL,
+        id_seguido INTEGER NOT NULL,
+        PRIMARY KEY (id_seguidor, id_seguido),
+        FOREIGN KEY (id_seguidor) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+        FOREIGN KEY (id_seguido) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    )
+    """)
 
     #Tabla de comisiones
     cursor.execute("""
@@ -72,7 +80,16 @@ def init_db():
     )
     """)
 
-    #HAY QUE CREAR TABLA INTERMEDIA PARA RELACION N:M DE ARTISTAS Y CATEGORIAS
+    #Tabla intermedia de Artistas-Categorias
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS categoria_artista (
+        id_artista INTEGER NOT NULL,
+        id_categoria INTEGER NOT NULL,
+        PRIMARY KEY (id_artista, id_categoria),
+        FOREIGN KEY (id_artista) REFERENCES artistas(id_artista) ON DELETE CASCADE,
+        FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria) ON DELETE CASCADE
+    )
+    """)
 
     #Tabla de publicacion
     cursor.execute("""
