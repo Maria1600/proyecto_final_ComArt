@@ -1,10 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-
-from Modelos.AsociacionesTablas import artista_categoria
-
-#Crea instacia de SQLAlchemy para definir el modelo
-# db en el futuro se inicializará en app.py con db.init_app(app)
-db = SQLAlchemy()
+from Modelos.TablasIntermedias import artista_categoria
+from app import db
 
 #Creamos una clase que hereda del modelo de la instancia
 #Esto indica que estamos representando una tabla de BD

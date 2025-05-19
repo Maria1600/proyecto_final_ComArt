@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from app import db
 
 class Publicacion(db.Model):
     #Definimos explicitamente el nombre de la tabla

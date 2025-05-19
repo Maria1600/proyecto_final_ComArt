@@ -1,8 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-
-from Modelos.AsociacionesTablas import artista_categoria
-
-db = SQLAlchemy()
+from Modelos.TablasIntermedias import artista_categoria
+from app import db
 
 class Artista(db.Model):
     #Definimos explicitamente el nombre de la tabla

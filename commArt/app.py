@@ -1,15 +1,23 @@
-import os
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from init_db import init_db
+import os
 
-# Crear la aplicación Flask
+# Inicializamos SQLAlchemy
+db = SQLAlchemy()
+
+# Creamos la aplicación Flask
 app = Flask(__name__)
-app.config.from_object(Config)  # Cargar configuración desde config.py
+app.config.from_object(Config)
 
-# Llamar a init_db para asegurarse de que la base de datos esté lista
-if not os.path.exists(Config.DATABASE):
-    init_db()  # Ejecuta la función para crear la base de datos
+# Asociamos la app con la extensión de SQLAlchemy
+db.init_app(app)
+
+# Solo se inicializa la base si no existe
+with app.app_context():
+    if not os.path.exists(Config.DATABASE):
+        from init_db import init_db
+        init_db()
 
 # Ruta de inicio
 @app.route('/')

@@ -6,6 +6,6 @@ DB_PATH = os.path.join(BASE_DIR, "comisiones.db")
 
 # Configuración de Flask
 class Config:
-    DEBUG = True
-    SECRET_KEY = "clave-secretaX"  # luego se cambia
-    DATABASE = DB_PATH
+    DATABASE = os.path.join(BASE_DIR, 'comisiones.db')
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{DATABASE}'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -1,8 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-
-from Modelos.AsociacionesTablas import seguir
-
-db = SQLAlchemy()
+from app import db
+from Modelos.TablasIntermedias import seguir
 
 class Usuario(db.Model):
     #Definimos explicitamente el nombre de la tabla

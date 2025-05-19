@@ -1,8 +1,19 @@
 import sqlite3
 from config import DB_PATH
+#from Modelos.Usuario import Usuario
+#from Modelos.Artista import Artista
+#from Modelos.Categoria import Categoria
+#from Modelos.Comision import Comision
+#from Modelos.Mensaje import Mensaje
+#from Modelos.Publicacion import Publicacion
+#from Modelos.TablasIntermedias import TablasIntermedias
 
 #Funcion para inicializar la BD
 def init_db():
+
+    #Por mantener la estructura y todo el rollo aun esto no se va ha hacer pero como ya estan
+    #terminados los mapeados con hacer imports de cada uno y poner lo siguiente bastaria:
+    #db.create_all()
 
     # Conectar a la base de datos (la crea si no existe)
     conn = sqlite3.connect(DB_PATH)
