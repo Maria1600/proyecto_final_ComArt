@@ -12,10 +12,10 @@ class Publicacion(db.Model):
     dibujo = db.Column(db.String, nullable=False)
     fecha_publicacion = db.Column(db.Date)
     num_likes = db.Column(db.Integer)
+    id_artista_publicacion = db.Column(db.Integer, db.ForeignKey('artistas.id_artista'),nullable=False)
 
     #Relaciones
-    #Falta artista asociado
-    #id_artista_publicacion = db.Column(db.Integer, db.ForeignKey('artistas.id_artista'))
+    artista = db.relationship("Artista", back_populates="publicaciones")
 
     #Funcion para debugg futuro para imprimir datos en consola
     def __repr__(self):
