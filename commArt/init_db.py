@@ -11,7 +11,7 @@ from config import DB_PATH
 #Funcion para inicializar la BD
 def init_db():
 
-    #Por mantener la estructura y todo el rollo aun esto no se va ha hacer pero como ya estan
+    #Por mantener la estructura y tod0 el rollo aun esto no se va ha hacer pero como ya estan
     #terminados los mapeados con hacer imports de cada uno y poner lo siguiente bastaria:
     #db.create_all()
 
