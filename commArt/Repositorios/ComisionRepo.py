@@ -1,3 +1,8 @@
+from datetime import datetime
+
+from sqlalchemy.orm import joinedload
+
+from Modelos.Mensaje import Mensaje
 from app import db
 from Modelos.Comision import Comision
 
@@ -32,3 +37,36 @@ class ComisionRepositorio:
             db.session.commit()
             operacion_exitosa = True
         return operacion_exitosa
+
+    @staticmethod
+    def actualizar(comision_id, new_descripcion, new_estado, new_fecha, new_tipo):
+        comision = Comision.query.get(comision_id)
+        if comision:
+            comision.descripcion_com = new_descripcion,
+            comision.estado = new_estado,
+            comision.fecha_creacion = new_fecha,
+            comision.tipo = new_tipo
+            db.session.commit()
+        return comision if comision else None
+
+    @staticmethod
+    def obtener_mensajes(comision_id):
+        comision = Comision.query.options(joinedload(Comision.mensajes)).filter_by(id_com=comision_id).first()
+        return comision.mensajes if comision else []
+
+    @staticmethod
+    def agregar_nuevo_mensaje(comision_id, id_usuario, texto):
+        nuevo_mensaje = None
+        comision = Comision.query.get(comision_id)
+
+        if comision:
+            nuevo_mensaje = Mensaje(
+                texto=texto,
+                fecha_creacion_mensaje=datetime.now(),
+                id_user_creador=id_usuario,
+                comision=comision
+            )
+            db.session.add(nuevo_mensaje)
+            db.session.commit()
+
+        return nuevo_mensaje if comision else None

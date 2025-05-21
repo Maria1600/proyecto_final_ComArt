@@ -17,3 +17,15 @@ class ComisionServicio:
     @staticmethod
     def eliminar_categoria(comision_id):
         return ComisionRepositorio.eliminar(comision_id)
+
+    @staticmethod
+    def actualizar(comision_id, new_descripcion, new_estado, new_fecha, new_tipo):
+        return ComisionRepositorio.actualizar(comision_id, new_descripcion, new_estado, new_fecha, new_tipo)
+
+    @staticmethod
+    def obtener_mensajes(comision_id):
+        return ComisionRepositorio.obtener_mensajes(comision_id)
+
+    @staticmethod
+    def agregar_nuevo_mensaje(comision_id, id_usuario, texto):
+        return ComisionRepositorio.agregar_nuevo_mensaje(comision_id, id_usuario, texto)
