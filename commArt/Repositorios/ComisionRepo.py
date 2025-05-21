@@ -63,20 +63,3 @@ class ComisionRepositorio:
     def obtener_mensajes(comision_id):
         comision = Comision.query.options(joinedload(Comision.mensajes)).filter_by(id_com=comision_id).first()
         return comision.mensajes if comision else []
-
-    @staticmethod
-    def agregar_nuevo_mensaje(comision_id, id_usuario, texto):
-        nuevo_mensaje = None
-        comision = Comision.query.get(comision_id)
-
-        if comision:
-            nuevo_mensaje = Mensaje(
-                texto=texto,
-                fecha_creacion_mensaje=datetime.now(),
-                id_user_creador=id_usuario,
-                comision=comision
-            )
-            db.session.add(nuevo_mensaje)
-            db.session.commit()
-
-        return nuevo_mensaje if comision else None

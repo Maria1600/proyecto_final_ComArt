@@ -29,7 +29,3 @@ class ComisionServicio:
     @staticmethod
     def obtener_mensajes(comision_id):
         return ComisionRepositorio.obtener_mensajes(comision_id)
-
-    @staticmethod
-    def agregar_nuevo_mensaje(comision_id, id_usuario, texto):
-        return ComisionRepositorio.agregar_nuevo_mensaje(comision_id, id_usuario, texto)

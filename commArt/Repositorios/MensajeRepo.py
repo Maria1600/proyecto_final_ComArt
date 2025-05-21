@@ -13,10 +13,12 @@ class MensajeRepositorio:
         return Mensaje.query.get(mensaje_id)
 
     @staticmethod
-    def crear(texto,fecha):
+    def crear(texto,fecha,id_creador,id_comision):
         mensaje = Mensaje(
             texto=texto,
-            fecha_creacion_mensaje = fecha
+            fecha_creacion_mensaje = fecha,
+            id_user_creador = id_creador,
+            id_com_asociada = id_comision
         )
         db.session.add(mensaje)
         db.session.commit()
@@ -31,3 +33,11 @@ class MensajeRepositorio:
             db.session.commit()
             operacion_exitosa = True
         return operacion_exitosa
+
+    @staticmethod
+    def actualizar(mensaje_id, texto):
+        mensaje = Mensaje.query.get(mensaje_id)
+        if mensaje:
+            mensaje.texto = texto
+            db.session.commit()
+        return mensaje if mensaje else None
