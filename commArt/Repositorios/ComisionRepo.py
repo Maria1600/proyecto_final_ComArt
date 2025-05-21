@@ -1,8 +1,5 @@
-from datetime import datetime
-
 from sqlalchemy.orm import joinedload
 
-from Modelos.Mensaje import Mensaje
 from app import db
 from Modelos.Comision import Comision
 
@@ -46,7 +43,6 @@ class ComisionRepositorio:
         if comision:
             comision.descripcion_com = new_descripcion,
             comision.estado = new_estado,
-            comision.fecha_creacion = new_fecha,
             comision.tipo = new_tipo
             db.session.commit()
         return comision if comision else None
@@ -56,6 +52,14 @@ class ComisionRepositorio:
         comision = Comision.query.get(comision_id)
         if comision and comision.tipo == "Global":
             comision.id_artista_com = id_artista
+            db.session.commit()
+        return comision if comision else None
+
+    @staticmethod
+    def actualizar_estado(comision_id, estado):
+        comision = Comision.query.get(comision_id)
+        if comision:
+            comision.estado = estado
             db.session.commit()
         return comision if comision else None
 

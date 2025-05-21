@@ -3,19 +3,19 @@ from Repositorios.ComisionRepo import ComisionRepositorio
 class ComisionServicio:
 
     @staticmethod
-    def listar_categorias():
+    def listar_comision():
         return ComisionRepositorio.obtener_todo()
 
     @staticmethod
-    def buscar_categoria(comision_id):
+    def buscar_comision(comision_id):
         return ComisionRepositorio.obtener_por_id(comision_id)
 
     @staticmethod
-    def crear_categoria(descripcion,estado,fecha,tipo,id_cliente,id_artista):
+    def crear_comision(descripcion,estado,fecha,tipo,id_cliente,id_artista):
         return ComisionRepositorio.crear(descripcion,estado,fecha,tipo,id_cliente,id_artista)
 
     @staticmethod
-    def eliminar_categoria(comision_id):
+    def eliminar_comision(comision_id):
         return ComisionRepositorio.eliminar(comision_id)
 
     @staticmethod
@@ -25,6 +25,10 @@ class ComisionServicio:
     @staticmethod
     def actualizar_artista_global(comision_id, id_artista):
         return ComisionRepositorio.actualizar_artista_global(comision_id, id_artista)
+
+    @staticmethod
+    def actualizar_estado(comision_id, estado):
+        return ComisionRepositorio.actualizar_estado(comision_id, estado)
 
     @staticmethod
     def obtener_mensajes(comision_id):
