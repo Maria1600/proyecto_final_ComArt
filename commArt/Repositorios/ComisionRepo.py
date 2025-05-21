@@ -17,12 +17,14 @@ class ComisionRepositorio:
         return Comision.query.get(comision_id)
 
     @staticmethod
-    def crear(descripcion,estado,fecha,tipo):
+    def crear(descripcion,estado,fecha,tipo,id_cliente,id_artista):
         comision = Comision(
             descripcion_com=descripcion,
             estado=estado,
             fecha_creacion=fecha,
-            tipo=tipo
+            tipo=tipo,
+            id_cliente_com = id_cliente,
+            id_artista_com = id_artista
         )
         db.session.add(comision)
         db.session.commit()
@@ -46,6 +48,14 @@ class ComisionRepositorio:
             comision.estado = new_estado,
             comision.fecha_creacion = new_fecha,
             comision.tipo = new_tipo
+            db.session.commit()
+        return comision if comision else None
+
+    @staticmethod
+    def actualizar_artista_global(comision_id, id_artista):
+        comision = Comision.query.get(comision_id)
+        if comision and comision.tipo == "Global":
+            comision.id_artista_com = id_artista
             db.session.commit()
         return comision if comision else None
 
