@@ -17,3 +17,11 @@ class CategoriaServicio:
     @staticmethod
     def eliminar_categoria(categoria_id):
         return CategoriaRepositorio.eliminar(categoria_id)
+
+    @staticmethod
+    def actualizar(categoria_id,nombre_categoria):
+        return CategoriaRepositorio.actualizar(categoria_id,nombre_categoria)
+
+    @staticmethod
+    def obtener_artistas_por_categoria(categoria_id):
+        return CategoriaRepositorio.obtener_artistas_por_categoria(categoria_id)
