@@ -23,7 +23,7 @@ class ArtistaServicio:
         return ArtistaRepositorio.obtener_comisiones_realizadas(id_artista)
 
     @staticmethod
-    def obtener_categorias_por_artista(id_artista):
+    def obtener_categorias_artista(id_artista):
         return ArtistaRepositorio.obtener_categorias_por_artista(id_artista)
 
     @staticmethod
