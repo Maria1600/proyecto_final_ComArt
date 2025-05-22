@@ -7,6 +7,7 @@ class Comision(db.Model):
     #Mapeamos los atributos
     id_com = db.Column(db.Integer, primary_key=True, autoincrement=True)
     descripcion_com = db.Column(db.String, nullable=False)
+    dibujo = db.Column(db.String)
     estado = db.Column(db.String, nullable=False)
     fecha_creacion = db.Column(db.Date, nullable=False)
     tipo = db.Column(db.String, nullable=False)

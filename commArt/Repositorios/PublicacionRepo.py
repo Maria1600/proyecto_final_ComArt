@@ -45,9 +45,9 @@ class PublicacionRepositorio:
         return publicacion if publicacion else None
 
     @staticmethod
-    def add_like(publicacion_id, nlike):
+    def add_like(publicacion_id):
         publicacion = Publicacion.query.get(publicacion_id)
         if publicacion:
-            publicacion.num_likes = nlike
+            publicacion.num_likes += 1
             db.session.commit()
         return publicacion if publicacion else None

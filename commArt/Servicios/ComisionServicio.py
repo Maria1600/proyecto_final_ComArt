@@ -31,5 +31,9 @@ class ComisionServicio:
         return ComisionRepositorio.actualizar_estado(comision_id, estado)
 
     @staticmethod
+    def cargar_dibujo_a_bd(comision_id, dibujo):
+        return ComisionRepositorio.cargar_dibujo_a_bd(comision_id, dibujo)
+
+    @staticmethod
     def obtener_mensajes(comision_id):
         return ComisionRepositorio.obtener_mensajes(comision_id)

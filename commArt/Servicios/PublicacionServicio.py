@@ -23,5 +23,5 @@ class CategoriaServicio:
         return PublicacionRepositorio.actualizar(publicacion_id, new_descripcion, new_dibujo, new_fecha)
 
     @staticmethod
-    def add_like(publicacion_id, nlike):
-        return PublicacionRepositorio.add_like(publicacion_id, nlike)
+    def add_like(publicacion_id):
+        return PublicacionRepositorio.add_like(publicacion_id)

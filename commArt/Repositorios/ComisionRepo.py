@@ -64,6 +64,14 @@ class ComisionRepositorio:
         return comision if comision else None
 
     @staticmethod
+    def cargar_dibujo_a_bd(comision_id, dibujo):
+        comision = Comision.query.get(comision_id)
+        if comision:
+            comision.dibujo = dibujo
+            db.session.commit()
+        return comision if comision else None
+
+    @staticmethod
     def obtener_mensajes(comision_id):
         comision = Comision.query.options(joinedload(Comision.mensajes)).filter_by(id_com=comision_id).first()
         return comision.mensajes if comision else []
