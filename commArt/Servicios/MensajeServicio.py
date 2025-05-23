@@ -1,13 +1,13 @@
 from Repositorios.MensajeRepo import MensajeRepositorio
 
-class CategoriaServicio:
+class MensajeServicio:
 
     @staticmethod
     def listar_mensajes():
         return MensajeRepositorio.obtener_todo()
 
     @staticmethod
-    def buscar_mensajes(mensaje_id):
+    def buscar_mensaje(mensaje_id):
         return MensajeRepositorio.obtener_por_id(mensaje_id)
 
     @staticmethod
