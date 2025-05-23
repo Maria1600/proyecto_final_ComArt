@@ -1,13 +1,13 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-
 from Controladores.ArtistaControlador import artista_bp
 from Controladores.ComisionControlador import comision_bp
 from Controladores.MensajeControlador import mensaje_bp
 from Controladores.PublicacionControlador import publicacion_bp
+from Controladores.UsuarioControlador import usuario_bp
+from Controladores.CategoriaControlador import categoria_bp
 from config import Config
 import os
-from Controladores.CategoriaControlador import categoria_bp
 
 # Inicializamos SQLAlchemy
 db = SQLAlchemy()
@@ -25,6 +25,7 @@ app.register_blueprint(publicacion_bp)
 app.register_blueprint(mensaje_bp)
 app.register_blueprint(comision_bp)
 app.register_blueprint(artista_bp)
+app.register_blueprint(usuario_bp)
 
 # Solo se inicializa la base si no existe
 with app.app_context():

@@ -9,6 +9,7 @@ class UsuarioServicio:
     @staticmethod
     def buscar_usuario(user_id):
         return UsuarioRepositorio.obtener_por_id(user_id)
+
     @staticmethod
     def crear_usuario(correo, username ,contrasenia, fecha):
         return UsuarioRepositorio.crear(correo, username ,contrasenia, fecha)
