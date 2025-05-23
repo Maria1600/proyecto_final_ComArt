@@ -1,6 +1,6 @@
 from Repositorios.PublicacionRepo import PublicacionRepositorio
 
-class CategoriaServicio:
+class PublicacionServicio:
 
     @staticmethod
     def listar_publicacion():

@@ -1,7 +1,9 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+from Controladores.PublicacionControlador import publicacion_bp
 from config import Config
 import os
+from Controladores.CategoriaControlador import categoria_bp
 
 # Inicializamos SQLAlchemy
 db = SQLAlchemy()
@@ -12,6 +14,10 @@ app.config.from_object(Config)
 
 # Asociamos la app con la extensión de SQLAlchemy
 db.init_app(app)
+
+# Registrar Blueprints
+app.register_blueprint(categoria_bp)
+app.register_blueprint(publicacion_bp)
 
 # Solo se inicializa la base si no existe
 with app.app_context():
