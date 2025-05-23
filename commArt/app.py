@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+
+from Controladores.MensajeControlador import mensaje_bp
 from Controladores.PublicacionControlador import publicacion_bp
 from config import Config
 import os
@@ -18,6 +20,7 @@ db.init_app(app)
 # Registrar Blueprints
 app.register_blueprint(categoria_bp)
 app.register_blueprint(publicacion_bp)
+app.register_blueprint(mensaje_bp)
 
 # Solo se inicializa la base si no existe
 with app.app_context():

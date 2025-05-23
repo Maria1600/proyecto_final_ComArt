@@ -3,9 +3,9 @@ from flask import Blueprint, jsonify, request
 from Servicios.MensajeServicio import MensajeServicio
 
 #Blueprint
-publicacion_bp = Blueprint('mensaje_bp', __name__)
+mensaje_bp = Blueprint('mensaje_bp', __name__)
 
-@publicacion_bp.route('/mensajes', methods=['GET'])
+@mensaje_bp.route('/mensajes', methods=['GET'])
 def obtener_todas():
     mensajes = MensajeServicio.listar_mensajes()
 
@@ -22,7 +22,7 @@ def obtener_todas():
 
     return jsonify(data), 200
 
-@publicacion_bp.route('/mensajes/<int:id_mensaje>', methods=['GET'])
+@mensaje_bp.route('/mensajes/<int:id_mensaje>', methods=['GET'])
 def obtener_mensaje(id_mensaje):
     mensaje = MensajeServicio.buscar_mensaje(id_mensaje)
 
@@ -41,7 +41,7 @@ def obtener_mensaje(id_mensaje):
 
     return jsonify(data), http
 
-@publicacion_bp.route('/mensajes', methods=['POST'])
+@mensaje_bp.route('/mensajes', methods=['POST'])
 def crear_mensaje():
     data = request.get_json()
     texto = data.get("texto")
@@ -65,7 +65,7 @@ def crear_mensaje():
 
     return jsonify(data_json), http
 
-@publicacion_bp.route('/mensajes/<int:id_mensaje>', methods=['PUT'])
+@mensaje_bp.route('/mensajes/<int:id_mensaje>', methods=['PUT'])
 def actualizar_publicacion(id_mensaje):
     data = request.get_json()
     texto = data.get("texto")
@@ -93,7 +93,7 @@ def actualizar_publicacion(id_mensaje):
 
     return jsonify(data_json), http
 
-@publicacion_bp.route('/mensajes/<int:id_mensaje>', methods=['DELETE'])
+@mensaje_bp.route('/mensajes/<int:id_mensaje>', methods=['DELETE'])
 def eliminar_mensaje(id_mensaje):
     exito = MensajeServicio.eliminar_mensaje(id_mensaje)
 
