@@ -19,8 +19,8 @@ class ComisionServicio:
         return ComisionRepositorio.eliminar(comision_id)
 
     @staticmethod
-    def actualizar(comision_id, new_descripcion, new_estado, new_fecha, new_tipo):
-        return ComisionRepositorio.actualizar(comision_id, new_descripcion, new_estado, new_fecha, new_tipo)
+    def actualizar(comision_id, new_descripcion, new_estado):
+        return ComisionRepositorio.actualizar(comision_id, new_descripcion, new_estado)
 
     @staticmethod
     def actualizar_artista_global(comision_id, id_artista):

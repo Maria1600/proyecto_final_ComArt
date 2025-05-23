@@ -38,12 +38,11 @@ class ComisionRepositorio:
         return operacion_exitosa
 
     @staticmethod
-    def actualizar(comision_id, new_descripcion, new_estado, new_fecha, new_tipo):
+    def actualizar(comision_id, new_descripcion, new_estado):
         comision = Comision.query.get(comision_id)
         if comision:
             comision.descripcion_com = new_descripcion,
-            comision.estado = new_estado,
-            comision.tipo = new_tipo
+            comision.estado = new_estado
             db.session.commit()
         return comision if comision else None
 

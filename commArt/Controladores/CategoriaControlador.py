@@ -106,7 +106,7 @@ def obtener_artistas_por_categoria(categoria_id):
         data = [
             {
                 "id_artista": a.id_artista,
-                "username": a.usuario.username  # asumiendo que tienes relación Artista → Usuario
+                "username": a.usuario.username
             }
             for a in artistas
         ]

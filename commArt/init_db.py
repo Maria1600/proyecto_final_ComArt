@@ -61,7 +61,7 @@ def init_db():
         id_com INTEGER PRIMARY KEY AUTOINCREMENT,
         descripcion_com TEXT NOT NULL,
         dibujo TEXT,
-        estado TEXT CHECK(estado IN ('Aceptada','Rechazada','Cancelada','En espera','En proceso', 'Terminada')) NOT NULL,
+        estado TEXT CHECK(estado IN ('Aceptada','Rechazada','Cancelada','En espera','En proceso', 'Entregada', 'Terminada')) NOT NULL,
         fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         tipo TEXT CHECK(tipo IN ('Global','Individual')) NOT NULL,
         id_cliente_com INTEGER NOT NULL,
