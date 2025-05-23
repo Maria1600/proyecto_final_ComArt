@@ -76,20 +76,20 @@ def eliminar_artista(id_artista):
 
 @artista_bp.route('/artistas/<int:id_artista>/comisiones_realizadas', methods=['GET'])
 def obtener_comisiones_realizadas(id_artista):
-    artista = ArtistaServicio.obtener_comisiones_realizadas(id_artista)
-    if artista:
+    com_realizadas = ArtistaServicio.obtener_comisiones_realizadas(id_artista)
+    if com_realizadas:
         data = [
             {
-                "id_comision": a.comisiones_realizadas.id_com,
-                "descripcion": a.comisiones_realizadas.descripcion_com,
-                "dibujo": a.comisiones_realizadas.dibujo,
-                "estado": a.comisiones_realizadas.estado,
-                "fecha_creacion": a.comisiones_realizadas.fecha_creacion,
-                "tipo": a.comisiones_realizadas.tipo,
-                "artista": a.id_artista,
-                "cliente": a.comisiones_realizadas.cliente.username
+                "id_comision": c.id_com,
+                "descripcion": c.descripcion_com,
+                "dibujo": c.dibujo,
+                "estado": c.estado,
+                "fecha_creacion": c.fecha_creacion,
+                "tipo": c.tipo,
+                "artista": id_artista,
+                "cliente": c.cliente.username
             }
-            for a in artista
+            for c in com_realizadas
         ]
         http = 200
     else:
@@ -100,14 +100,14 @@ def obtener_comisiones_realizadas(id_artista):
 
 @artista_bp.route('/artistas/<int:id_artista>/categorias', methods=['GET'])
 def obtener_categorias(id_artista):
-    artista = ArtistaServicio.obtener_categorias_artista(id_artista)
-    if artista:
+    categorias = ArtistaServicio.obtener_categorias_artista(id_artista)
+    if categorias:
         data = [
             {
-                "id_categoria": a.categorias.id_categoria,
-                "nombre_categoria": a.categorias.nombre_categoria
+                "id_categoria": c.id_categoria,
+                "nombre_categoria": c.nombre_categoria
             }
-            for a in artista
+            for c in categorias
         ]
         http = 200
     else:
@@ -118,18 +118,18 @@ def obtener_categorias(id_artista):
 
 @artista_bp.route('/artistas/<int:id_artista>/publicaciones', methods=['GET'])
 def obtener_publicaciones(id_artista):
-    artista = ArtistaServicio.obtener_publicaciones(id_artista)
-    if artista:
+    publicaciones = ArtistaServicio.obtener_publicaciones(id_artista)
+    if publicaciones:
         data = [
             {
-                "id_publicacion": a.publicaciones.id_publicacion,
-                "descripcion": a.publicaciones.descripcion_publicacion,
-                "dibujo": a.publicaciones.dibujo,
-                "fecha_publicacion": a.publicaciones.fecha_publicacion,
-                "num_likes": a.publicaciones.num_likes,
-                "artista": a.id_artista
+                "id_publicacion": p.id_publicacion,
+                "descripcion": p.descripcion_publicacion,
+                "dibujo": p.dibujo,
+                "fecha_publicacion": p.fecha_publicacion,
+                "num_likes": p.num_likes,
+                "artista": id_artista
             }
-            for a in artista
+            for p in publicaciones
         ]
         http = 200
     else:

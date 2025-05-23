@@ -218,15 +218,15 @@ def entregar_dibujo(id_comision):
 
 @comision_bp.route('/comisiones/<int:id_comision>/mensaje', methods=['GET'])
 def obtener_mensajes(id_comision):
-    comision = ComisionServicio.obtener_mensajes(id_comision)
-    if comision:
+    mensajes = ComisionServicio.obtener_mensajes(id_comision)
+    if mensajes:
         data = [
             {
-                "creador": c.mensajes.creador.username,
-                "mensaje": c.mensajes.texto,
-                "fecha": c.mensajes.fecha_creacion_mensaje
+                "creador": m.creador.username,
+                "mensaje": m.texto,
+                "fecha": m.fecha_creacion_mensaje
             }
-            for c in comision
+            for m in mensajes
         ]
         http = 200
     else:
