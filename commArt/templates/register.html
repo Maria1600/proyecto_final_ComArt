@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registroStyle.css') }}">
+</head>
+<body>
+<div class="contenedor-registro">
+    <form class="formulario-registro">
+        <h2 class="titulo">REGISTRO</h2>
+
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo" name="correo" required>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="contrasenia">Contraseña:</label>
+        <input type="password" id="contrasenia" name="contrasenia" required>
+
+        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="artista" name="artista">
+            <label for="artista">¿Quiere registrarse como artista?</label>
+        </div>
+
+        <button type="submit">Crear cuenta</button>
+    </form>
+</div>
+</body>
+</html>

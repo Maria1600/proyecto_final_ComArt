@@ -1,0 +1,73 @@
+body {
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+}
+
+.contenedor-registro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.formulario-registro {
+    background: white;
+    padding: 40px;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    background: linear-gradient(
+        to right,
+        #53bef8,
+        #669ff4,
+        #5b71f0,
+        #71c5f2,
+        #81f5e3
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+input[type="email"],
+input[type="text"],
+input[type="password"],
+input[type="date"] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #4169e1;
+}
+
+.checkbox-container input {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    background: linear-gradient(to right, #53bef8, #5b71f0);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
