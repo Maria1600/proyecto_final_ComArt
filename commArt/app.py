@@ -38,10 +38,12 @@ with app.app_context():
 def home():
     return render_template('index.html')
 
-# Aquí ejemplo de otra ruta
-@app.route('/artistas')
-def artistas():
-    return render_template('artistas_list.html')
+#Rutas
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 
 # Iniciar el servidor
 if __name__ == '__main__':
