@@ -1,5 +1,4 @@
 from sqlalchemy.orm import joinedload
-from werkzeug.security import check_password_hash
 
 from Modelos.Usuario import Usuario
 from app import db
