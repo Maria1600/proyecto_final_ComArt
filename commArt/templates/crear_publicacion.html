@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Publicacion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/creaPubliStyle.css') }}">
+</head>
+<body>
+<!-- Fondo opaco -->
+<div class="fondo-opaco"></div>
+
+<!-- Caja modal -->
+<div class="modal-publicacion">
+
+    <!-- NAV dentro del modal -->
+    <div class="nav">
+        <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+            <span class="titulo-app">ComArt</span>
+        </div>
+
+        <div class="search-container">
+            <input type="text" placeholder="Búsqueda">
+        </div>
+
+        <div class="perfil-icono" onclick="toggleDropdown()">
+            <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
+            <div id="dropdown" class="dropdown-menu hidden">
+                <a href="{{ url_for('perfil') }}">Ver perfil</a>
+                <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="contenido-modal">
+        <div class="header-modal">
+            <h2 class="titulo-gradiente">CREAR PUBLICACIÓN</h2>
+            <button class="cerrar-modal" onclick="location.href='{{ url_for('perfil') }}'">✕</button>
+        </div>
+
+        <label for="descripcion">Describe tu dibujo:</label>
+        <textarea id="descripcion" name="descripcion" rows="6"></textarea>
+
+        <div class="zona-subida">
+            <button class="btn-subir-img">
+                <i class="fa fa-upload"></i> Cargar dibujo
+            </button>
+
+            <!-- Solo se muestra si hay imagen cargada -->
+            <div class="archivo-subido">
+                <i class="fa fa-image"></i>
+                <span>Comisión.jpg</span>
+            </div>
+        </div>
+
+        <button class="btn-publicar">Publicar</button>
+    </div>
+</div>
+</body>
+</html>

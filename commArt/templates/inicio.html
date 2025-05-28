@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicioStyle.css') }}">
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
 <div class="nav">
     <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
@@ -55,3 +65,5 @@
     <button onclick="location.href='{{ url_for('notificaciones') }}'">Notificaciones</button>
     <button onclick="location.href='{{ url_for('perfil') }}'">Perfil</button>
 </div>
+</body>
+</html>
