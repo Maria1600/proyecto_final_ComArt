@@ -1,0 +1,57 @@
+<div class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="titulo-app">ComArt</span>
+    </div>
+
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda">
+    </div>
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</div>
+
+<div class="muro">
+    {% for pub in publicaciones %}
+    <div class="publicacion">
+        <div class="info-usuario">
+            <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}" class="avatar" alt="Avatar">
+            <div>
+                <div><strong>{{ pub.usuario }}</strong></div>
+                <div>{{ pub.fecha }}</div>
+            </div>
+        </div>
+        <div class="contenido-publicacion">
+            <img src="{{ pub.imagen }}" alt="Imagen subida">
+            <div class="descripcion">{{ pub.descripcion }}</div>
+        </div>
+        <div class="likes">
+            <button class="like-btn {% if pub.dio_like %}liked{% endif %}">
+                <i class="fa {% if pub.dio_like %}fa-thumbs-up{% else %}fa-thumbs-o-up{% endif %}"></i>
+            </button>
+            <span>{{ pub.likes }}</span>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% for com in comisiones_globales %}
+    <div class="comision-global">
+        <div class="etiqueta">Comisión global</div>
+        <div class="descripcion">{{ com.texto }}</div>
+        <button class="boton-comision">Solicitar comisión</button>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="menu-inferior">
+    <button class="activo">Inicio</button>
+    <button onclick="location.href='{{ url_for('comisiones') }}'">Comisiones</button>
+    <button onclick="location.href='{{ url_for('notificaciones') }}'">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('perfil') }}'">Perfil</button>
+</div>

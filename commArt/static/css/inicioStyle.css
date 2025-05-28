@@ -1,0 +1,234 @@
+/* === General === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #e6f3ff, #ffffff);
+}
+
+.hidden {
+  display: none;
+}
+
+/* === Navbar === */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.titulo-app {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(
+    to right,
+    #53bef8,
+    #669ff4,
+    #5b71f0,
+    #71c5f2,
+    #81f5e3
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === Buscador === */
+.search-container input {
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: none;
+  box-shadow: rgba(136, 165, 191, 0.4) 0px 2px 10px;
+  width: 200px;
+}
+
+/* === Crear comisión global === */
+.crear-comision {
+  background: linear-gradient(to right, #53bef8, #5b71f0);
+  border: none;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* === Perfil Icono + Dropdown === */
+.perfil-icono {
+  position: relative;
+  cursor: pointer;
+}
+
+.perfil-icono img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+              rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu a:last-child {
+  color: #f8536b;
+}
+
+/* === Muro de publicaciones === */
+.muro {
+  padding: 2rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+}
+
+/* === Publicación === */
+.publicacion {
+  background: white;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-usuario {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.info-usuario .avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 1rem;
+}
+
+.contenido-publicacion img {
+  width: 100%;
+  border-radius: 10px;
+  margin: 1rem 0;
+}
+
+.descripcion {
+  font-size: 0.95rem;
+  padding: 0 0.5rem;
+}
+
+/* === Likes === */
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.like-btn.liked {
+  color: #5b71f0;
+}
+
+/* === Comisión global === */
+.comision-global {
+  background: white;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: relative;
+}
+
+.comision-global .etiqueta {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.comision-global .descripcion {
+  font-size: 1rem;
+  padding: 1rem 0;
+}
+
+.comision-global .boton-comision {
+  background: linear-gradient(to right, #53bef8, #5b71f0);
+  border: none;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* === Menú inferior === */
+.menu-inferior {
+  display: flex;
+  justify-content: space-around;
+  background: linear-gradient(to top, #dce1ff, #f0f3ff);
+  padding: 0.5rem;
+  position: sticky;
+  bottom: 0;
+}
+
+.menu-inferior button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  font-weight: 500;
+  color: #5b71f0;
+  transition: background 0.2s;
+}
+
+.menu-inferior button.activo {
+  background: #d0d5ff;
+  border-radius: 10px;
+}
