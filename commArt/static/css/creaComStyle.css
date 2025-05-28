@@ -1,0 +1,130 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.fondo-oscuro {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 0;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 10;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.titulo-app {
+    font-size: 1.5rem;
+    color: #3ac3ff;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.search-container input {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: linear-gradient(to right, #53bef8, #a4e0ff);
+    color: white;
+    width: 200px;
+}
+
+.perfil-icono {
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-caja {
+    background: white;
+    margin: 60px auto;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    position: relative;
+    z-index: 2;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-titulo {
+    background: linear-gradient(to right, #53bef8, #5b71f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.cerrar-modal {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: #f8536b;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: none;
+    font-size: 1rem;
+}
+
+.boton-publicar-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.boton-primario {
+    background: linear-gradient(to right, #53bef8, #5b71f0);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.boton-primario:hover {
+    transform: scale(1.05);
+}
