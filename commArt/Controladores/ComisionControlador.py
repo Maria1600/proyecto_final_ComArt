@@ -16,7 +16,8 @@ def obtener_todas():
             "estado": c.estado,
             "fecha_creacion": c.fecha_creacion,
             "tipo": c.tipo,
-            "artista": c.artista.usuario.username,
+            "artista": c.artista.usuario.username if c.artista and c.artista.usuario else None,
+            #Como el artista puede ser null hay que hacer la comprobacion
             "cliente": c.cliente.username
         }
         for c in comision
@@ -45,6 +46,24 @@ def obtener_comision(id_comision):
         http = 404
 
     return jsonify(data), http
+
+@comision_bp.route('/comisiones/globales', methods=['GET'])
+def obtener_comision_por_tipo_sin_asignar():
+    comision = ComisionServicio.obtener_global_sin_asigar()
+
+    data = [
+        {
+            "id_comision": c.id_com,
+            "descripcion": c.descripcion_com,
+            "estado": c.estado,
+            "fecha_creacion": c.fecha_creacion,
+            "tipo": c.tipo,
+            "cliente": c.cliente.username
+        }
+        for c in comision
+    ]
+
+    return jsonify(data), 200
 
 @comision_bp.route('/comisiones', methods=['POST'])
 def crear_comision():

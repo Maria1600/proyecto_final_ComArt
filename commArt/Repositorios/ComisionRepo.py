@@ -14,6 +14,12 @@ class ComisionRepositorio:
         return Comision.query.get(comision_id)
 
     @staticmethod
+    def obtener_global_sin_asigar():
+        #Se utilizan varios filtros para que una vez pase uno de los filtros y se hayan recopilado
+        # las consultas globales que ya de ahi saque las que no tienen artista
+        return Comision.query.filter_by(tipo='Global').filter(Comision.id_artista_com is None).all()
+
+    @staticmethod
     def crear(descripcion,estado,fecha,tipo,id_cliente,id_artista):
         comision = Comision(
             descripcion_com=descripcion,

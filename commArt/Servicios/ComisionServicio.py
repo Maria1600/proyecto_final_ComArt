@@ -11,6 +11,10 @@ class ComisionServicio:
         return ComisionRepositorio.obtener_por_id(comision_id)
 
     @staticmethod
+    def obtener_global_sin_asigar():
+        return ComisionRepositorio.obtener_global_sin_asigar()
+
+    @staticmethod
     def crear_comision(descripcion,estado,fecha,tipo,id_cliente,id_artista):
         return ComisionRepositorio.crear(descripcion,estado,fecha,tipo,id_cliente,id_artista)
 
