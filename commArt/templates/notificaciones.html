@@ -16,7 +16,7 @@
     <div class="buscador">
         <input type="text" placeholder="Buscar...">
     </div>
-    <div class="icono-usuario">
+    <div class="icono-usuario" onclick="toggleDropdown()>
         <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
         <div id="dropdown" class="dropdown-menu hidden">
             <a href="{{ url_for('perfil') }}">Ver perfil</a>
