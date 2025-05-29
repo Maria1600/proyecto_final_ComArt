@@ -1,0 +1,175 @@
+/* === General === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #e6f3ff, #ffffff);
+}
+
+.hidden {
+  display: none;
+}
+
+/* === Navbar === */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.titulo-app {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(
+    to right,
+    #53bef8,
+    #669ff4,
+    #5b71f0,
+    #71c5f2,
+    #81f5e3
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === Buscador === */
+.search-container input {
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: none;
+  box-shadow: rgba(136, 165, 191, 0.4) 0px 2px 10px;
+  width: 200px;
+}
+
+/* === Perfil Icono + Dropdown === */
+.perfil-icono {
+  position: relative;
+  cursor: pointer;
+}
+
+.perfil-icono img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+              rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu a:last-child {
+  color: #f8536b;
+}
+
+/* === Menú inferior === */
+.menu-inferior {
+  display: flex;
+  justify-content: space-around;
+  background: linear-gradient(to top, #dce1ff, #f0f3ff);
+  padding: 0.5rem;
+  position: sticky;
+  bottom: 0;
+}
+
+.menu-inferior button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  font-weight: 500;
+  color: #5b71f0;
+  transition: background 0.2s;
+}
+
+.menu-inferior button.activo {
+  background: #d0d5ff;
+  border-radius: 10px;
+}
+
+/* Título */
+.titulo-notificaciones {
+    color: #4bdec7;
+    text-align: center;
+    margin: 40px 0 20px;
+    text-shadow: 0 0 2px #3ba798,
+                 0 0 4px #2d9183,
+                 0 0 8px rgba(35, 122, 110, 0.5),
+                 0 0 12px rgba(35, 122, 110, 0.4),
+                 0 0 16px rgba(35, 122, 110, 0.3);
+}
+
+/* Contenedor de todas las notificaciones */
+.lista-notificaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 20px;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+/* Cada notificación individual */
+.notificacion-caja {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 12px 20px;
+    border-radius: 16px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.icono-campana {
+    color: #81f5e3;
+    font-size: 22px;
+    margin-right: 15px;
+}
+
+/* Sin notificaciones */
+.no-notificaciones {
+    text-align: center;
+    margin-top: 100px;
+    font-size: 20px;
+    color: #5b71f0;
+}
+
+.globo-vacio {
+    font-size: 80px;
+    margin-bottom: 10px;
+}

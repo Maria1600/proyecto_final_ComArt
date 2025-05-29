@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notificaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="nombre-app">ComArt</span>
+    </div>
+    <div class="buscador">
+        <input type="text" placeholder="Buscar...">
+    </div>
+    <div class="icono-usuario">
+        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Título -->
+<h1 class="titulo-notificaciones">NOTIFICACIONES</h1>
+
+<!-- Cuerpo principal -->
+<main class="contenedor-notificaciones">
+    {% if notificaciones %}
+    <div class="lista-notificaciones">
+        {% for notificacion in notificaciones %}
+        <div class="notificacion-caja">
+            <span class="icono-campana">🔔</span>
+            <span class="texto-notificacion">{{ notificacion }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-notificaciones">
+        <div class="globo-vacio">🎈</div>
+        <p>¡No tienes ninguna notificación!</p>
+    </div>
+    {% endif %}
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+</footer>
+
+</body>
+</html>
