@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<div class="nav">
+
+<!-- Navbar -->
+<nav class="nav">
     <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <span class="titulo-app">ComArt</span>
@@ -25,7 +27,7 @@
             <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
-</div>
+</nav>
 
 <div class="muro">
     {% for pub in publicaciones %}

@@ -11,7 +11,7 @@
 <div class="fondo-oscuro"></div>
 
 <!-- NAV -->
-<div class="nav">
+<nav class="nav">
     <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <span class="titulo-app">ComArt</span>
@@ -26,7 +26,7 @@
             <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
-</div>
+</nav>
 
 <!-- Modal -->
 <div class="modal-caja">
