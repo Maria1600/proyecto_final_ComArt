@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notificaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notisStyle.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="nombre-app">ComArt</span>
+    </div>
+    <div class="buscador">
+        <input type="text" placeholder="Buscar...">
+    </div>
+    <div class="icono-usuario">
+        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<main class="busqueda-main">
+    <h1>¡Busca a tus artistas favoritos!</h1>
+
+    <div class="busqueda-barra">
+        <!-- Campo de búsqueda -->
+        <input type="text" name="busqueda" value="{{ busqueda }}" placeholder="Busca a tus artistas favoritos..." />
+
+        <!-- Filtros activos -->
+        <div class="filtros-activos">
+            {% for filtro in filtros_activos %}
+            <span class="filtro-activo">
+                {{ filtro }}
+                <button type="submit" name="eliminar_filtro" value="{{ filtro }}">×</button>
+            </span>
+            {% endfor %}
+        </div>
+
+        <!-- Dropdown de tags -->
+        <div class="dropdown-tags">
+            <button type="button" onclick="toggleDropdown()">Tags ▾</button>
+            <div id="tagsDropdown" class="dropdown-content">
+                {% for tag in todos_los_tags %}
+                <label>
+                    <input type="checkbox" name="filtros" value="{{ tag }}"
+                           {% if tag in filtros_activos %}checked{% endif %}>
+                    {{ tag }}
+                </label><br />
+                {% endfor %}
+                <button type="submit">Filtrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="resultados">
+        {% if perfiles %}
+        <div class="resultados">
+            {% for perfil in perfiles %}
+            <div class="resultado-perfil">
+                <span class="icono-usuario">👤</span>
+                <span class="nombre-usuario">{{ perfil.nombre }}</span>
+                <div class="tags">
+                    {% for tag in perfil.tags %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="sin-resultados">¡No se encontraron resultados!</p>
+        {% endif %}
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+</footer>
+
+</body>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById("tagsDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+</script>
+
+</html>
