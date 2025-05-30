@@ -1,0 +1,281 @@
+/* === General === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #e6f3ff, #ffffff);
+}
+
+.hidden {
+  display: none;
+}
+
+.contenedor-comisiones {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* === Navbar === */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.titulo-app {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(
+    to right,
+    #53bef8,
+    #669ff4,
+    #5b71f0,
+    #71c5f2,
+    #81f5e3
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === Buscador === */
+.search-container input {
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: none;
+  box-shadow: rgba(136, 165, 191, 0.4) 0px 2px 10px;
+  width: 200px;
+}
+
+/* === Perfil Icono + Dropdown === */
+.perfil-icono {
+  position: relative;
+  cursor: pointer;
+}
+
+.perfil-icono img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+              rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu a:last-child {
+  color: #f8536b;
+}
+
+/* === Menú inferior === */
+.menu-inferior {
+  display: flex;
+  justify-content: space-around;
+  background: linear-gradient(to top, #dce1ff, #f0f3ff);
+  padding: 0.5rem;
+  position: sticky;
+  bottom: 0;
+}
+
+.menu-inferior button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  font-weight: 500;
+  color: #5b71f0;
+  transition: background 0.2s;
+}
+
+.menu-inferior button.activo {
+  background: #d0d5ff;
+  border-radius: 10px;
+}
+
+/* === Filtros de comisiones === */
+.filtros-comisiones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filtro-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #d6dbf9;
+    background-color: rgba(117, 133, 229, 0.6);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filtro-btn.activo {
+    background-color: rgba(184, 194, 249, 0.5);
+    color: #3f54cd;
+}
+
+/* === Lista de comisiones === */
+.lista-comisiones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* === Cajas de comisiones === */
+.comision-caja {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+/* === Icons === */
+.comision-icono {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.icono-carpeta,
+.icono-sobre {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #10cdaf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.icono-carpeta::before {
+    content: "\1F4C1"; /* Carpeta (puedes sustituir por SVG o clase externa) */
+    font-size: 20px;
+    color: white;
+}
+
+.icono-sobre::before {
+    content: "\2709"; /* Sobre (puedes sustituir por SVG o clase externa) */
+    font-size: 20px;
+    color: white;
+}
+
+/* === Contenido comision === */
+.comision-contenido {
+    flex: 1;
+}
+
+.comision-descripcion {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.comision-meta {
+    font-size: 12px;
+    color: #616161;
+}
+
+/* === Estado o acciones === */
+.comision-estado-o-acciones {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* === ESTADO (para comisiones no en espera ) === */
+.estado-comision {
+    padding: 6px 12px;
+    background-color: rgba(47, 74, 229, 0.15);
+    color: black;
+    font-weight: bold;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 12px;
+}
+
+/* === ACCIONES (para comisiones en espera artistas pendientes) === */
+.acciones-solicitud {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-aceptar,
+.btn-rechazar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.btn-aceptar span,
+.btn-rechazar span {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.icono-tick {
+    background-image: url('data:image/svg+xml,<svg fill="%2327d3b9" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.285 2L9 13.567l-5.285-5.285L2 10.997l7 7L22 4.713z"/></svg>');
+}
+
+.icono-x {
+    background-image: url('data:image/svg+xml,<svg fill="%23f8536b" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12"/></svg>');
+}
+
+/* === Scroll === */
+.lista-comisiones::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista-comisiones::-webkit-scrollbar-thumb {
+    background-color: #c7d1f9;
+    border-radius: 4px;
+}
