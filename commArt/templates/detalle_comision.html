@@ -91,10 +91,10 @@
 </div>
 
 <!-- MODAL para imagen (emergente si se hace clic en el archivo) -->
-<div class="modal-imagen" id="modalEntrega">
+<div class="modal-imagen" id="modalEntrega" style="display: none;">
     <div class="modal-contenido">
         <span class="cerrar-modal" onclick="document.getElementById('modalEntrega').style.display='none'">&times;</span>
-        <img src="GatoBonito.jpg" alt="Entrega" />
+        <img src="{{ url_for('static', filename=comision.imagen_entregada) }}" alt="Entrega" />
     </div>
 </div>
 
