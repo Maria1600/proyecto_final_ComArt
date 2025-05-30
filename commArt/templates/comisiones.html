@@ -40,7 +40,7 @@
 
     <div class="lista-comisiones">
         {% for comision in comisiones %}
-        <div class="comision-caja">
+        <div class="comision-caja" onclick="location.href='{{ url_for('detalle_comision') }}'">
             <div class="comision-icono">
                 {% if comision.tipo == 'solicitud_directa' %}
                 <span class="icono-sobre"></span>
@@ -61,8 +61,8 @@
             <div class="comision-estado-o-acciones">
                 {% if comision.tipo == 'solicitud_directa' and comision.estado == 'espera' %}
                 <div class="acciones-solicitud">
-                    <button class="btn-aceptar"><span class="icono-tick"></span></button>
-                    <button class="btn-rechazar"><span class="icono-x"></span></button>
+                    <button class="btn-aceptar" onclick="location.href='{{ url_for('comisiones') }}'" ><span class="icono-tick"></span></button>
+                    <button class="btn-rechazar" onclick="location.href='{{ url_for('comisiones') }}'" ><span class="icono-x"></span></button>
                 </div>
                 {% else %}
                 <span class="estado-comision">
