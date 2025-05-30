@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Abrir Comisión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/detalleComStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<!-- Fondo con blur -->
+<div class="fondo-oscuro"></div>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="titulo-app">ComArt</span>
+    </div>
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda">
+    </div>
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<!-- DETALLE DE COMISIÓN -->
+<div class="detalle-comision">
+    <div class="detalle-header">
+        <h2 class="titulo">DETALLES DE COMISIÓN</h2>
+        <button class="cerrar">&times;</button>
+    </div>
+
+    <!-- Información de la comisión desde backend -->
+    <div class="detalle-info">
+        <p class="info-meta">
+            Creada por <strong>{{ creador }}</strong> el {{ fecha }}
+            {% if artista_asignado %}
+            y aceptada por <strong>{{ artista_asignado }}</strong>
+            {% endif %}
+        </p>
+
+        <p class="info-desc">{{ descripcion_completa }}</p>
+
+        <p class="estado"><strong>Estado actual:</strong> {{ estado }}</p>
+
+        {% if entrega_realizada %}
+        <div class="archivo-entregado">
+            <span class="icono-foto"></span>
+            <a href="{{ entrega_url }}" target="_blank">{{ entrega_nombre }}</a>
+        </div>
+        {% endif %}
+
+        <!-- Botones controlados por lógica -->
+        {% if es_artista and estado == "En proceso" %}
+        <div class="botones">
+            <button class="btn-entregar"><span class="icono-subir"></span> Entregar </button>
+            <button class="btn-cancelar">Cancelar entrega</button>
+        </div>
+        {% elif es_cliente and estado == "En proceso" %}
+        <div class="botones">
+            <button class="btn-cancelar">Cancelar</button>
+        </div>
+        {% elif es_cliente and estado == "Entregada" %}
+        <div class="boton-aceptar">
+            <button class="btn-aceptar">Aceptar entrega</button>
+            <button class="btn-cancelar">Cancelar entrega</button>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-container">
+        <h3 class="titulo-chat">CHAT</h3>
+        <div class="chat-mensajes">
+            {% for mensaje in mensajes %}
+            <div class="mensaje {% if mensaje.de_usuario_actual %}propio{% else %}otro{% endif %}">
+                {{ mensaje.texto }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="chat-input">
+            <textarea placeholder="Escribe un mensaje..."></textarea>
+            <button class="btn-enviar"><span class="icono-avion"></span></button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL para imagen (emergente si se hace clic en el archivo) -->
+<div class="modal-imagen" id="modalEntrega">
+    <div class="modal-contenido">
+        <span class="cerrar-modal" onclick="document.getElementById('modalEntrega').style.display='none'">&times;</span>
+        <img src="GatoBonito.jpg" alt="Entrega" />
+    </div>
+</div>
+
+</body>
+</html>
