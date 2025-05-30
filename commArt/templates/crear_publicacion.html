@@ -27,7 +27,7 @@
             <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
             <div id="dropdown" class="dropdown-menu hidden">
                 <a href="{{ url_for('perfil') }}">Ver perfil</a>
-                <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+                <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
             </div>
         </div>
     </nav>
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <button class="btn-publicar">Publicar</button>
+        <button class="btn-publicar" onclick="location.href='{{ url_for('perfil') }}'">Publicar</button>
     </div>
 </div>
 </body>

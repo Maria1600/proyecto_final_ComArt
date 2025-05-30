@@ -24,7 +24,7 @@
         <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
         <div id="dropdown" class="dropdown-menu hidden">
             <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -33,9 +33,9 @@
     {% for pub in publicaciones %}
     <div class="publicacion">
         <div class="info-usuario">
-            <img src="{{ url_for('static', filename='img/user-icon.png') }}" class="avatar" alt="Avatar">
+            <img src="{{ url_for('static', filename='img/user-icon.png') }}" class="avatar" alt="Avatar" onclick="location.href='{{ url_for('perfil') }}'">
             <div>
-                <div><strong>{{ pub.usuario }}</strong></div>
+                <div onclick="location.href='{{ url_for('perfil') }}'" ><strong>{{ pub.usuario }}</strong></div>
                 <div>{{ pub.fecha }}</div>
             </div>
         </div>
@@ -56,16 +56,18 @@
     <div class="comision-global">
         <div class="etiqueta">Comisión global</div>
         <div class="descripcion">{{ com.texto }}</div>
-        <button class="boton-comision">Solicitar comisión</button>
+        <button class="boton-comision">Apuntarse</button>
     </div>
     {% endfor %}
 </div>
 
-<div class="menu-inferior">
-    <button class="activo">Inicio</button>
-    <button onclick="location.href='{{ url_for('comisiones') }}'">Comisiones</button>
-    <button onclick="location.href='{{ url_for('notificaciones') }}'">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('perfil') }}'">Perfil</button>
-</div>
+<!-- Footer -->
+<footer class="footer">
+    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+</footer>
+
 </body>
 </html>

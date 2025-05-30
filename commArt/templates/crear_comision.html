@@ -23,7 +23,7 @@
         <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
         <div id="dropdown" class="dropdown-menu hidden">
             <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -47,7 +47,7 @@
         <label for="descripcion">Escribe aquí tu pedido detalladamente:</label>
         <textarea id="descripcion" name="descripcion" rows="6" required></textarea>
         <div class="boton-publicar-container">
-            <button type="submit" class="boton-primario">Crear comisión</button>
+            <button type="submit" class="boton-primario" onclick="location.href='{{ url_for('perfil') }}'" >Crear comisión</button>
         </div>
     </form>
 </div>

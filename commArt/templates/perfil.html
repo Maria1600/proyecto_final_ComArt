@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notificaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfilStyle.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="nombre-app">ComArt</span>
+    </div>
+    <div class="search-container">
+        <input type="text" placeholder="Buscar...">
+    </div>
+    <div class="icono-usuario" onclick="toggleDropdown()">
+        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<div class="perfil-encabezado">
+    <div class="avatar-contenedor">
+        <span class="icono-usuario">👤</span>
+    </div>
+    <div class="perfil-info">
+        <h2>{{ usuario.nombre }}</h2>
+        <p class="fecha-creacion">{{ usuario.fecha_creacion }}</p>
+        <div class="seguimiento">
+            <div>Seguidores<br><strong>{{ usuario.seguidores }}</strong></div>
+            <div>Seguidos<br><strong>{{ usuario.seguidos }}</strong></div>
+            {% if es_logado %}
+            <!-- No se muestra botón de seguir -->
+            {% else %}
+            <form method="POST" action="/seguir">
+                <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
+                <button class="boton-seguir" type="submit">seguir</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="descripcion-caja">
+    {% if es_logado %}
+    {% if modo_edicion %}
+    <form method="POST" action="/guardar-descripcion">
+        <textarea name="nueva_descripcion">{{ usuario.descripcion }}</textarea>
+        <div class="botones-edicion">
+            <button type="submit" class="btn-guardar">✔</button>
+            <a href="/perfil" class="btn-cancelar">✖</a>
+        </div>
+    </form>
+    {% else %}
+    <p>{{ usuario.descripcion }}</p>
+    <form method="GET" action="/perfil?editar=1">
+        <button class="btn-editar">✎</button>
+    </form>
+    {% endif %}
+    {% else %}
+    <p>{{ usuario.descripcion }}</p>
+    {% endif %}
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer activo">Perfil</button>
+</footer>
+
+</body>
+</html>
