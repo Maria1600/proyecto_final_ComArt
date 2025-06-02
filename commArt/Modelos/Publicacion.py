@@ -1,4 +1,4 @@
-from app import db
+from extensiones import db
 
 class Publicacion(db.Model):
     #Definimos explicitamente el nombre de la tabla

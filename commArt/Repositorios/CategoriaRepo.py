@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload
 
-from app import db
+from extensiones import db
 from Modelos.Categoria import Categoria
 
 class CategoriaRepositorio:

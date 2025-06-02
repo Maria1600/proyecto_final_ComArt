@@ -1,7 +1,7 @@
 from sqlalchemy.orm import joinedload
 from Modelos.Artista import Artista
 from Modelos.Usuario import Usuario
-from app import db
+from extensiones import db
 
 class ArtistaRepositorio:
 

@@ -1,7 +1,8 @@
 from sqlalchemy.orm import joinedload
+from werkzeug.security import check_password_hash
 
 from Modelos.Usuario import Usuario
-from app import db
+from extensiones import db
 
 class UsuarioRepositorio:
 
@@ -106,8 +107,7 @@ class UsuarioRepositorio:
         return usuario.comisiones_solicitadas if usuario else []
 
     @staticmethod
-    def verificar_login(correo,contrasenia):
-        usuario = Usuario.query.filter_by(correo=correo,contrasenia=contrasenia, activo=1).first()
-        #Esto para mas adelante quiza para que sea mas seguro
-        #if usuario and check_password_hash(usuario.contrasenia, contrasenia):
-        return usuario
+    def verificar_login(correo, contrasenia):
+        usuario = Usuario.query.filter_by(correo=correo, activo=1).first()
+        if usuario and check_password_hash(usuario.contrasenia, contrasenia):
+            return usuario

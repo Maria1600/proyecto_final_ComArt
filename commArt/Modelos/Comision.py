@@ -1,4 +1,4 @@
-from app import db
+from extensiones import db
 
 class Comision(db.Model):
     #Definimos explicitamente el nombre de la tabla

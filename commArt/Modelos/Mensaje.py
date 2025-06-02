@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db
+from extensiones import db
 
 class Mensaje(db.Model):
     #Definimos explicitamente el nombre de la tabla
@@ -12,7 +12,7 @@ class Mensaje(db.Model):
     #Si se requiere a futuro zona horaria tambien datetime.now(UTC)
     fecha_creacion_mensaje = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     id_user_creador = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), nullable=False)
-    id_com_asociada = db.Column(db.Integer, db.ForeignKey('artistas.id_artista'), nullable=False)
+    id_com_asociada = db.Column(db.Integer, db.ForeignKey('comisiones.id_com'), nullable=False)
 
     #Relaciones
     creador = db.relationship("Usuario", back_populates="mensajes")

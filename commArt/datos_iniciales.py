@@ -1,6 +1,7 @@
 from Modelos.Comision import Comision
 from Modelos.Mensaje import Mensaje
-from app import db, app
+from app import app
+from extensiones import db
 from Modelos.Usuario import Usuario
 from Modelos.Artista import Artista
 from Modelos.Categoria import Categoria
@@ -62,8 +63,8 @@ def insertar_datos():
 
         # ---------- Asignar Categorías al artista ----------
         #Gracias al mapeo asignamos directamente a categorias las categorias que queremos
-        a1.categorias.extend(categorias[3], categorias[9])
-        a2.categorias.extend(categorias[4], categorias[3], categorias[2])
+        a1.categorias.extend([categorias[3], categorias[9]])
+        a2.categorias.extend([categorias[4], categorias[3], categorias[2]])
         db.session.commit()
 
         # ---------- Crear Publicaciones ----------
@@ -135,19 +136,23 @@ def insertar_datos():
         # ---------- Mensajes ----------
         msg1 = Mensaje(
             texto="¡Hola! Me interesa la comisión. Entonces esta es libre no quieres nada en especifico? Solo que sea un paisaje griego no?",
-            id_user_creador=u1.id_usuario
+            id_user_creador=u1.id_usuario,
+            id_com_asociada=com1.id_com
         )
         msg2 = Mensaje(
             texto="Holaaa siii eres libre de hacer lo que quieras!!",
-            id_user_creador=u2.id_usuario
+            id_user_creador=u2.id_usuario,
+            id_com_asociada=com1.id_com
         )
         msg3 = Mensaje(
             texto="Aaa pero con una condición que el paisaje sea antiguo en plan de la antigua grecia como era antes y no ahora",
-            id_user_creador=u2.id_usuario
+            id_user_creador=u2.id_usuario,
+            id_com_asociada=com1.id_com
         )
         msg4 = Mensaje(
             texto="Jajaja sin problema así más divertido!! Me pondré a ello",
-            id_user_creador=u1.id_usuario
+            id_user_creador=u1.id_usuario,
+            id_com_asociada=com1.id_com
         )
         com1.mensajes.append(msg1)
         com1.mensajes.append(msg2)

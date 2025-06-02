@@ -1,4 +1,4 @@
-from app import db
+from extensiones import db
 from Modelos.TablasIntermedias import seguir
 
 class Usuario(db.Model):

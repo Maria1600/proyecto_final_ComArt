@@ -1,5 +1,5 @@
 from Modelos.TablasIntermedias import artista_categoria
-from app import db
+from extensiones import db
 
 class Artista(db.Model):
     #Definimos explicitamente el nombre de la tabla

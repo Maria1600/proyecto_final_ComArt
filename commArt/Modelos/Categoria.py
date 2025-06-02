@@ -1,5 +1,5 @@
 from Modelos.TablasIntermedias import artista_categoria
-from app import db
+from extensiones import db
 
 #Creamos una clase que hereda del modelo de la instancia
 #Esto indica que estamos representando una tabla de BD

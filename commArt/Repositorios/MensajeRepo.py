@@ -1,4 +1,4 @@
-from app import db
+from extensiones import db
 from Modelos.Mensaje import Mensaje
 
 class MensajeRepositorio:

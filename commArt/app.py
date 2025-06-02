@@ -1,16 +1,11 @@
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
+from extensiones import db  # cambiamos esto para no generar errores de import circulares
 from Controladores.ArtistaControlador import artista_bp
-from Controladores.ComisionControlador import comision_bp
-from Controladores.MensajeControlador import mensaje_bp
-from Controladores.PublicacionControlador import publicacion_bp
+import Modelos  # Esto ejecuta __init__.py de Modelos y carga TODITO
 from Controladores.UsuarioControlador import usuario_bp
 from Controladores.CategoriaControlador import categoria_bp
 from config import Config
 import os
-
-# Inicializamos SQLAlchemy
-db = SQLAlchemy()
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
@@ -21,9 +16,9 @@ db.init_app(app)
 
 # Registrar Blueprints
 app.register_blueprint(categoria_bp)
-app.register_blueprint(publicacion_bp)
-app.register_blueprint(mensaje_bp)
-app.register_blueprint(comision_bp)
+#app.register_blueprint(publicacion_bp)
+#app.register_blueprint(mensaje_bp)
+#app.register_blueprint(comision_bp)
 app.register_blueprint(artista_bp)
 app.register_blueprint(usuario_bp)
 
