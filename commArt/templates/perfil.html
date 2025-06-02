@@ -66,7 +66,119 @@
     {% else %}
     <p>{{ usuario.descripcion }}</p>
     {% endif %}
+</div><!-- PERFIL GENERAL HTML -->
+<div class="perfil-encabezado">
+    <div class="avatar-contenedor">
+        <span class="icono-usuario">👤</span>
+    </div>
+    <div class="perfil-info">
+        <h2>{{ usuario.nombre }}</h2>
+        <p class="fecha-creacion">{{ usuario.fecha_creacion }}</p>
+        <div class="seguimiento">
+            <div>Seguidores<br><strong>{{ usuario.seguidores }}</strong></div>
+            <div>Seguidos<br><strong>{{ usuario.seguidos }}</strong></div>
+
+            {% if not es_logado %}
+            <form method="POST" action="/seguir">
+                <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
+                <button class="boton-seguir">seguir</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
 </div>
+
+<!-- USUARIO NORMAL -->
+{% if not usuario.es_artista %}
+<div class="perfil-descripcion">
+    {% if es_logado and modo_edicion %}
+    <form method="POST" action="/guardar-descripcion">
+        <textarea name="nueva_descripcion">{{ usuario.descripcion }}</textarea>
+        <div class="botones-edicion">
+            <button type="submit" class="btn-guardar">✔</button>
+            <a href="/perfil" class="btn-cancelar">✖</a>
+        </div>
+    </form>
+    {% else %}
+    <p>{{ usuario.descripcion }}</p>
+    {% if es_logado %}
+    <form method="GET" action="/perfil?editar=1">
+        <button class="btn-editar">✎</button>
+    </form>
+    {% endif %}
+    {% endif %}
+</div>
+
+<!-- USUARIO ARTISTA -->
+{% else %}
+<div class="perfil-artista-contenido">
+    <div class="info-artista">
+        <div class="descripcion-caja">
+            {% if es_logado and modo_edicion %}
+            <form method="POST" action="/guardar-descripcion">
+                <textarea name="nueva_descripcion">{{ usuario.descripcion }}</textarea>
+                <div class="botones-edicion">
+                    <button type="submit" class="btn-guardar">✔</button>
+                    <a href="/perfil" class="btn-cancelar">✖</a>
+                </div>
+            </form>
+            {% else %}
+            <p>{{ usuario.descripcion }}</p>
+            {% if es_logado %}
+            <form method="GET" action="/perfil?editar=1">
+                <button class="btn-editar">✎</button>
+            </form>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="tags-artista">
+            {% for tag in usuario.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+            {% if es_logado %}
+            <form method="GET" action="/editar_tags">
+                <button class="btn-editar">✎</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="publicaciones-artista">
+        <div class="publicaciones-header">
+            <h3>PUBLICACIONES</h3>
+            {% if es_logado %}
+            <a href="/crear_publicacion" class="boton-gradiente">+ Crear publicación</a>
+            {% else %}
+            <a href="/abrir_comision/{{ usuario.id }}" class="boton-gradiente">+ Abrir comisión</a>
+            {% endif %}
+        </div>
+
+        <div class="lista-publicaciones">
+            {% for pub in publicaciones %}
+            <div class="publicacion">
+                <div class="publicacion-cabecera">
+                    <span class="nombre-autor">{{ usuario.nombre }}</span>
+                    <span class="fecha-publicacion">{{ pub.fecha }}</span>
+                </div>
+                <img src="{{ pub.imagen_url }}" alt="imagen publicación" class="imagen-publicacion">
+                <div class="texto-publicacion">
+                    <p>{{ pub.descripcion }}</p>
+                </div>
+                <div class="acciones-publicacion">
+                    <span>👍 {{ pub.likes }}</span>
+                    {% if es_logado %}
+                    <form method="GET" action="/editar_publicacion/{{ pub.id }}">
+                        <button class="btn-editar">✎</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <!-- Footer -->
 <footer class="footer">

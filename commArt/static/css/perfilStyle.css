@@ -124,133 +124,175 @@ body {
 }
 
 /* === Cuerpo === */
+
+/* Encabezado del perfil */
 .perfil-encabezado {
-    display: flex;
-    align-items: center;
-    background: linear-gradient(
-        135deg,
-        #b5e3fc,
-        #53bef8,
-        #84d1fa,
-        #669ff4,
-        #5e9dfc,
-        #5b71f0,
-        #526bf9,
-        #71c5f2,
-        #81f5e3,
-        #7afce8
-    );
-    padding: 2rem;
-    border-radius: 0 0 20px 20px;
-    gap: 2rem;
+  background: linear-gradient(135deg, #b5e3fc, #53bef8, #84d1fa, #669ff4, #5e9dfc, #5b71f0, #526bf9, #71c5f2, #81f5e3, #7afce8);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border-radius: 16px 16px 0 0;
 }
 
 .avatar-contenedor {
-    background: white;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
-                rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+  font-size: 2rem;
 }
 
 .perfil-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    color: #333;
-}
-
-.perfil-info h2 {
-    margin: 0;
-    font-size: 1.8rem;
-}
-
-.fecha-creacion {
-    font-size: 0.9rem;
-    color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .seguimiento {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-
-.seguimiento div {
-    text-align: center;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
 }
 
 .boton-seguir {
-    padding: 0.4rem 1rem;
-    background: linear-gradient(to right, #5ff0d3, #50b5f4);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
+  background: linear-gradient(to right, #22edce, #669ff4);
+  border: none;
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.descripcion-caja {
-    margin: 2rem;
-    padding: 1.5rem;
-    background: white;
-    border-radius: 16px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    position: relative;
-}
-
-.descripcion-caja p {
-    margin: 0;
-    white-space: pre-line;
+/* Descripción */
+.perfil-descripcion, .descripcion-caja {
+  background: white;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 16px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: relative;
 }
 
 textarea {
-    width: 100%;
-    height: 8rem;
-    padding: 1rem;
-    font-size: 1rem;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    resize: none;
+  width: 100%;
+  min-height: 100px;
+  padding: 0.5rem;
+  border-radius: 8px;
+  resize: vertical;
 }
 
 .btn-editar {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: #10cdaf;
-    font-size: 1.5rem;
-    cursor: pointer;
+  background: none;
+  border: none;
+  color: #10cdaf;
+  font-size: 1.2rem;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
-.botones-edicion {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+.botones-edicion button {
+  margin-right: 10px;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .btn-guardar {
-    background-color: #27d3b9;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    cursor: pointer;
+  background-color: #27d3b9;
+  color: white;
 }
 
 .btn-cancelar {
-    background-color: #f8536b;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    text-decoration: none;
+  background-color: #f8536b;
+  color: white;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
 }
+
+/* Tags */
+.tags-artista {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background: rgba(47, 74, 229, 0.2);
+  color: #2f4ae5;
+  padding: 0.3rem 0.7rem;
+  border-radius: 10px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Publicaciones */
+.publicaciones-artista {
+  margin: 1rem;
+}
+
+.publicaciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.boton-gradiente {
+  background: linear-gradient(to right, #53bef8, #5b71f0);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.lista-publicaciones {
+  max-height: 500px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.publicacion {
+  background: white;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.publicacion-cabecera {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.imagen-publicacion {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.texto-publicacion p {
+  margin: 0.5rem 0;
+}
+
+.acciones-publicacion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
