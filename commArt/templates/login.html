@@ -18,6 +18,7 @@
 
         <label for="password">Contraseña:</label>
         <input type="password" id="password" name="password" required>
+        <div id="error-msg" style="color: #f8536b; font-size: 0.9em; margin-top: 5px;"></div>
 
         <div class="register-link">
             <a href="/register">¿No tienes una cuenta? <span>Regístrate</span></a>
@@ -27,4 +28,43 @@
     </form>
 </div>
 </body>
+
+<script>
+    //Se selecciona el fomulario de login por su clase y se añade listener al boton submit
+    document.querySelector('.login-form').addEventListener('submit', async function (e) {
+        e.preventDefault(); //Previene recarga de pagina
+
+        //Obtenemos datos de los campos
+        const correo = document.getElementById('email').value;
+        const contrasenia = document.getElementById('password').value;
+        const errorMsg = document.getElementById('error-msg');
+        errorMsg.textContent = "";  // Limpia errores anteriores para no volver a mostrarlos
+
+        //Aqui enviamos una peticion post a la ruta login usando fetch para enviar la peticion
+        // en formato Json y await para esperar una respuesta de back
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                correo: correo,
+                contrasenia: contrasenia
+            })
+        });
+
+        // Aqui obtenemos devuelta los datos que nos devuelve el back en Json
+        const data = await response.json();
+
+        //Aqui actuamos segun los codigos cuando obtenemos un 200 la respuesta es ok cuando no es un error
+        if (response.ok) {
+            alert("Login exitoso. Bienvenido " + data.username);
+            window.location.href = "/inicio";
+        } else {
+            //Aqui se rellena el div para que se muestre
+            errorMsg.textContent = data.error || "Error al iniciar sesión.";
+        }
+    });
+</script>
+
 </html>

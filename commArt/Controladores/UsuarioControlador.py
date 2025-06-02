@@ -197,3 +197,27 @@ def dejar_de_seguir_usuario(id_usuario, user_id_a_dejar_de_seguir):
         http = 404
 
     return jsonify(data), http
+
+@usuario_bp.route('/login', methods=['POST'])
+def login_user():
+    data = request.get_json()
+    correo = data.get("correo")
+    contrasenia = data.get("contrasenia")
+
+    if correo and contrasenia:
+        usuario = UsuarioServicio.verificar_login(correo, contrasenia)
+        if usuario:
+            data_json = {
+                "id_usuario": usuario.id_usuario,
+                "correo": usuario.correo,
+                "username": usuario.username
+            }
+            http = 200
+        else:
+            data_json = {"error": "Credenciales inválidas"}
+            http = 401
+    else:
+        data_json = {"error": "Faltan campos obligatorios"}
+        http = 400
+
+    return jsonify(data_json), http
