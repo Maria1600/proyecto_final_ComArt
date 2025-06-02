@@ -72,6 +72,7 @@ button {
     cursor: pointer;
 }
 
+/* === Para errores === */
 .error-msg {
     color: #f8536b;
     font-size: 0.9em;
