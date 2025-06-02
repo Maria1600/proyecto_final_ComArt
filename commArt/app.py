@@ -16,7 +16,7 @@ db = SQLAlchemy()
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Asociamos la app con la extensión de SQLAlchemy
+# Asociamos la app con SQLAlchemy
 db.init_app(app)
 
 # Registrar Blueprints
@@ -27,19 +27,20 @@ app.register_blueprint(comision_bp)
 app.register_blueprint(artista_bp)
 app.register_blueprint(usuario_bp)
 
-# Solo se inicializa la base si no existe
+# Inicialización de BD si no existe
 with app.app_context():
     if not os.path.exists(Config.DATABASE):
         from init_db import init_db
-        init_db()
+        from datos_iniciales import insertar_datos  # Importamos los insert
+        init_db()               # Crea la estructura con SQL
+        insertar_datos()      # Despues de crear la bd y su estructura insertamos datos
 
-# Ruta de inicio
+# Ruta principal la que aparece justo al compilar
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('login.html')  # ← Se hace predeterminado
 
-#Rutas
-
+# Otras rutas
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -48,10 +49,6 @@ def login():
 def register():
     return render_template('register.html')
 
-@app.route('/inicio')
-def inicio():
-    return render_template('inicio.html')
-
-# Iniciar el servidor
+# Ejecutar
 if __name__ == '__main__':
     app.run(debug=True)
