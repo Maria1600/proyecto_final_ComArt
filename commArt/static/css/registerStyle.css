@@ -71,3 +71,11 @@ button {
     border-radius: 6px;
     cursor: pointer;
 }
+
+.error-msg {
+    color: #f8536b;
+    font-size: 0.9em;
+    margin-top: 4px;
+    display: block;
+}
+

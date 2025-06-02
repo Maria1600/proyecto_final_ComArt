@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from Servicios.UsuarioServicio import UsuarioServicio
 
 #Blueprint
@@ -49,9 +49,10 @@ def crear_usuario():
     username = data.get("username")
     contrasenia = data.get("contrasenia")
     fecha = data.get("fecha_nacimiento")
+    es_artista = data.get("es_artista", False)
 
     if correo and username and contrasenia and fecha:
-        nueva = UsuarioServicio.crear_usuario(correo, username ,contrasenia, fecha)
+        nueva = UsuarioServicio.crear_usuario(correo, username ,contrasenia, fecha, es_artista)
         data_json = {
             "id_usuario": nueva.id_usuario,
             "es_artista": 1 if nueva.artista else 0,
@@ -221,3 +222,8 @@ def login_user():
         http = 400
 
     return jsonify(data_json), http
+
+#Esto es para que flask encuentre las rutas mas facil
+@usuario_bp.route('/register', methods=['GET'])
+def mostrar_registro():
+    return render_template("register.html")

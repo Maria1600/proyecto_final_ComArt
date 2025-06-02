@@ -1,4 +1,7 @@
+from datetime import datetime
 from Repositorios.UsuarioRepo import UsuarioRepositorio
+from Servicios.ArtistaServicio import ArtistaServicio
+
 
 class UsuarioServicio:
 
@@ -11,8 +14,16 @@ class UsuarioServicio:
         return UsuarioRepositorio.obtener_por_id(user_id)
 
     @staticmethod
-    def crear_usuario(correo, username ,contrasenia, fecha):
-        return UsuarioRepositorio.crear(correo, username ,contrasenia, fecha)
+    def crear_usuario(correo, username ,contrasenia, fecha, es_artista=False):
+        if isinstance(fecha, str):
+            fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+        usuario = UsuarioRepositorio.crear(correo, username, contrasenia, fecha)
+
+        # Si es artista lo creamos
+        if es_artista:
+            ArtistaServicio.crear_artista(usuario.id_usuario)
+
+        return usuario
 
     @staticmethod
     def eliminar_usuario(user_id):

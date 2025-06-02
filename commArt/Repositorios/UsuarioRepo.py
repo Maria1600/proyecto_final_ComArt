@@ -1,5 +1,5 @@
 from sqlalchemy.orm import joinedload
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from Modelos.Usuario import Usuario
 from extensiones import db
@@ -18,10 +18,11 @@ class UsuarioRepositorio:
 
     @staticmethod
     def crear(correo, username ,contrasenia, fecha):
+        hash_pass = generate_password_hash(contrasenia)
         usuario = Usuario(
             correo=correo,
             username=username,
-            contrasenia=contrasenia,
+            contrasenia=hash_pass,
             fecha_nacimiento=fecha,
             activo = 1
         )

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/registroStyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registerStyle.css') }}">
 </head>
 <body>
 <div class="contenedor-registro">
@@ -12,15 +12,19 @@
 
         <label for="correo">Correo:</label>
         <input type="email" id="correo" name="correo" required>
+        <small class="error-msg" id="error-correo"></small>
 
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
+        <small class="error-msg" id="error-username"></small>
 
         <label for="contrasenia">Contraseña:</label>
         <input type="password" id="contrasenia" name="contrasenia" required>
+        <small class="error-msg" id="error-contrasenia"></small>
 
         <label for="fecha_nacimiento">Fecha de nacimiento:</label>
         <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+        <small class="error-msg" id="error-fecha"></small>
 
         <div class="checkbox-container">
             <input type="checkbox" id="artista" name="artista">
@@ -31,4 +35,84 @@
     </form>
 </div>
 </body>
+
+<script>
+    document.querySelector('.formulario-registro').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        limpiarErrores();
+
+        const correo = document.getElementById('correo').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const contrasenia = document.getElementById('contrasenia').value;
+        const fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
+        const artista = document.getElementById('artista').checked;
+
+        let hayError = false;
+
+        if (!correo.includes("@")) {
+            mostrarError("error-correo", "Correo inválido. Debe contener '@'");
+            hayError = true;
+        }
+
+        if (username.length > 50) {
+            mostrarError("error-username", "Username demasiado largo (máx. 50 caracteres)");
+            hayError = true;
+        }
+
+        if (contrasenia.length > 50) {
+            mostrarError("error-contrasenia", "Contraseña demasiado larga (máx. 50 caracteres)");
+            hayError = true;
+        }
+
+        if (!isValidDate(fecha_nacimiento)) {
+            mostrarError("error-fecha", "Fecha inválida. Use el formato YYYY-MM-DD");
+            hayError = true;
+        }
+
+        if (hayError) return;
+
+        // Enviar petición si todo está correcto
+        const response = await fetch('/usuarios', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                correo,
+                username,
+                contrasenia,
+                fecha_nacimiento,
+                artista
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            window.location.href = "/inicio";
+        } else {
+            alert("Error: " + data.error);
+        }
+    });
+
+    function mostrarError(idElemento, mensaje) {
+        document.getElementById(idElemento).textContent = mensaje;
+    }
+
+    function limpiarErrores() {
+        const errores = document.querySelectorAll('.error-msg');
+        errores.forEach(el => el.textContent = "");
+    }
+
+    function isValidDate(fecha) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(fecha)) return false;
+        const date = new Date(fecha);
+        const [y, m, d] = fecha.split('-').map(Number);
+        return (
+            date.getFullYear() === y &&
+            date.getMonth() + 1 === m &&
+            date.getDate() === d
+        );
+    }
+</script>
+
 </html>
