@@ -8,6 +8,6 @@ artista_categoria = db.Table('categoria_artista',
 
 # Tabla intermedia seguir
 seguir = db.Table('seguir',
-                  db.Column('seguidor_id', db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True),
-                  db.Column('seguido_id', db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True)
+                  db.Column('id_seguidor', db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True),
+                  db.Column('id_seguido', db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True)
                   )

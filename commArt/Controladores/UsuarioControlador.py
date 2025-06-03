@@ -222,8 +222,3 @@ def login_user():
         http = 400
 
     return jsonify(data_json), http
-
-#Esto es para que flask encuentre las rutas mas facil
-@usuario_bp.route('/register', methods=['GET'])
-def mostrar_registro():
-    return render_template("register.html")

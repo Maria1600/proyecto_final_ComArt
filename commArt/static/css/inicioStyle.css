@@ -33,6 +33,10 @@ body {
   margin-right: 0.5rem;
 }
 
+.icono-perfil {
+    color: #10cdaf;
+}
+
 .titulo-app {
   font-size: 1.5rem;
   font-weight: bold;
@@ -107,6 +111,26 @@ body {
 
 .dropdown-menu a:last-child {
   color: #f8536b;
+}
+
+/* === Boton === */
+.crear-comision-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 30px 0 30px;
+}
+
+.crear-comision-btn {
+    background: linear-gradient(to right, #53bef8, #5b71f0);
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
 }
 
 /* === Muro de publicaciones === */
@@ -232,3 +256,4 @@ body {
   background: #d0d5ff;
   border-radius: 10px;
 }
+

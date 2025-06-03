@@ -18,8 +18,8 @@ class Usuario(db.Model):
     seguidos = db.relationship(
         'Usuario',
         secondary=seguir,
-        primaryjoin=(seguir.c.seguidor_id == id_usuario),
-        secondaryjoin=(seguir.c.seguido_id == id_usuario),
+        primaryjoin=(seguir.c.id_seguidor == id_usuario),
+        secondaryjoin=(seguir.c.id_seguido == id_usuario),
         backref='seguidores'#hace lo mismo del mapeo pero a la inversa y con este nombre
     )#Los joins son consultas para poder sacar las lista de seguidos y seguidores comparando ids
     comisiones_solicitadas = db.relationship("Comision", back_populates="cliente")

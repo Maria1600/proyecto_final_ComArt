@@ -1,4 +1,8 @@
 from flask import Flask, render_template
+from Controladores.ComisionControlador import comision_bp
+from Controladores.MensajeControlador import mensaje_bp
+from Controladores.PublicacionControlador import publicacion_bp
+from Controladores.RutasVistaControlador import vista_bp
 from extensiones import db  # cambiamos esto para no generar errores de import circulares
 from Controladores.ArtistaControlador import artista_bp
 import Modelos  # Esto ejecuta __init__.py de Modelos y carga TODITO
@@ -16,11 +20,12 @@ db.init_app(app)
 
 # Registrar Blueprints
 app.register_blueprint(categoria_bp)
-#app.register_blueprint(publicacion_bp)
-#app.register_blueprint(mensaje_bp)
-#app.register_blueprint(comision_bp)
+app.register_blueprint(publicacion_bp)
+app.register_blueprint(mensaje_bp)
+app.register_blueprint(comision_bp)
 app.register_blueprint(artista_bp)
 app.register_blueprint(usuario_bp)
+app.register_blueprint(vista_bp)
 
 # Inicialización de BD si no existe
 with app.app_context():
@@ -28,7 +33,7 @@ with app.app_context():
         from init_db import init_db
         from datos_iniciales import insertar_datos  # Importamos los insert
         init_db()               # Crea la estructura con SQL
-        insertar_datos()      # Despues de crear la bd y su estructura insertamos datos
+        insertar_datos(app)      # Despues de crear la bd y su estructura insertamos datos
 
 # Ruta principal la que aparece justo al compilar
 @app.route('/')
@@ -43,6 +48,10 @@ def login():
 @app.route('/register')
 def register():
     return render_template('register.html')
+
+@app.route('/inicio')
+def inicio():
+    return render_template('inicio.html')
 
 # Ejecutar
 if __name__ == '__main__':

@@ -1,6 +1,5 @@
 from Modelos.Comision import Comision
 from Modelos.Mensaje import Mensaje
-from app import app
 from extensiones import db
 from Modelos.Usuario import Usuario
 from Modelos.Artista import Artista
@@ -9,7 +8,7 @@ from Modelos.Publicacion import Publicacion
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 
-def insertar_datos():
+def insertar_datos(app):
     with app.app_context():
         # Verificamos si ya existen usuarios (Comprueba si ya hay datos)
         if Usuario.query.first():
@@ -101,7 +100,7 @@ def insertar_datos():
         com1 = Comision(
             descripcion_com="Holaa buenasss hace poco estuve de visita en grecia y los monumentos de alli me dejaron sin palabras. \n¿Sería posible si me hicieras un dibujo de un paisaje romano? me da igual como sea lo dejo a tu eleccion. \nSimplemente quería algo así para colgarlo en mi sala de estar. Gracias!!",
             dibujo="ruta/paisaje_griego.png",
-            estado="Acabada",
+            estado="Terminada",
             tipo="Individual",
             id_cliente_com=u2.id_usuario,
             id_artista_com=a1.id_artista

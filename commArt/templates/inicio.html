@@ -21,7 +21,7 @@
     </div>
 
     <div class="perfil-icono" onclick="toggleDropdown()">
-        <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
+        <i class="fa-solid fa-user avatar icono-perfil"></i>
         <div id="dropdown" class="dropdown-menu hidden">
             <a href="{{ url_for('perfil') }}">Ver perfil</a>
             <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
@@ -29,36 +29,12 @@
     </div>
 </nav>
 
-<div class="muro">
-    {% for pub in publicaciones %}
-    <div class="publicacion">
-        <div class="info-usuario">
-            <img src="{{ url_for('static', filename='img/user-icon.png') }}" class="avatar" alt="Avatar" onclick="location.href='{{ url_for('perfil') }}'">
-            <div>
-                <div onclick="location.href='{{ url_for('perfil') }}'" ><strong>{{ pub.usuario }}</strong></div>
-                <div>{{ pub.fecha }}</div>
-            </div>
-        </div>
-        <div class="contenido-publicacion">
-            <img src="{{ pub.imagen }}" alt="Imagen subida">
-            <div class="descripcion">{{ pub.descripcion }}</div>
-        </div>
-        <div class="likes">
-            <button class="like-btn {% if pub.dio_like %}liked{% endif %}">
-                <i class="fa {% if pub.dio_like %}fa-thumbs-up{% else %}fa-thumbs-o-up{% endif %}"></i>
-            </button>
-            <span>{{ pub.likes }}</span>
-        </div>
-    </div>
-    {% endfor %}
+<div class="crear-comision-container">
+    <button class="crear-comision-btn" onclick="location.href='{{ url_for('crear_comision') }}'">+ Crear comisión global</button>
+</div>
 
-    {% for com in comisiones_globales %}
-    <div class="comision-global">
-        <div class="etiqueta">Comisión global</div>
-        <div class="descripcion">{{ com.texto }}</div>
-        <button class="boton-comision">Apuntarse</button>
-    </div>
-    {% endfor %}
+<div class="muro">
+    <!-- Aqui se irán generando automaticamente los apartados gracias al script -->
 </div>
 
 <!-- Footer -->
@@ -70,4 +46,73 @@
 </footer>
 
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const contenedor = document.getElementById("muro-contenido");
+
+        // Fetch de publicaciones y comisiones para que vayan generandose aleatoriamente
+        const [pubsRes, comsRes] = await Promise.all([
+            fetch("/publicaciones"),
+            fetch("/comisiones/globales")
+        ]);
+
+        const publicaciones = await pubsRes.json();
+        const comisiones = await comsRes.json();
+
+        // Añadimos un tipo a cada elemento para diferenciarlos
+        const datos = [
+            ...publicaciones.map(p => ({ tipo: "publicacion", ...p })),
+            ...comisiones.map(c => ({ tipo: "comision", ...c }))
+        ];
+
+        // Mezclar aleatoriamente
+        datos.sort(() => Math.random() - 0.5);
+
+        // Renderizado
+        for (const item of datos) {
+            const div = document.createElement("div");
+
+            if (item.tipo === "publicacion") {
+                div.classList.add("publicacion");
+                div.innerHTML = `
+                    <div class="info-usuario">
+                        <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
+                        <div>
+                            <div onclick="location.href='/perfil'"><strong>${item.artista}</strong></div>
+                            <div>${item.fecha_publicacion}</div>
+                        </div>
+                    </div>
+                    <div class="contenido-publicacion">
+                        <img src="/static/${item.dibujo}" alt="Imagen subida">
+                        <div class="descripcion">${item.descripcion_publicacion}</div>
+                    </div>
+                    <div class="likes">
+                        <button class="like-btn">
+                            <i class="fa fa-thumbs-up"></i>
+                        </button>
+                        <span>${item.num_likes}</span>
+                    </div>
+                `;
+            } else if (item.tipo === "comision") {
+                div.classList.add("comision-global");
+                div.innerHTML = `
+                    <div class="info-usuario">
+                        <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
+                        <div>
+                            <div onclick="location.href='/perfil'"><strong>${item.cliente}</strong></div>
+                            <div>${item.fecha_creacion}</div>
+                        </div>
+                    </div>
+                    <div class="etiqueta">Comisión global</div>
+                    <div class="descripcion">${item.descripcion_com}</div>
+                    <button class="boton-comision">Apuntarse</button>
+                `;
+            }
+
+            contenedor.appendChild(div);
+        }
+    });
+</script>
+
 </html>
