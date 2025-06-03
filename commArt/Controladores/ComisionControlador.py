@@ -63,6 +63,8 @@ def obtener_comision_por_tipo_sin_asignar():
         for c in comision
     ]
 
+    print(">> Comisiones globales devueltas:", data)
+
     return jsonify(data), 200
 
 @comision_bp.route('/comisiones', methods=['POST'])

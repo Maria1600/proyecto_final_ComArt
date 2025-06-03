@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request
 from Servicios.UsuarioServicio import UsuarioServicio
 
 #Blueprint

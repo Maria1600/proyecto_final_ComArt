@@ -11,7 +11,7 @@
 
 <!-- Navbar -->
 <nav class="nav">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <span class="titulo-app">ComArt</span>
     </div>
@@ -21,33 +21,41 @@
     </div>
 
     <div class="perfil-icono" onclick="toggleDropdown()">
-        <i class="fa-solid fa-user avatar icono-perfil"></i>
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('vista_bp.login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
 
 <div class="crear-comision-container">
-    <button class="crear-comision-btn" onclick="location.href='{{ url_for('crear_comision') }}'">+ Crear comisión global</button>
+    <button class="crear-comision-btn" onclick="location.href='{{ url_for('vista_bp.crear_comision') }}'">+ Crear comisión global</button>
 </div>
 
-<div class="muro">
+<div id="muro-contenido" class="muro">
     <!-- Aqui se irán generando automaticamente los apartados gracias al script -->
 </div>
 
 <!-- Footer -->
 <footer class="footer">
-    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
-    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
-    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer activo">Inicio</button>
+    <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil') }}'" class="boton-footer">Perfil</button>
 </footer>
 
 </body>
 
 <script>
+    function formatearFecha(fechaStr) {
+      const fecha = new Date(fechaStr);
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const año = fecha.getFullYear();
+      return `${dia}/${mes}/${año}`;
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
         const contenedor = document.getElementById("muro-contenido");
 
@@ -62,8 +70,8 @@
 
         // Añadimos un tipo a cada elemento para diferenciarlos
         const datos = [
-            ...publicaciones.map(p => ({ tipo: "publicacion", ...p })),
-            ...comisiones.map(c => ({ tipo: "comision", ...c }))
+            ...publicaciones.map(p => ({ tipe: "publicacion", ...p })),
+            ...comisiones.map(c => ({ tipe: "comision", ...c }))
         ];
 
         // Mezclar aleatoriamente
@@ -72,40 +80,50 @@
         // Renderizado
         for (const item of datos) {
             const div = document.createElement("div");
-
-            if (item.tipo === "publicacion") {
+            console.log("Rendering item:", item);
+            if (item.tipe === "publicacion") {
                 div.classList.add("publicacion");
+                const tieneDescripcion = item.descripcion && item.descripcion.trim() !== "";
+
                 div.innerHTML = `
-                    <div class="info-usuario">
+                  <div class="info-usuario">
+                    <div class="avatar-circulo">
                         <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
-                        <div>
-                            <div onclick="location.href='/perfil'"><strong>${item.artista}</strong></div>
-                            <div>${item.fecha_publicacion}</div>
-                        </div>
                     </div>
-                    <div class="contenido-publicacion">
-                        <img src="/static/${item.dibujo}" alt="Imagen subida">
-                        <div class="descripcion">${item.descripcion_publicacion}</div>
+                    <div>
+                      <div onclick="location.href='/perfil'"><strong>${item.artista}</strong></div>
+                      <div>${formatearFecha(item.fecha_publicacion)}</div>
                     </div>
-                    <div class="likes">
-                        <button class="like-btn">
-                            <i class="fa fa-thumbs-up"></i>
+                  </div>
+
+                  <div class="cuerpo-publicacion">
+                    <img src="/static/${item.dibujo}" alt="Imagen subida">
+                    <div class="lado-derecho">
+                      <div class="descripcion">${item.descripcion}</div>
+                      <div class="likes">
+                        <button class="like-btn" data-id="${item.id_publicacion}">
+                          <i class="fa fa-thumbs-up"></i>
                         </button>
                         <span>${item.num_likes}</span>
+                      </div>
                     </div>
+                  </div>
                 `;
-            } else if (item.tipo === "comision") {
+
+            } else if (item.tipe === "comision") {
                 div.classList.add("comision-global");
                 div.innerHTML = `
+                    <div class="etiqueta">Comisión global</div>
                     <div class="info-usuario">
-                        <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
+                        <div class="avatar-circulo">
+                            <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
+                        </div>
                         <div>
                             <div onclick="location.href='/perfil'"><strong>${item.cliente}</strong></div>
-                            <div>${item.fecha_creacion}</div>
+                            <div>${formatearFecha(item.fecha_creacion)}</div>
                         </div>
                     </div>
-                    <div class="etiqueta">Comisión global</div>
-                    <div class="descripcion">${item.descripcion_com}</div>
+                    <div class="descripcion">${item.descripcion || "Sin descripción"}</div>
                     <button class="boton-comision">Apuntarse</button>
                 `;
             }
@@ -113,6 +131,40 @@
             contenedor.appendChild(div);
         }
     });
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener("click", async (e) => {
+      if (e.target.closest(".like-btn")) {
+        const btn = e.target.closest(".like-btn");
+        const id = btn.getAttribute("data-id");
+        const countSpan = btn.nextElementSibling;
+
+        try {
+          const response = await fetch(`/publicaciones/${id}/like`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.num_likes !== undefined) {
+            btn.classList.add("liked");
+            countSpan.textContent = data.num_likes;
+          } else {
+            console.error("Error del servidor:", data.error);
+          }
+        } catch (error) {
+          console.error("Error de red al dar like:", error);
+        }
+      }
+    });
+
 </script>
 
 </html>

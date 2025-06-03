@@ -1,3 +1,4 @@
+from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 
 from extensiones import db
@@ -15,9 +16,13 @@ class ComisionRepositorio:
 
     @staticmethod
     def obtener_global_sin_asigar():
-        #Se utilizan varios filtros para que una vez pase uno de los filtros y se hayan recopilado
-        # las consultas globales que ya de ahi saque las que no tienen artista
-        return Comision.query.filter_by(tipo='Global').filter(Comision.id_artista_com is None).all()
+        return Comision.query.filter(
+            and_(
+                Comision.tipo == 'Global',
+                Comision.id_artista_com == None
+            )
+        ).all()
+
 
     @staticmethod
     def crear(descripcion,estado,fecha,tipo,id_cliente,id_artista):
