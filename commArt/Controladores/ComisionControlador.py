@@ -77,7 +77,9 @@ def crear_comision():
     id_cliente = data.get("id_cliente")
     id_artista = data.get("id_artista")
 
-    if descripcion and fecha and estado and tipo and id_cliente and id_artista:
+    print("DATOS RECIBIDOS:", data)
+
+    if descripcion and fecha and estado and tipo and id_cliente:
         estado_valido = estado in ['En espera']
         tipo_valido = tipo in ['Global', 'Individual']
 
@@ -89,7 +91,7 @@ def crear_comision():
                 "estado": nueva.estado,
                 "fecha_creacion": nueva.fecha_creacion,
                 "tipo": nueva.tipo,
-                "artista": nueva.artista.usuario.username,
+                "artista": nueva.artista.usuario.username if nueva.artista else None,
                 "cliente": nueva.cliente.username
             }
             http = 201

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from Repositorios.ComisionRepo import ComisionRepositorio
 
 class ComisionServicio:
@@ -16,7 +18,8 @@ class ComisionServicio:
 
     @staticmethod
     def crear_comision(descripcion,estado,fecha,tipo,id_cliente,id_artista):
-        return ComisionRepositorio.crear(descripcion,estado,fecha,tipo,id_cliente,id_artista)
+        fecha_convertida = datetime.strptime(fecha, "%Y-%m-%d").date()
+        return ComisionRepositorio.crear(descripcion,estado,fecha_convertida,tipo,id_cliente,id_artista)
 
     @staticmethod
     def eliminar_comision(comision_id):

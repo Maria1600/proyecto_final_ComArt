@@ -35,7 +35,7 @@
     <div class="modal-header">
         <h2 class="modal-titulo">
             {% if es_global %}
-            ABRIR COMISIÓN / GLOBAL
+            ABRIR COMISIÓN GLOBAL
             {% else %}
             ABRIR COMISIÓN
             {% endif %}
@@ -45,20 +45,29 @@
         </button>
     </div>
 
-    <form id="form-comision"
-          data-tipo="{{ 'Global' if es_global else 'Individual' }}"
-          data-id-artista="{{ id_artista if not es_global else '' }}">
-        <label for="descripcion">Escribe aquí tu pedido detalladamente:</label>
-        <textarea id="descripcion" name="descripcion" rows="6" required></textarea>
-        <div id="error-descripcion" class="error-msg"></div>
-        <div class="boton-publicar-container">
-            <button type="submit" class="boton-primario" >Crear comisión</button>
-        </div>
-    </form>
+    <div class="modal-contenido">
+        <form id="form-comision"
+              data-tipo="{{ 'Global' if es_global else 'Individual' }}"
+              data-id-cliente="{{ id_cliente }}"
+              data-id-artista="{{ id_artista if not es_global else '' }}">
+            <label for="descripcion">Escribe aquí tu pedido detalladamente:</label>
+            <textarea id="descripcion" name="descripcion" rows="6" required></textarea>
+            <div id="error-descripcion" class="error-msg"></div>
+            <div class="boton-publicar-container">
+                <button type="submit" class="boton-primario" >Crear comisión</button>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 
 <script>
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
     document.getElementById('form-comision').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -88,7 +97,7 @@
         };
 
         try {
-            const response = await fetch("{{ url_for('crear_comision') }}", {
+            const response = await fetch("/comisiones", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
