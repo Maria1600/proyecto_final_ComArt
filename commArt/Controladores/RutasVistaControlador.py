@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session, redirect, url_for
 
 #Esto es para que flask encuentre las rutas mas facil
 vista_bp = Blueprint('vista_bp', __name__)
@@ -15,9 +15,21 @@ def login():
 def mostrar_registro():
     return render_template("register.html")
 
-@vista_bp.route('/crear_comision')
-def crear_comision():
-    return "<h1>crear_comision en construcción</h1>"
+@vista_bp.route('/crear_comision', defaults={'id_artista': None})
+@vista_bp.route('/abrir_comision/<int:id_artista>')
+def crear_comision(id_artista):
+    es_global = id_artista is None
+    id_cliente = session.get("id_usuario")
+
+    if not id_cliente:
+        return redirect(url_for('login'))  # Por seguridad, si no hay sesión
+
+    return render_template(
+        "crear_comision.html",
+        es_global=es_global,
+        id_artista=id_artista,
+        id_cliente=id_cliente
+    )
 
 @vista_bp.route('/comisiones')
 def comisiones():

@@ -1,3 +1,5 @@
+import secrets
+
 from flask import Flask, render_template
 from Controladores.ComisionControlador import comision_bp
 from Controladores.MensajeControlador import mensaje_bp
@@ -13,6 +15,8 @@ import os
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)
+#Esto se hace para tener una clave aleatoria para poder utilizar session de manera segura
 app.config.from_object(Config)
 
 # Asociamos la app con SQLAlchemy
@@ -52,6 +56,10 @@ def register():
 @app.route('/inicio')
 def inicio():
     return render_template('inicio.html')
+
+@app.route('/crear_comision')
+def crear_comision():
+    return render_template('crear_comision.html')
 
 # Ejecutar
 if __name__ == '__main__':

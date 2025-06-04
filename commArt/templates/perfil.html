@@ -150,7 +150,7 @@
             {% if es_logado %}
             <a href="/crear_publicacion" class="boton-gradiente">+ Crear publicación</a>
             {% else %}
-            <a href="/abrir_comision/{{ usuario.id }}" class="boton-gradiente">+ Abrir comisión</a>
+            <a href="{{ url_for('vista_bp.crear_comision', id_artista=usuario.id) }}" class="boton-gradiente">+ Abrir comisión</a>
             {% endif %}
         </div>
 

@@ -24,7 +24,7 @@
         <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
             <a href="{{ url_for('vista_bp.perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('vista_bp.login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -113,7 +113,7 @@
             } else if (item.tipe === "comision") {
                 div.classList.add("comision-global");
                 div.innerHTML = `
-                    <div class="etiqueta">Comisión global</div>
+                    <div class="etiqueta">COMISIÓN GLOBAL</div>
                     <div class="info-usuario">
                         <div class="avatar-circulo">
                             <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>

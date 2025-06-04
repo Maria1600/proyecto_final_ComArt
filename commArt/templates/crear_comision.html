@@ -10,20 +10,22 @@
 <!-- Fondo con blur -->
 <div class="fondo-oscuro"></div>
 
-<!-- NAV -->
+<!-- Navbar -->
 <nav class="nav">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <span class="titulo-app">ComArt</span>
     </div>
+
     <div class="search-container">
         <input type="text" placeholder="Búsqueda">
     </div>
+
     <div class="perfil-icono" onclick="toggleDropdown()">
-        <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -38,18 +40,74 @@
             ABRIR COMISIÓN
             {% endif %}
         </h2>
-        <button class="cerrar-modal" onclick="location.href='{{ url_for('perfil') }}'">
+        <button class="cerrar-modal" onclick="location.href=document.referrer">
             <i class="fa fa-times"></i>
         </button>
     </div>
 
-    <form action="{{ url_for('crear_comision') }}" method="post">
+    <form id="form-comision"
+          data-tipo="{{ 'Global' if es_global else 'Individual' }}"
+          data-id-artista="{{ id_artista if not es_global else '' }}">
         <label for="descripcion">Escribe aquí tu pedido detalladamente:</label>
         <textarea id="descripcion" name="descripcion" rows="6" required></textarea>
+        <div id="error-descripcion" class="error-msg"></div>
         <div class="boton-publicar-container">
-            <button type="submit" class="boton-primario" onclick="location.href='{{ url_for('perfil') }}'" >Crear comisión</button>
+            <button type="submit" class="boton-primario" >Crear comisión</button>
         </div>
     </form>
 </div>
 </body>
+
+<script>
+    document.getElementById('form-comision').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const descripcion = document.getElementById('descripcion').value.trim();
+        const errorDiv = document.getElementById('error-descripcion');
+
+        if (!descripcion) {
+            errorDiv.textContent = "La descripción no puede estar vacía.";
+            return;
+        } else {
+            errorDiv.textContent = "";
+        }
+
+        const tipo = form.dataset.tipo;
+        const idCliente = parseInt(form.dataset.idCliente);
+        const idArtista = form.dataset.idArtista || null;
+        const fecha = new Date().toISOString().split('T')[0];
+
+        const payload = {
+            descripcion: descripcion,
+            fecha_creacion: fecha,
+            estado: "En espera",
+            tipo: tipo,
+            id_cliente: idCliente,
+            id_artista: tipo === "Global" ? null : parseInt(idArtista)
+        };
+
+        try {
+            const response = await fetch("{{ url_for('crear_comision') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                window.location.href = document.referrer || "{{ url_for('inicio') }}";
+            } else {
+                errorDiv.textContent = data.error || "Error al crear la comisión.";
+            }
+        } catch (err) {
+            console.error("Error en el envío:", err);
+            errorDiv.textContent = "Ocurrió un error inesperado.";
+        }
+    });
+</script>
+
 </html>

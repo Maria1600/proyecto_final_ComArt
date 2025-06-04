@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session, redirect, url_for
 from Servicios.UsuarioServicio import UsuarioServicio
 
 #Blueprint
@@ -208,6 +208,10 @@ def login_user():
     if correo and contrasenia:
         usuario = UsuarioServicio.verificar_login(correo, contrasenia)
         if usuario:
+            #Guarda el usuario en la sesión para saber quien es el user logeado en cualquier momento
+            session['id_usuario'] = usuario.id_usuario
+            session['username'] = usuario.username
+
             data_json = {
                 "id_usuario": usuario.id_usuario,
                 "correo": usuario.correo,
@@ -222,3 +226,8 @@ def login_user():
         http = 400
 
     return jsonify(data_json), http
+
+@usuario_bp.route('/logout')
+def logout():
+    session.clear()  # Elimina todos los datos de sesión
+    return redirect(url_for('vista_bp.login'))  # Redirige al login
