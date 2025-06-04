@@ -3,6 +3,7 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom right, #e6f3ff, #ffffff);
+  background-attachment: fixed;
 }
 
 .hidden {
@@ -180,13 +181,13 @@ body {
 
 /* === Cajas de comisiones === */
 .comision-caja {
+    background-color: white; /* Antes rgba(255, 255, 255, 0.25) */
+    border-radius: 16px;
+    padding: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.25);
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* === Icons === */
@@ -195,8 +196,7 @@ body {
     margin-right: 15px;
 }
 
-.icono-carpeta,
-.icono-sobre {
+.icono-generico {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -204,19 +204,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
-}
-
-.icono-carpeta::before {
-    content: "\1F4C1"; /* Carpeta (puedes sustituir por SVG o clase externa) */
-    font-size: 20px;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+                rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
     color: white;
-}
-
-.icono-sobre::before {
-    content: "\2709"; /* Sobre (puedes sustituir por SVG o clase externa) */
     font-size: 20px;
-    color: white;
 }
 
 /* === Contenido comision === */
@@ -265,24 +256,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 18px;
-}
-
-.btn-aceptar span,
-.btn-rechazar span {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.icono-tick {
-    background-image: url('data:image/svg+xml,<svg fill="%2327d3b9" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.285 2L9 13.567l-5.285-5.285L2 10.997l7 7L22 4.713z"/></svg>');
-}
-
-.icono-x {
-    background-image: url('data:image/svg+xml,<svg fill="%23f8536b" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12"/></svg>');
+    font-size: 25px;
 }
 
 /* === Scroll === */

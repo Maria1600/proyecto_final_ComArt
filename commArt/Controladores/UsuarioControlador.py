@@ -53,6 +53,12 @@ def crear_usuario():
 
     if correo and username and contrasenia and fecha:
         nueva = UsuarioServicio.crear_usuario(correo, username ,contrasenia, fecha, es_artista)
+
+        #Como solo se utiliza para el register
+        #Guarda el usuario en la sesión para saber quien es el user logeado en cualquier momento
+        session['id_usuario'] = nueva.id_usuario
+        session['username'] = nueva.username
+
         data_json = {
             "id_usuario": nueva.id_usuario,
             "es_artista": 1 if nueva.artista else 0,

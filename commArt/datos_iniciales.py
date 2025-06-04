@@ -5,7 +5,7 @@ from Modelos.Usuario import Usuario
 from Modelos.Artista import Artista
 from Modelos.Categoria import Categoria
 from Modelos.Publicacion import Publicacion
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug.security import generate_password_hash
 
 def insertar_datos(app):
@@ -68,21 +68,24 @@ def insertar_datos(app):
 
         # ---------- Crear Publicaciones ----------
         pub1 = Publicacion(
-            dibujo="ruta/paisaje.png",
+            dibujo="img/paisaje.jpg",
             descripcion_publicacion="Hola mundo! Esta es mi primera publicación espero que le deis mucho amor <3\n\nMe ha llevado 3 días acabar esta pintura pero ha merecido totalmente la pena.\nMe encantó el resultado!!",
             num_likes=2,
+            fecha_publicacion=date(2020,12,3),
             id_artista_publicacion=a1.id_artista
         )
         pub2 = Publicacion(
-            dibujo="ruta/gato.png",
+            dibujo="img/pelusa.jpg",
             descripcion_publicacion="Uff primera publicación eh. \nUna mañana me levanté y vi a mi gato mirando por la ventana, como si estuviera teniendo flashbacks de Vietnam, con esos ojos azules tan bonitos que te miran hasta el alma. \nAsí que pensé en dibujarlo, y la verdad es que me encantó el resultado. \nEs un dibujo algo viejo, pero creo que es perfecto como carta de presentación.",
             num_likes=3,
+            fecha_publicacion=date(2023,8,12),
             id_artista_publicacion=a2.id_artista
         )
         pub3 = Publicacion(
-            dibujo="ruta/chibi.png",
+            dibujo="img/chibi.png",
             descripcion_publicacion="Hooolaaa :D. Hoy me levanté con ganas de experimentar, así que, gente, os presento mi primer chibi. \n¡Quedó súper mono, eee! Lo añadiré como parte de mis tags, por si acaso... a lo mejor me sale mejor de lo que esperaba.",
             num_likes=1,
+            fecha_publicacion=date(2024,11,21),
             id_artista_publicacion=a2.id_artista
         )
         db.session.add_all([pub1, pub2, pub3])
@@ -99,9 +102,10 @@ def insertar_datos(app):
         # ---------- Comisiones ----------
         com1 = Comision(
             descripcion_com="Holaa buenasss hace poco estuve de visita en grecia y los monumentos de alli me dejaron sin palabras. \n¿Sería posible si me hicieras un dibujo de un paisaje romano? me da igual como sea lo dejo a tu eleccion. \nSimplemente quería algo así para colgarlo en mi sala de estar. Gracias!!",
-            dibujo="ruta/paisaje_griego.png",
+            dibujo="img/paisaje_griego.jpg",
             estado="Terminada",
             tipo="Individual",
+            fecha_creacion=date(2021,7,17),
             id_cliente_com=u2.id_usuario,
             id_artista_com=a1.id_artista
         )
@@ -110,6 +114,7 @@ def insertar_datos(app):
             dibujo=None,
             estado="En espera",
             tipo="Individual",
+            fecha_creacion=date(2025,5,19),
             id_cliente_com=u1.id_usuario,
             id_artista_com=a2.id_artista
         )
@@ -118,6 +123,7 @@ def insertar_datos(app):
             dibujo=None,
             estado="En espera",
             tipo="Individual",
+            fecha_creacion=date(2025,6,1),
             id_cliente_com=u4.id_usuario,
             id_artista_com=a2.id_artista
         )
@@ -126,6 +132,7 @@ def insertar_datos(app):
             dibujo=None,
             estado="En espera",
             tipo="Global",
+            fecha_creacion=date(2025,6,3),
             id_cliente_com=u2.id_usuario,
             id_artista_com=None
         )
