@@ -4,7 +4,7 @@ from Servicios.ComisionServicio import ComisionServicio
 #Blueprint
 comision_bp = Blueprint('comision_bp', __name__)
 
-@comision_bp.route('/comisiones', methods=['GET'])
+@comision_bp.route('/api/comisiones', methods=['GET'])
 def obtener_todas():
     comision = ComisionServicio.listar_comision()
 
@@ -25,7 +25,7 @@ def obtener_todas():
 
     return jsonify(data), 200
 
-@comision_bp.route('/comisiones/<int:id_comision>', methods=['GET'])
+@comision_bp.route('/api/comisiones/<int:id_comision>', methods=['GET'])
 def obtener_comision(id_comision):
     comision = ComisionServicio.buscar_comision(id_comision)
 
@@ -195,12 +195,13 @@ def actualizar_estado(id_comision):
 
             if comision:
                 data_json = {
-                    "id_publicacion": comision.id_publicacion,
-                    "descripcion": comision.descripcion_publicacion,
-                    "dibujo": comision.dibujo,
-                    "fecha_publicacion": comision.fecha_publicacion,
-                    "num_likes": comision.num_likes,
-                    "artista": comision.artista.usuario.username
+                    "id_comision": comision.id_com,
+                    "descripcion": comision.descripcion_com,
+                    "estado": comision.estado,
+                    "fecha_creacion": comision.fecha_creacion,
+                    "tipo": comision.tipo,
+                    "artista": comision.artista.usuario.username if comision.artista else None,
+                    "cliente": comision.cliente.username
                 }
                 http = 200
             else:
@@ -257,3 +258,23 @@ def obtener_mensajes(id_comision):
         http = 404
 
     return jsonify(data), http
+
+@comision_bp.route('/comisiones/usuario/<int:id_usuario>', methods=['GET'])
+def obtener_comisiones_usuario(id_usuario):
+    comisiones = ComisionServicio.obtener_comisiones_de_usuario(id_usuario)
+    data = [
+        {
+            "id_comision": c.id_com,
+            "descripcion": c.descripcion_com,
+            "dibujo": c.dibujo,
+            "estado": c.estado,
+            "fecha_creacion": c.fecha_creacion,
+            "tipo": c.tipo,
+            "artista": c.artista.usuario.username if c.artista and c.artista.usuario else None,
+            #Como el artista puede ser null hay que hacer la comprobacion
+            "cliente": c.cliente.username
+        }
+        for c in comisiones
+    ]
+
+    return jsonify(data), 200

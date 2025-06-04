@@ -85,3 +85,10 @@ class ComisionRepositorio:
     def obtener_mensajes(comision_id):
         comision = Comision.query.options(joinedload(Comision.mensajes)).filter_by(id_com=comision_id).first()
         return comision.mensajes if comision else []
+
+    @staticmethod
+    def obtener_comisiones_de_usuario(id_usuario):
+        return Comision.query.filter(
+            (Comision.id_cliente_com == id_usuario) |
+            (Comision.id_artista_com == id_usuario)
+        ).all()

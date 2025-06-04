@@ -44,3 +44,7 @@ class ComisionServicio:
     @staticmethod
     def obtener_mensajes(comision_id):
         return ComisionRepositorio.obtener_mensajes(comision_id)
+
+    @staticmethod
+    def obtener_comisiones_de_usuario(id_usuario):
+        return ComisionRepositorio.obtener_comisiones_de_usuario(id_usuario)

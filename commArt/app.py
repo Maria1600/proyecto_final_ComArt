@@ -61,6 +61,10 @@ def inicio():
 def crear_comision():
     return render_template('crear_comision.html')
 
+@app.route('/comisiones')
+def comisiones():
+    return render_template('comisiones.html')
+
 # Ejecutar
 if __name__ == '__main__':
     app.run(debug=True)

@@ -4,84 +4,154 @@
     <meta charset="UTF-8">
     <title>Comisiones</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/comisionesStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
-        <span class="nombre-app">ComArt</span>
+        <span class="titulo-app">ComArt</span>
     </div>
-    <div class="buscador">
-        <input type="text" placeholder="Buscar...">
+
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda">
     </div>
-    <div class="icono-usuario" onclick="toggleDropdown()">
-        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
 
 <main class="contenedor-comisiones">
     <div class="filtros-comisiones">
-        <button class="filtro-btn {{ 'activo' if filtro == 'espera' else '' }}" onclick="filtrar('En espera')">
-            comisiones en espera
-        </button>
-        <button class="filtro-btn {{ 'activo' if filtro == 'abiertas' else '' }}" onclick="filtrar('Abierta')">
-            comisiones abiertas
-        </button>
-        <button class="filtro-btn {{ 'activo' if filtro == 'acabadas' else '' }}" onclick="filtrar('Acabada')">
-            comisiones acabadas
-        </button>
+        <button id="btn-espera" class="filtro-btn" onclick="aplicarFiltro('espera')">comisiones en espera</button>
+        <button id="btn-abiertas" class="filtro-btn" onclick="aplicarFiltro('abiertas')">comisiones abiertas</button>
+        <button id="btn-acabadas" class="filtro-btn" onclick="aplicarFiltro('acabadas')">comisiones acabadas</button>
     </div>
 
-    <div class="lista-comisiones">
-        {% for comision in comisiones %}
-        <div class="comision-caja" onclick="location.href='{{ url_for('detalle_comision') }}'">
-            <div class="comision-icono">
-                {% if comision.tipo == 'solicitud_directa' %}
-                <span class="icono-sobre"></span>
-                {% else %}
-                <span class="icono-carpeta"></span>
-                {% endif %}
-            </div>
-
-            <div class="comision-contenido">
-                <p class="comision-descripcion">
-                    {{ comision.descripcion | truncate(50, True, '...') }}
-                </p>
-                <p class="comision-meta">
-                    creado por {{ comision.creador }} el {{ comision.fecha }}
-                </p>
-            </div>
-
-            <div class="comision-estado-o-acciones">
-                {% if comision.tipo == 'solicitud_directa' and comision.estado == 'espera' %}
-                <div class="acciones-solicitud">
-                    <button class="btn-aceptar" onclick="location.href='{{ url_for('comisiones') }}'" ><span class="icono-tick"></span></button>
-                    <button class="btn-rechazar" onclick="location.href='{{ url_for('comisiones') }}'" ><span class="icono-x"></span></button>
-                </div>
-                {% else %}
-                <span class="estado-comision">
-                                {{ comision.estado.upper() }}
-                            </span>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
+    <div class="lista-comisiones" id="lista-comisiones">
+        <!-- Aquí se inyectarán las comisiones automaticamente -->
     </div>
+
 </main>
 
 <!-- Footer -->
 <footer class="footer">
-    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
-    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer activo">Comisiones</button>
-    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer activo">Comisiones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil') }}'" class="boton-footer">Perfil</button>
 </footer>
+
+<script>
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+    const idUsuario = {{ session['id_usuario'] }};
+    const username = "{{ session['username'] }}";
+    let comisiones = [];
+    let filtroActual = 'espera'; // Se inicia con este filtro por defecto
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch(`/comisiones/usuario/${idUsuario}`);
+            const data = await res.json();
+            comisiones = data;
+            aplicarFiltro(filtroActual); // Mostrar el filtro por defecto
+        } catch (err) {
+            console.error("Error cargando comisiones:", err);
+        }
+    });
+
+    function aplicarFiltro(filtro) {
+        filtroActual = filtro; // Actualizamos el filtro activo
+
+        // Cambiar visualmente el botón activo
+        document.querySelectorAll('.filtro-btn').forEach(btn => btn.classList.remove('activo'));
+        document.getElementById(`btn-${filtro}`).classList.add('activo');
+
+        const lista = document.getElementById('lista-comisiones');
+        lista.innerHTML = '';
+
+        let estadosFiltrados = [];
+        if (filtro === 'espera') estadosFiltrados = ['En espera'];
+        else if (filtro === 'abiertas') estadosFiltrados = ['En proceso', 'Entregada'];
+        else if (filtro === 'acabadas') estadosFiltrados = ['Rechazada', 'Cancelada', 'Terminada'];
+
+        const comFiltradas = comisiones.filter(c => estadosFiltrados.includes(c.estado));
+
+        if (comFiltradas.length === 0) {
+            lista.innerHTML = '<p style="text-align: center; padding: 20px;">No hay comisiones para este estado.</p>';
+            return;
+        }
+
+        comFiltradas.forEach(c => {
+            const caja = document.createElement('div');
+            caja.classList.add('comision-caja');
+            caja.onclick = () => location.href = `/detalle_comision/${c.id_comision}`;
+
+            let icono = c.tipo === 'solicitud_directa'
+                ? '<span class="icono-sobre"></span>'
+                : '<span class="icono-carpeta"></span>';
+
+            let acciones = '';
+            const esAsignadaAlArtistaLogado = c.artista === username;
+            if (c.estado === 'En espera' && esAsignadaAlArtistaLogado) {
+                acciones = `
+                    <div class="acciones-solicitud">
+                        <button class="btn-aceptar" onclick="actualizarEstado(${c.id_comision}, 'En proceso'); event.stopPropagation();"><span class="icono-tick"></span></button>
+                        <button class="btn-rechazar" onclick="actualizarEstado(${c.id_comision}, 'Rechazada'); event.stopPropagation();"><span class="icono-x"></span></button>
+                    </div>
+                `;
+            } else {
+                acciones = `<span class="estado-comision">${c.estado.toUpperCase()}</span>`;
+            }
+
+            caja.innerHTML = `
+                <div class="comision-icono">${icono}</div>
+                <div class="comision-contenido">
+                    <p class="comision-descripcion">${c.descripcion.slice(0, 50)}...</p>
+                    <p class="comision-meta">creado por ${c.cliente} el ${c.fecha_creacion}</p>
+                </div>
+                <div class="comision-estado-o-acciones">${acciones}</div>
+            `;
+
+            caja.onclick = () => location.href = '/detalle_comision/' + c.id_comision;
+            lista.appendChild(caja);
+        });
+    }
+
+    async function actualizarEstado(id, nuevoEstado) {
+        try {
+            const res = await fetch(`/comisiones/${id}/estado`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: nuevoEstado })
+            });
+
+            if (res.ok) {
+                comisiones = comisiones.map(c =>
+                    c.id_comision === id ? { ...c, estado: nuevoEstado } : c
+                );
+                aplicarFiltro(filtroActual); // Refrescar con el filtro actual
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Error al actualizar la comisión');
+            }
+        } catch (err) {
+            console.error("Error al cambiar estado:", err);
+        }
+    }
+</script>
 
 </body>
 </html>
