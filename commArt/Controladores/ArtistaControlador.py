@@ -137,3 +137,19 @@ def obtener_publicaciones(id_artista):
         http = 404
 
     return jsonify(data), http
+
+@artista_bp.route('/artistas/<int:id_artista>/categorias/<int:id_categoria>', methods=['POST'])
+def asignar_categoria(id_artista, id_categoria):
+    try:
+        ArtistaServicio.asignar_categoria(id_artista, id_categoria)
+        return jsonify({"mensaje": "Categoría asignada correctamente"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@artista_bp.route('/artistas/<int:id_artista>/categorias/<int:id_categoria>', methods=['DELETE'])
+def eliminar_categoria(id_artista, id_categoria):
+    try:
+        ArtistaServicio.desvincular_categoria(id_artista, id_categoria)
+        return jsonify({"mensaje": "Categoría eliminada correctamente"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

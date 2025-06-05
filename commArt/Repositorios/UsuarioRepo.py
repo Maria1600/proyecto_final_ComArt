@@ -17,6 +17,14 @@ class UsuarioRepositorio:
         return Usuario.query.filter_by(id_usuario=user_id, activo=1).first()
 
     @staticmethod
+    def obtener_por_correo(correo):
+        return Usuario.query.filter_by(correo=correo, activo=1).first()
+
+    @staticmethod
+    def obtener_por_username(username):
+        return Usuario.query.filter_by(username=username, activo=1).first()
+
+    @staticmethod
     def crear(correo, username ,contrasenia, fecha):
         hash_pass = generate_password_hash(contrasenia)
         usuario = Usuario(

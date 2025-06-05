@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Selecciona tus tags</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/seleccionaTagsStyle.css') }}">
+</head>
+<body>
+<div class="tag-selector-container">
+    <h2>Selecciona hasta 3 tags que definan tu arte</h2>
+
+    <select id="selector-categorias">
+        <option value="" disabled selected>Selecciona una categoría</option>
+    </select>
+
+    <div id="tags-seleccionadas" class="tags-contenedor"></div>
+
+    <button id="confirmar-tags" class="btn-confirmar">Continuar</button>
+</div>
+</body>
+
+<script>
+    const idUsuario = {{ session['id_usuario'] }};
+    const seleccionadas = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+
+        const select = document.getElementById("selector-categorias");
+
+        select.addEventListener("mousedown", () => {
+            select.classList.add("open");
+        });
+
+        select.addEventListener("blur", () => {
+            select.classList.remove("open");
+        });
+
+        try {
+            const res = await fetch("/categorias");
+            const categorias = await res.json();
+
+            const selector = document.getElementById("selector-categorias");
+
+            categorias.forEach(cat => {
+                const option = document.createElement("option");
+                option.value = cat.id_categoria;
+                option.textContent = cat.nombre_categoria;
+                selector.appendChild(option);
+            });
+
+            selector.addEventListener("change", () => {
+                const selectedId = parseInt(selector.value);
+                const selectedText = selector.options[selector.selectedIndex].text;
+
+                if (seleccionadas.some(tag => tag.id === selectedId)) return;
+                if (seleccionadas.length >= 3) {
+                    alert("Solo puedes seleccionar hasta 3 tags.");
+                    return;
+                }
+
+                seleccionadas.push({ id: selectedId, nombre: selectedText });
+                renderizarTags();
+            });
+
+        } catch (err) {
+            console.error("Error cargando categorías:", err);
+        }
+    });
+
+    function renderizarTags() {
+        const contenedor = document.getElementById("tags-seleccionadas");
+        contenedor.innerHTML = "";
+
+        seleccionadas.forEach((tag, index) => {
+            const div = document.createElement("div");
+            div.classList.add("tag");
+
+            div.innerHTML = `
+                ${tag.nombre}
+                <span class="eliminar-tag" onclick="eliminarTag(${index})">✕</span>
+            `;
+
+            contenedor.appendChild(div);
+        });
+    }
+
+    function eliminarTag(index) {
+        seleccionadas.splice(index, 1);
+        renderizarTags();
+    }
+
+    document.getElementById("confirmar-tags").addEventListener("click", async () => {
+        if (seleccionadas.length === 0) {
+            alert("Debes seleccionar al menos una categoría.");
+            return;
+        }
+
+        try {
+            for (const tag of seleccionadas) {
+                await fetch(`/artistas/${idUsuario}/categorias/${tag.id}`, {
+                    method: 'POST'
+                });
+            }
+
+            window.location.href = "/inicio";
+        } catch (err) {
+            alert("Error al asignar categorías.");
+            console.error(err);
+        }
+    });
+</script>
+
+</html>

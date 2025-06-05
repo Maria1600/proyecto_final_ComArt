@@ -14,6 +14,14 @@ class UsuarioServicio:
         return UsuarioRepositorio.obtener_por_id(user_id)
 
     @staticmethod
+    def obtener_por_correo(correo):
+        return UsuarioRepositorio.obtener_por_correo(correo)
+
+    @staticmethod
+    def obtener_por_username(username):
+        return UsuarioRepositorio.obtener_por_username(username)
+
+    @staticmethod
     def crear_usuario(correo, username ,contrasenia, fecha, es_artista=False):
         if isinstance(fecha, str):
             fecha = datetime.strptime(fecha, "%Y-%m-%d").date()

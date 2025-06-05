@@ -29,3 +29,11 @@ class ArtistaServicio:
     @staticmethod
     def obtener_publicaciones(id_artista):
         return ArtistaRepositorio.obtener_publicaciones(id_artista)
+
+    @staticmethod
+    def asignar_categoria(id_artista, id_categoria):
+        return ArtistaRepositorio.asignar_categoria(id_artista, id_categoria)
+
+    @staticmethod
+    def desvincular_categoria(id_artista, id_categoria):
+        return ArtistaRepositorio.desvincular_categoria(id_artista, id_categoria)

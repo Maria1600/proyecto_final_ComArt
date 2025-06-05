@@ -87,9 +87,19 @@
         const data = await response.json();
 
         if (response.ok) {
-            window.location.href = "/inicio";
+            if (es_artista) {
+                window.location.href = "/seleccionar_tags";
+            } else {
+                window.location.href = "/inicio";
+            }
         } else {
-            alert("Error: " + data.error);
+            if (data.error.toLowerCase().includes("correo")) {
+                mostrarError("error-correo", "El correo introducido ya tiene una cuenta activa");
+            } else if (data.error.toLowerCase().includes("usuario") || data.error.toLowerCase().includes("username")) {
+                mostrarError("error-username", "El username introducido ya existe");
+            } else {
+                alert("Error: " + data.error);
+            }
         }
     });
 

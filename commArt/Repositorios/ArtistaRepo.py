@@ -1,4 +1,6 @@
 from sqlalchemy.orm import joinedload
+
+from Modelos import Categoria
 from Modelos.Artista import Artista
 from Modelos.Usuario import Usuario
 from extensiones import db
@@ -54,3 +56,19 @@ class ArtistaRepositorio:
     def obtener_publicaciones(id_artista):
         artista = Artista.query.options(joinedload(Artista.publicaciones)).filter_by(id_artista=id_artista).first()
         return artista.publicaciones if artista else []
+
+    @staticmethod
+    def asignar_categoria(id_artista, id_categoria):
+        artista = Artista.query.get(id_artista)
+        categoria = Categoria.query.get(id_categoria)
+        if categoria not in artista.categorias:
+            artista.categorias.append(categoria)
+        db.session.commit()
+
+    @staticmethod
+    def desvincular_categoria(id_artista, id_categoria):
+        artista = Artista.query.get(id_artista)
+        artista.categorias = [
+            c for c in artista.categorias if c.id_categoria != id_categoria
+        ]
+        db.session.commit()

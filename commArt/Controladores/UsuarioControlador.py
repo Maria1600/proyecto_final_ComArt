@@ -52,6 +52,15 @@ def crear_usuario():
     es_artista = data.get("es_artista", False)
 
     if correo and username and contrasenia and fecha:
+
+        #Validar si el correo ya esta registrado
+        if UsuarioServicio.obtener_por_correo(correo):
+            return jsonify({"error": "Este correo ya está registrado"}), 400
+
+        # Validar si el username ya está en uso
+        if UsuarioServicio.obtener_por_username(username):
+            return jsonify({"error": "El nombre de usuario ya existe"}), 400
+
         nueva = UsuarioServicio.crear_usuario(correo, username ,contrasenia, fecha, es_artista)
 
         #Como solo se utiliza para el register

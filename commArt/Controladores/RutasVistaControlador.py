@@ -45,3 +45,11 @@ def notificaciones():
 @vista_bp.route('/perfil')
 def perfil():
     return "<h1>Perfil en construcción</h1>"
+
+@vista_bp.route('/seleccionar_tags')
+def seleccionar_tags():
+    if 'id_usuario' not in session:
+        return redirect(url_for('login'))
+
+    return render_template('seleccionar_tags.html')
+

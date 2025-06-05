@@ -65,6 +65,10 @@ def crear_comision():
 def comisiones():
     return render_template('comisiones.html')
 
+@app.route('/seleccionar_tags')
+def seleccionar_tags():
+    return render_template('seleccionar_tags.html')
+
 # Ejecutar
 if __name__ == '__main__':
     app.run(debug=True)
