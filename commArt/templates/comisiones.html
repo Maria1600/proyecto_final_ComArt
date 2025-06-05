@@ -22,7 +22,7 @@
     <div class="perfil-icono" onclick="toggleDropdown()">
         <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('vista_bp.perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
             <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
@@ -46,7 +46,7 @@
     <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer">Inicio</button>
     <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer activo">Comisiones</button>
     <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('vista_bp.perfil') }}'" class="boton-footer">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil_redirect') }}'" class="boton-footer">Perfil</button>
 </footer>
 
 <script>

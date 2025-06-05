@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request
 
+from Servicios.PublicacionServicio import PublicacionServicio
+from Servicios.UsuarioServicio import UsuarioServicio
+
 #Esto es para que flask encuentre las rutas mas facil
 vista_bp = Blueprint('vista_bp', __name__)
 
@@ -42,9 +45,35 @@ def comisiones():
 def notificaciones():
     return "<h1>notificaciones en construcción</h1>"
 
+@vista_bp.route('/detalles_perfil')
+def detalles_perfil():
+    return "<h1>detalles_perfil en construcción</h1>"
+
+@vista_bp.route('/perfil/<int:id_usuario>')
+def perfil(id_usuario):
+    id_logado = session.get('id_usuario')
+    es_logado = id_logado == id_usuario
+    sigue = False
+
+    if id_logado and not es_logado:
+        sigue = UsuarioServicio.comprobar_si_sigue(id_logado, id_usuario)
+
+    return render_template(
+        "perfil.html",
+        id_usuario=id_usuario,
+        es_logado=bool(id_logado),
+        id_logado=id_logado,
+        modo_edicion=bool(request.args.get("editar")),
+        id_editando=request.args.get("editar_pub", type=int),
+        sigue=sigue
+    )
+
+
 @vista_bp.route('/perfil')
-def perfil():
-    return "<h1>Perfil en construcción</h1>"
+def perfil_redirect():
+    if 'id_usuario' not in session:
+        return redirect(url_for('usuario_bp.login'))  # O una página de error/login
+    return redirect(url_for('vista_bp.perfil', id_usuario=session['id_usuario']))
 
 @vista_bp.route('/seleccionar_tags')
 def seleccionar_tags():

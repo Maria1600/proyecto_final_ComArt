@@ -8,7 +8,8 @@ class Usuario(db.Model):
     #Mapeamos los atributos
     id_usuario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     correo = db.Column(db.String, nullable=False, unique=True)
-    username = db.Column(db.String, nullable=False)
+    descripcion = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, nullable=False, unique=True)
     contrasenia = db.Column(db.String, nullable=False)
     fecha_nacimiento = db.Column(db.Date, nullable=False)
     activo = db.Column(db.Integer, nullable=False)

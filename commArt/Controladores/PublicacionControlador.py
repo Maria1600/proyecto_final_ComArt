@@ -15,7 +15,8 @@ def obtener_todas():
             "dibujo": p.dibujo,
             "fecha_publicacion": p.fecha_publicacion,
             "num_likes": p.num_likes,
-            "artista": p.artista.usuario.username
+            "artista": p.artista.usuario.username,
+            "id_artista": p.artista.id_artista
         }
         for p in publicaciones
     ]
@@ -72,11 +73,9 @@ def crear_publicacion():
 def actualizar_publicacion(id_publicacion):
     data = request.get_json()
     descripcion = data.get("descripcion")
-    dibujo = data.get("dibujo")
-    fecha = data.get("fecha_publicacion")
 
-    if descripcion and dibujo and fecha:
-        actualizada = PublicacionServicio.actualizar(id_publicacion, descripcion, dibujo, fecha)
+    if descripcion:
+        actualizada = PublicacionServicio.actualizar(id_publicacion, descripcion)
 
         if actualizada:
             data_json = {

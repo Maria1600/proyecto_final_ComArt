@@ -38,8 +38,8 @@ class UsuarioServicio:
         return UsuarioRepositorio.eliminar(user_id)
 
     @staticmethod
-    def actualizar(user_id, correo, username ,contrasenia, fecha):
-        return UsuarioRepositorio.actualizar(user_id, correo, username ,contrasenia, fecha)
+    def actualizar(user_id, correo, username ,contrasenia, fecha, descripcion):
+        return UsuarioRepositorio.actualizar(user_id, correo, username ,contrasenia, fecha, descripcion)
 
     @staticmethod
     def seguir(user_id_a_seguir,id_user_seguidor):
@@ -64,3 +64,7 @@ class UsuarioServicio:
     @staticmethod
     def verificar_login(correo,contrasenia):
         return UsuarioRepositorio.verificar_login(correo,contrasenia)
+
+    @staticmethod
+    def comprobar_si_sigue(id_usuario, id_objetivo):
+        return UsuarioRepositorio.comprobar_si_sigue(id_usuario, id_objetivo)

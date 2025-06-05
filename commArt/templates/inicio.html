@@ -23,7 +23,7 @@
     <div class="perfil-icono" onclick="toggleDropdown()">
         <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('vista_bp.perfil') }}">Ver perfil</a>
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
             <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
@@ -42,7 +42,7 @@
     <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer activo">Inicio</button>
     <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer">Comisiones</button>
     <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('vista_bp.perfil') }}'" class="boton-footer">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil_redirect') }}'" class="boton-footer">Perfil</button>
 </footer>
 
 </body>
@@ -88,10 +88,10 @@
                 div.innerHTML = `
                   <div class="info-usuario">
                     <div class="avatar-circulo">
-                        <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
+                        <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil/${item.id_artista}'"></i>
                     </div>
                     <div>
-                      <div onclick="location.href='/perfil'"><strong>${item.artista}</strong></div>
+                      <div  onclick="location.href='/perfil/${item.id_artista}'"><strong>${item.artista}</strong></div>
                       <div>${formatearFecha(item.fecha_publicacion)}</div>
                     </div>
                   </div>
@@ -116,10 +116,10 @@
                     <div class="etiqueta">COMISIÓN GLOBAL</div>
                     <div class="info-usuario">
                         <div class="avatar-circulo">
-                            <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil'"></i>
+                            <i class="fa-solid fa-user avatar icono-perfil"  onclick="location.href='/perfil/${item.id_cliente}'"></i>
                         </div>
                         <div>
-                            <div onclick="location.href='/perfil'"><strong>${item.cliente}</strong></div>
+                            <div  onclick="location.href='/perfil/${item.id_cliente}''"><strong>${item.cliente}</strong></div>
                             <div>${formatearFecha(item.fecha_creacion)}</div>
                         </div>
                     </div>

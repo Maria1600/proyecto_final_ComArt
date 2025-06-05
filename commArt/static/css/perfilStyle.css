@@ -33,6 +33,10 @@ body {
   margin-right: 0.5rem;
 }
 
+.icono-perfil {
+    color: #10cdaf;
+}
+
 .titulo-app {
   font-size: 1.5rem;
   font-weight: bold;
@@ -59,16 +63,21 @@ body {
 
 /* === Perfil Icono + Dropdown === */
 .perfil-icono {
-  position: relative;
-  cursor: pointer;
-}
-
-.perfil-icono img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
               rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.perfil-icono .avatar {
+  font-size: 1.2rem;
+  color: #10cdaf;
 }
 
 .dropdown-menu {
@@ -83,12 +92,16 @@ body {
 
 .dropdown-menu a {
   display: block;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
   text-decoration: none;
   color: #333;
   font-weight: 500;
   transition: background 0.2s ease;
+  white-space: nowrap;
+  min-width: 160px;
 }
+
 
 .dropdown-menu a:hover {
   background-color: #f0f0f0;
@@ -99,16 +112,18 @@ body {
 }
 
 /* === Menú inferior === */
-.menu-inferior {
+.footer {
   display: flex;
   justify-content: space-around;
   background: linear-gradient(to top, #dce1ff, #f0f3ff);
   padding: 0.5rem;
-  position: sticky;
+  position: fixed;
   bottom: 0;
+  width: 100%;
+  z-index: 10;
 }
 
-.menu-inferior button {
+.footer .boton-footer {
   flex: 1;
   padding: 0.75rem;
   border: none;
@@ -118,7 +133,7 @@ body {
   transition: background 0.2s;
 }
 
-.menu-inferior button.activo {
+.footer .activo {
   background: #d0d5ff;
   border-radius: 10px;
 }

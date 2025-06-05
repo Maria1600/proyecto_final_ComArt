@@ -19,6 +19,7 @@ def insertar_datos(app):
         u1 = Usuario(
             correo="blingBlosh@example.com",
             username="Mister_blingBlos34",
+            descripcion="¡Hola gentesilla! Soy Mister BlingBlos, ilustrador especializado en paisajes realistas y escenarios de fantasía. Si te gustan los cielos imposibles, las montañas que susurran leyendas o los bosques donde parece que vive algo mágico… probablemente te interese lo que hago.\n\nTrabajo creando fondos, escenarios conceptuales, y paisajes que se sienten vivos. Ideal para juegos, novelas visuales o simplemente decorar tu espacio.\n\n💸 Precios orientativos:\nFondo simple : 40 €\nPaisaje detallado: 70–90 €\nConcept art para entornos: desde 100 €\n\nMe encanta trabajar con descripciones detalladas como si estuviera leyendo una novela. Si tienes una idea, puedo construirle un mundo alrededor :).",
             contrasenia=generate_password_hash("1234"),  # Con hash implementado
             fecha_nacimiento=datetime(2000, 5, 1),
             activo=True
@@ -26,6 +27,7 @@ def insertar_datos(app):
         u2 = Usuario(
             correo="miriam362@example.com",
             username="Casual_Gamer456",
+            descripcion = "Aloo soy Miriam, desarrolladora de videojuegos indie. Me paso el día entre líneas de código, mecánicas raras y mundos imaginarios. Para darles forma, suelo encargar animaciones, sprites y assets visuales que los hagan brillar.\n\nUso esta app para conectar con artistas que puedan traducir ideas técnicas en arte con personalidad. Si haces pixel art, animación 2D o ilustraciones de personajes… ¡me interesa tu trabajo!\n\n🔧 No soy artista, pero sí muy clara con lo que necesito: briefs bien hechos, referencias listas y feedback constructivo. ¡Si colaboramos espero que me trateis bien! (Suelo ser muy perfeccionista)",
             contrasenia=generate_password_hash("4321"),
             fecha_nacimiento=datetime(1995, 8, 15),
             activo=True
@@ -33,6 +35,7 @@ def insertar_datos(app):
         u3 = Usuario(
             correo="windyyys@example.com",
             username="WindyAnimales",
+            descripcion="Holiiii soy Windy y mi arte gira en torno a lo bonito, lo suave y adorable (GATOS). Dibujar animales adorables y criaturas fantásticas de mirada tierna es mi pasión.\n\nTrabajo con comisiones personalizadas, desde retratos de mascotas hasta criaturas inventadas. \n\n💸 Precios de referencia:\nRetrato de mascota: $20 USD\nAnimalito (inventado o real): $35–50 USD\nIlustración personalizada: desde $60 USD\n\nSoy súper detallista y pongo mucho cariño en cada trazo. ¡No hay nada que una buena dosis de ternura no pueda mejorar! 🐶🌼",
             contrasenia=generate_password_hash("pelusa02/12"),
             fecha_nacimiento=datetime(1990, 8, 5),
             activo=True
@@ -40,6 +43,7 @@ def insertar_datos(app):
         u4 = Usuario(
             correo="Gickia@example.com",
             username="geckos_chan",
+            descripcion= "Holi uwu. Soy geckos_chan, furro orgulloso y gecko-identificado desde tiempos prehistóricos. Alma reptiliana atrapada en un cuerpo humano desde 2009 (bueno, más o menos).\n\nNo dibujo, pero sí encargo... mucho.  Soy fan número uno de todo lo que tenga escamas, garras o colitas que se menean. Aquí estoy para seguir a mis artistas favoritos, apoyar commissions y encargar arte de mi fursona gecko vestida como si fuera al Met Gala.\n\n💸 Spoiler: tengo mucho dinero y me encanta consentir a mis artistas favoritos 7v7. Si haces arte que grite \"esto pertenece en una galería furry interdimensional\", probablemente ya estés en mi radar 0w0.\n\nAsí que sí, soy un gecko con gustos caros. Y no, no me arrepiento. 🦎✨",
             contrasenia=generate_password_hash("ImAGeckoSoWhat"),
             fecha_nacimiento=datetime(2009, 1, 23),
             activo=True

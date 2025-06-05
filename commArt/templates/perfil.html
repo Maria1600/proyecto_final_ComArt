@@ -4,189 +4,196 @@
     <meta charset="UTF-8">
     <title>Perfil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/perfilStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
-        <span class="nombre-app">ComArt</span>
+        <span class="titulo-app">ComArt</span>
     </div>
     <div class="search-container">
-        <input type="text" placeholder="Buscar...">
+        <input type="text" placeholder="Búsqueda">
     </div>
-    <div class="icono-usuario" onclick="toggleDropdown()">
-        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
 
+<!-- PERFIL -->
 <div class="perfil-encabezado">
     <div class="avatar-contenedor">
         <span class="icono-usuario">👤</span>
     </div>
     <div class="perfil-info">
-        <h2>{{ usuario.nombre }}</h2>
-        <p class="fecha-creacion">{{ usuario.fecha_creacion }}</p>
-        <div class="seguimiento">
-            <div>Seguidores<br><strong>{{ usuario.seguidores }}</strong></div>
-            <div>Seguidos<br><strong>{{ usuario.seguidos }}</strong></div>
-            {% if es_logado %}
-            <!-- No se muestra botón de seguir -->
-            {% else %}
-            <form method="POST" action="/seguir">
-                <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
-                <button class="boton-seguir" type="submit">seguir</button>
-            </form>
-            {% endif %}
-        </div>
+        <h2 id="username-perfil"></h2>
+        <div class="seguimiento" id="seguimiento-info"></div>
     </div>
 </div>
 
-<div class="descripcion-caja">
-    {% if es_logado %}
-    {% if modo_edicion %}
-    <form method="POST" action="/guardar-descripcion">
-        <textarea name="nueva_descripcion">{{ usuario.descripcion }}</textarea>
-        <div class="botones-edicion">
-            <button type="submit" class="btn-guardar">✔</button>
-            <a href="/perfil" class="btn-cancelar">✖</a>
-        </div>
-    </form>
-    {% else %}
-    <p>{{ usuario.descripcion }}</p>
-    <form method="GET" action="/perfil?editar=1">
-        <button class="btn-editar">✎</button>
-    </form>
-    {% endif %}
-    {% else %}
-    <p>{{ usuario.descripcion }}</p>
-    {% endif %}
-</div><!-- PERFIL GENERAL HTML -->
-<div class="perfil-encabezado">
-    <div class="avatar-contenedor">
-        <span class="icono-usuario">👤</span>
-    </div>
-    <div class="perfil-info">
-        <h2>{{ usuario.nombre }}</h2>
-        <p class="fecha-creacion">{{ usuario.fecha_creacion }}</p>
-        <div class="seguimiento">
-            <div>Seguidores<br><strong>{{ usuario.seguidores }}</strong></div>
-            <div>Seguidos<br><strong>{{ usuario.seguidos }}</strong></div>
+<!-- DESCRIPCIÓN -->
+<div class="descripcion-caja" id="descripcion-caja"></div>
 
-            {% if not es_logado %}
-            <form method="POST" action="/seguir">
-                <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
-                <button class="boton-seguir">seguir</button>
-            </form>
-            {% endif %}
-        </div>
-    </div>
+<!-- ARTISTA -->
+<div class="perfil-artista-contenido" id="seccion-artista" style="display: none;">
+    <div class="tags-artista" id="contenedor-tags"></div>
+    <div class="publicaciones-artista" id="contenedor-publicaciones"></div>
 </div>
-
-<!-- USUARIO NORMAL -->
-{% if not usuario.es_artista %}
-<div class="perfil-descripcion">
-    {% if es_logado and modo_edicion %}
-    <form method="POST" action="/guardar-descripcion">
-        <textarea name="nueva_descripcion">{{ usuario.descripcion }}</textarea>
-        <div class="botones-edicion">
-            <button type="submit" class="btn-guardar">✔</button>
-            <a href="/perfil" class="btn-cancelar">✖</a>
-        </div>
-    </form>
-    {% else %}
-    <p>{{ usuario.descripcion }}</p>
-    {% if es_logado %}
-    <form method="GET" action="/perfil?editar=1">
-        <button class="btn-editar">✎</button>
-    </form>
-    {% endif %}
-    {% endif %}
-</div>
-
-<!-- USUARIO ARTISTA -->
-{% else %}
-<div class="perfil-artista-contenido">
-    <div class="info-artista">
-        <div class="descripcion-caja">
-            {% if es_logado and modo_edicion %}
-            <form method="POST" action="/guardar-descripcion">
-                <textarea name="nueva_descripcion">{{ usuario.descripcion }}</textarea>
-                <div class="botones-edicion">
-                    <button type="submit" class="btn-guardar">✔</button>
-                    <a href="/perfil" class="btn-cancelar">✖</a>
-                </div>
-            </form>
-            {% else %}
-            <p>{{ usuario.descripcion }}</p>
-            {% if es_logado %}
-            <form method="GET" action="/perfil?editar=1">
-                <button class="btn-editar">✎</button>
-            </form>
-            {% endif %}
-            {% endif %}
-        </div>
-
-        <div class="tags-artista">
-            {% for tag in usuario.tags %}
-            <span class="tag">{{ tag }}</span>
-            {% endfor %}
-            {% if es_logado %}
-            <form method="GET" action="/editar_tags">
-                <button class="btn-editar">✎</button>
-            </form>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="publicaciones-artista">
-        <div class="publicaciones-header">
-            <h3>PUBLICACIONES</h3>
-            {% if es_logado %}
-            <a href="/crear_publicacion" class="boton-gradiente">+ Crear publicación</a>
-            {% else %}
-            <a href="{{ url_for('vista_bp.crear_comision', id_artista=usuario.id) }}" class="boton-gradiente">+ Abrir comisión</a>
-            {% endif %}
-        </div>
-
-        <div class="lista-publicaciones">
-            {% for pub in publicaciones %}
-            <div class="publicacion">
-                <div class="publicacion-cabecera">
-                    <span class="nombre-autor">{{ usuario.nombre }}</span>
-                    <span class="fecha-publicacion">{{ pub.fecha }}</span>
-                </div>
-                <img src="{{ pub.imagen_url }}" alt="imagen publicación" class="imagen-publicacion">
-                <div class="texto-publicacion">
-                    <p>{{ pub.descripcion }}</p>
-                </div>
-                <div class="acciones-publicacion">
-                    <span>👍 {{ pub.likes }}</span>
-                    {% if es_logado %}
-                    <form method="GET" action="/editar_publicacion/{{ pub.id }}">
-                        <button class="btn-editar">✎</button>
-                    </form>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-{% endif %}
 
 <!-- Footer -->
 <footer class="footer">
-    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
-    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
-    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer activo">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil_redirect') }}'" class="boton-footer activo">Perfil</button>
 </footer>
 
 </body>
+
+<script>
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+    function formatearFecha(fechaStr) {
+        const fecha = new Date(fechaStr);
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const año = fecha.getFullYear();
+        return `${dia}/${mes}/${año}`;
+    }
+
+    const id_usuario = {{ id_usuario }};
+    const es_logado = {{ 'true' if es_logado else 'false' }};
+    const id_logado = {{ id_logado }};
+    const id_editando = {{ id_editando if id_editando else 'null' }};
+    const modo_edicion = window.location.href.includes('editar=1');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch(`/usuarios/${id_usuario}`)
+            .then(res => res.json())
+            .then(usuario => {
+                document.getElementById('username-perfil').textContent = usuario.username;
+
+                const seguimiento = document.getElementById('seguimiento-info');
+                seguimiento.innerHTML = `
+                    <div>Seguidores<br><strong>${usuario.n_seguidores}</strong></div>
+                    <div>Seguidos<br><strong>${usuario.n_seguidos}</strong></div>
+                    ${
+                      es_logado && usuario.id_usuario === id_logado
+                        ? `<a href="/detalles_perfil" class="btn-config"><i class="fa fa-gear"></i></a>`
+                        : es_logado
+                          ? `<form method="POST" action="/usuarios/${id_logado}/seguir/${usuario.id_usuario}">
+                               <button type="submit" class="boton-seguir">${usuario.siguiendo ? 'Dejar de seguir' : 'Seguir'}</button>
+                             </form>`
+                          : ''
+                    }
+                `;
+
+                const desc = document.getElementById('descripcion-caja');
+                if (es_logado && usuario.id_usuario === id_logado) {
+                    if (modo_edicion) {
+                        desc.innerHTML = `
+                            <form method="POST" action="/guardar_descripcion">
+                                <textarea name="nueva_descripcion">${usuario.descripcion || ''}</textarea>
+                                <div class="botones-edicion">
+                                    <button type="submit" class="btn-guardar">✔</button>
+                                    <a href="/perfil/${usuario.id_usuario}" class="btn-cancelar">✖</a>
+                                </div>
+                            </form>
+                        `;
+                    } else {
+                        desc.innerHTML = `
+                            <p>${(usuario.descripcion || '').replace(/\n/g, '<br>')}</p>
+                            <form method="GET" action="/perfil/${usuario.id_usuario}?editar=1">
+                                <button class="btn-editar">✎</button>
+                            </form>
+                        `;
+                    }
+                } else {
+                    desc.innerHTML = `<p>${usuario.descripcion || ''}</p>`;
+                }
+
+                if (usuario.es_artista) {
+                    document.getElementById('seccion-artista').style.display = 'block';
+                    renderizarTags(usuario.tags || []);
+                    cargarPublicaciones(usuario.id_usuario);
+                }
+            });
+
+        function renderizarTags(tags) {
+            const contenedor = document.getElementById("contenedor-tags");
+            contenedor.innerHTML = '';
+            tags.forEach(tag => {
+                const span = document.createElement("span");
+                span.className = "tag";
+                span.textContent = tag;
+                contenedor.appendChild(span);
+            });
+        }
+
+        function cargarPublicaciones(id_artista) {
+            fetch(`/artistas/${id_artista}/publicaciones`)
+                .then(res => res.json())
+                .then(publicaciones => {
+                    const contenedor = document.getElementById('contenedor-publicaciones');
+                    contenedor.innerHTML = '';
+                    publicaciones.forEach(pub => {
+                        contenedor.appendChild(crearPublicacionHTML(pub));
+                    });
+                });
+        }
+
+        function crearPublicacionHTML(pub) {
+            const div = document.createElement('div');
+            div.className = 'publicacion';
+
+            const cabecera = `
+                <div class="publicacion-cabecera">
+                    <span class="nombre-autor">Usuario</span>
+                    <span class="fecha-publicacion">${formatearFecha(pub.fecha_publicacion)}</span>
+                </div>
+            `;
+
+            const imagen = `<img src="/static/img/${pub.dibujo}" alt="imagen publicación" class="imagen-publicacion">`;
+
+            let descripcionHTML = '';
+            if (es_logado && id_logado === pub.artista && id_editando === pub.id_publicacion) {
+                descripcionHTML = `
+                    <form method="POST" action="/publicacion/actualizar/${pub.id_publicacion}">
+                        <textarea name="descripcion">${pub.descripcion}</textarea>
+                        <div class="botones-edicion">
+                            <button type="submit" class="btn-guardar">✔</button>
+                            <a href="/perfil" class="btn-cancelar">✖</a>
+                        </div>
+                    </form>
+                `;
+            } else {
+                descripcionHTML = `
+                    <p>${pub.descripcion}</p>
+                    ${
+                      es_logado && id_logado === pub.artista
+                        ? `<form method="GET" action="/perfil?editar_pub=${pub.id_publicacion}">
+                            <button class="btn-editar">✎</button>
+                          </form>`
+                        : ''
+                    }
+                `;
+            }
+
+            const acciones = `<div class="acciones-publicacion"><span>👍 ${pub.num_likes}</span></div>`;
+
+            div.innerHTML = cabecera + imagen + `<div class="texto-publicacion">${descripcionHTML}</div>` + acciones;
+            return div;
+        }
+    });
+</script>
+
 </html>

@@ -19,8 +19,8 @@ class PublicacionServicio:
         return PublicacionRepositorio.eliminar(publicacion_id)
 
     @staticmethod
-    def actualizar(publicacion_id, new_descripcion, new_dibujo, new_fecha):
-        return PublicacionRepositorio.actualizar(publicacion_id, new_descripcion, new_dibujo, new_fecha)
+    def actualizar(publicacion_id, new_descripcion):
+        return PublicacionRepositorio.actualizar(publicacion_id, new_descripcion)
 
     @staticmethod
     def add_like(publicacion_id):

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import joinedload
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from Modelos import seguir
 from Modelos.Usuario import Usuario
 from extensiones import db
 
@@ -51,11 +52,12 @@ class UsuarioRepositorio:
         return operacion_exitosa
 
     @staticmethod
-    def actualizar(user_id, correo, username ,contrasenia, fecha):
+    def actualizar(user_id, correo, username ,contrasenia, fecha,descripcion):
         usuario = Usuario.query.get(user_id)
         if usuario:
             usuario.correo=correo,
             usuario.username=username,
+            usuario.descripcion=descripcion
             usuario.contrasenia=contrasenia,
             usuario.fecha_nacimiento=fecha
             db.session.commit()
@@ -120,3 +122,13 @@ class UsuarioRepositorio:
         usuario = Usuario.query.filter_by(correo=correo, activo=1).first()
         if usuario and check_password_hash(usuario.contrasenia, contrasenia):
             return usuario
+
+    @staticmethod
+    def comprobar_si_sigue(id_usuario, id_objetivo):
+        #Comprueba si un usuario sigue a un user concreto mirando en la cadena en la tabla intermedia seguir
+        return db.session.query(
+            db.exists().where(
+                (seguir.c.id_seguidor == id_usuario) &
+                (seguir.c.id_seguido == id_objetivo)
+            )
+        ).scalar()

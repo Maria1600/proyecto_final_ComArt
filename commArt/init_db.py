@@ -21,7 +21,8 @@ def init_db():
     CREATE TABLE IF NOT EXISTS usuarios (
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
         correo TEXT UNIQUE NOT NULL,
-        username TEXT NOT NULL,
+        username TEXT UNIQUE NOT NULL,
+        descripcion TEXT NOT NULL,
         contrasenia TEXT NOT NULL,
         fecha_nacimiento TIMESTAMP NOT NULL,
         activo INTEGER CHECK(activo IN (1,0)) NOT NULL

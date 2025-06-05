@@ -35,12 +35,10 @@ class PublicacionRepositorio:
         return operacion_exitosa
 
     @staticmethod
-    def actualizar(publicacion_id, new_descripcion, new_dibujo, new_fecha):
+    def actualizar(publicacion_id, new_descripcion):
         publicacion = Publicacion.query.get(publicacion_id)
         if publicacion:
-            publicacion.descripcion_publicacion = new_descripcion,
-            publicacion.dibujo = new_dibujo,
-            publicacion.fecha_publicacion = new_fecha
+            publicacion.descripcion_publicacion = new_descripcion
             db.session.commit()
         return publicacion if publicacion else None
 

@@ -27,13 +27,19 @@ def obtener_usuario(id_usuario):
     usuario = UsuarioServicio.buscar_usuario(id_usuario)
 
     if usuario:
+        #Obtenemos seguidores y seguidos para contarlos
+        seguidores = UsuarioServicio.obtener_seguidores(id_usuario)
+        seguidos = UsuarioServicio.obtener_seguidos(id_usuario)
+
         data = {
             "id_usuario": usuario.id_usuario,
             "es_artista": 1 if usuario.artista else 0,
             "correo": usuario.correo,
             "username": usuario.username,
             "contrasenia": usuario.contrasenia,
-            "fecha_nacimiento": usuario.fecha_nacimiento
+            "fecha_nacimiento": usuario.fecha_nacimiento,
+            "n_seguidores": len(seguidores),
+            "n_seguidos": len(seguidos)
         }
         http = 200
     else:
@@ -246,3 +252,16 @@ def login_user():
 def logout():
     session.clear()  # Elimina todos los datos de sesión
     return redirect(url_for('vista_bp.login'))  # Redirige al login
+
+@usuario_bp.route('/usuarios/<int:id_usuario>/sigue_a/<int:id_objetivo>', methods=['GET'])
+def comprobar_si_sigue(id_usuario, id_objetivo):
+    sigue = UsuarioServicio.comprobar_si_sigue(id_usuario, id_objetivo)
+
+    if sigue is None:
+        data = {"error": "Error al comprobar seguimiento"}
+        http = 400
+    else:
+        data = {"sigue": sigue}
+        http = 200
+
+    return jsonify(data), http

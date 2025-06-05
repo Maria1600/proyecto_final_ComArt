@@ -58,7 +58,8 @@ def obtener_comision_por_tipo_sin_asignar():
             "estado": c.estado,
             "fecha_creacion": c.fecha_creacion,
             "tipo": c.tipo,
-            "cliente": c.cliente.username
+            "cliente": c.cliente.username,
+            "id_cliente" : c.cliente.id_usuario
         }
         for c in comision
     ]
