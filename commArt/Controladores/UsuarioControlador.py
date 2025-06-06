@@ -36,6 +36,7 @@ def obtener_usuario(id_usuario):
             "es_artista": 1 if usuario.artista else 0,
             "correo": usuario.correo,
             "username": usuario.username,
+            "descripcion": usuario.descripcion,
             "contrasenia": usuario.contrasenia,
             "fecha_nacimiento": usuario.fecha_nacimiento,
             "n_seguidores": len(seguidores),

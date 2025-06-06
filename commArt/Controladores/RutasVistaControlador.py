@@ -54,6 +54,8 @@ def perfil(id_usuario):
     id_logado = session.get('id_usuario')
     es_logado = id_logado == id_usuario
     sigue = False
+    if 'id_usuario' not in session:
+        return redirect(url_for('usuario_bp.login'))
 
     if id_logado and not es_logado:
         sigue = UsuarioServicio.comprobar_si_sigue(id_logado, id_usuario)

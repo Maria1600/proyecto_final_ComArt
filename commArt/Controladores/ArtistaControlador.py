@@ -127,6 +127,7 @@ def obtener_publicaciones(id_artista):
                 "dibujo": p.dibujo,
                 "fecha_publicacion": p.fecha_publicacion,
                 "num_likes": p.num_likes,
+                "username": p.artista.usuario.username,
                 "artista": id_artista
             }
             for p in publicaciones

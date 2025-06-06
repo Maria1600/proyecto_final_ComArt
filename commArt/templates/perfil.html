@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Perfil</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfilStyle.css') }}">
+    <link rel="stylesheet" href="/static/css/perfilStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
-<!-- Comentario para poder hacer push porque esta mierda no puede commitear y hacer push por separao -->
-
 <!-- Navbar -->
 <nav class="nav">
     <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <span class="titulo-app">ComArt</span>
     </div>
+
     <div class="search-container">
         <input type="text" placeholder="Búsqueda">
     </div>
+
     <div class="perfil-icono" onclick="toggleDropdown()">
         <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
@@ -28,24 +27,40 @@
     </div>
 </nav>
 
-<!-- PERFIL -->
 <div class="perfil-encabezado">
     <div class="avatar-contenedor">
-        <span class="icono-usuario">👤</span>
+        <i class="fas fa-user"></i>
     </div>
     <div class="perfil-info">
-        <h2 id="username-perfil"></h2>
-        <div class="seguimiento" id="seguimiento-info"></div>
+        <div id="nombre-config-contenedor" class="nombre-config">
+            <h2 class="nombre-usuario-wrapper">
+                <span id="nombre-usuario"></span>
+            </h2>
+        </div>
+        <div class="seguimiento" id="info-seguimiento"></div>
     </div>
+    <button id="btn-abrir-comision" class="btn-abrir-comision" style="display: none;">
+        Abrir comisión
+    </button>
 </div>
 
-<!-- DESCRIPCIÓN -->
-<div class="descripcion-caja" id="descripcion-caja"></div>
+<div class="perfil-cuerpo">
+    <!-- Columna izquierda: descripción + tags -->
+    <div class="columna-izquierda">
+        <div class="caja-descripcion-tags">
+            <div class="descripcion-caja" id="descripcion-usuario"></div>
+            <div class="tags-artista" id="contenedor-tags"></div>
+        </div>
+    </div>
 
-<!-- ARTISTA -->
-<div class="perfil-artista-contenido" id="seccion-artista" style="display: none;">
-    <div class="tags-artista" id="contenedor-tags"></div>
-    <div class="publicaciones-artista" id="contenedor-publicaciones"></div>
+    <!-- Columna derecha: publicaciones -->
+    <div class="columna-derecha">
+        <div class="publicaciones-header">
+            <h3 class="titulo-seccion">Publicaciones</h3>
+            <button id="btn-crear-publicacion" class="boton-gradiente" style="display: none;">+ Crear publicación</button>
+        </div>
+        <div class="publicaciones-artista scrollable-publicaciones"></div>
+    </div>
 </div>
 
 <!-- Footer -->
@@ -56,146 +71,163 @@
     <button onclick="location.href='{{ url_for('vista_bp.perfil_redirect') }}'" class="boton-footer activo">Perfil</button>
 </footer>
 
-</body>
-
 <script>
+    const id_usuario = {{ id_usuario }};
+    const id_logado = {{ id_logado }};
+    const es_logado = {{ 'true' if es_logado else 'false' }};
+
     function toggleDropdown() {
-        const menu = document.getElementById('dropdown');
-        menu.classList.toggle('hidden');
+      document.getElementById('dropdown').classList.toggle('hidden');
     }
 
     function formatearFecha(fechaStr) {
-        const fecha = new Date(fechaStr);
-        const dia = String(fecha.getDate()).padStart(2, '0');
-        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        const año = fecha.getFullYear();
-        return `${dia}/${mes}/${año}`;
+      const fecha = new Date(fechaStr);
+      return `${fecha.getDate().toString().padStart(2, '0')}/` +
+             `${(fecha.getMonth() + 1).toString().padStart(2, '0')}/` +
+             `${fecha.getFullYear()}`;
     }
 
-    const id_usuario = {{ id_usuario }};
-    const es_logado = {{ 'true' if es_logado else 'false' }};
-    const id_logado = {{ id_logado }};
-    const id_editando = {{ id_editando if id_editando else 'null' }};
-    const modo_edicion = window.location.href.includes('editar=1');
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch(`/usuarios/${id_usuario}`)
+        .then(res => res.json())
+        .then(usuario => {
+          document.getElementById("nombre-usuario").textContent = usuario.username;
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch(`/usuarios/${id_usuario}`)
-            .then(res => res.json())
-            .then(usuario => {
-                document.getElementById('username-perfil').textContent = usuario.username;
+          if (id_logado === usuario.id_usuario) {
+            const iconoConfig = document.createElement("i");
+            iconoConfig.className = "fa-solid fa-gear icono-config";
+            iconoConfig.title = "Configuración";
+            iconoConfig.onclick = () => location.href = "/detalles_perfil";
 
-                const seguimiento = document.getElementById('seguimiento-info');
-                seguimiento.innerHTML = `
-                    <div>Seguidores<br><strong>${usuario.n_seguidores}</strong></div>
-                    <div>Seguidos<br><strong>${usuario.n_seguidos}</strong></div>
-                    ${
-                      es_logado && usuario.id_usuario === id_logado
-                        ? `<a href="/detalles_perfil" class="btn-config"><i class="fa fa-gear"></i></a>`
-                        : es_logado
-                          ? `<form method="POST" action="/usuarios/${id_logado}/seguir/${usuario.id_usuario}">
-                               <button type="submit" class="boton-seguir">${usuario.siguiendo ? 'Dejar de seguir' : 'Seguir'}</button>
-                             </form>`
-                          : ''
-                    }
-                `;
+            const contenedorNombre = document.querySelector(".nombre-usuario-wrapper");
+            contenedorNombre.appendChild(iconoConfig);
+          }
 
-                const desc = document.getElementById('descripcion-caja');
-                if (es_logado && usuario.id_usuario === id_logado) {
-                    if (modo_edicion) {
-                        desc.innerHTML = `
-                            <form method="POST" action="/guardar_descripcion">
-                                <textarea name="nueva_descripcion">${usuario.descripcion || ''}</textarea>
-                                <div class="botones-edicion">
-                                    <button type="submit" class="btn-guardar">✔</button>
-                                    <a href="/perfil/${usuario.id_usuario}" class="btn-cancelar">✖</a>
-                                </div>
-                            </form>
-                        `;
-                    } else {
-                        desc.innerHTML = `
-                            <p>${(usuario.descripcion || '').replace(/\n/g, '<br>')}</p>
-                            <form method="GET" action="/perfil/${usuario.id_usuario}?editar=1">
-                                <button class="btn-editar">✎</button>
-                            </form>
-                        `;
-                    }
-                } else {
-                    desc.innerHTML = `<p>${usuario.descripcion || ''}</p>`;
-                }
+          document.getElementById("descripcion-usuario").innerHTML = `<p>${(usuario.descripcion || '').replace(/\n/g, '<br>')}</p>`;
 
-                if (usuario.es_artista) {
-                    document.getElementById('seccion-artista').style.display = 'block';
-                    renderizarTags(usuario.tags || []);
-                    cargarPublicaciones(usuario.id_usuario);
-                }
-            });
+          const seguimientoDiv = document.getElementById("info-seguimiento");
+          seguimientoDiv.innerHTML = `
+            <div>Seguidores<br><strong>${usuario.n_seguidores}</strong></div>
+            <div>Seguidos<br><strong>${usuario.n_seguidos}</strong></div>
+          `;
 
-        function renderizarTags(tags) {
-            const contenedor = document.getElementById("contenedor-tags");
-            contenedor.innerHTML = '';
-            tags.forEach(tag => {
-                const span = document.createElement("span");
-                span.className = "tag";
-                span.textContent = tag;
-                contenedor.appendChild(span);
-            });
-        }
+          if (es_logado && id_logado !== usuario.id_usuario) {
+            const btn = document.createElement("button");
+            btn.className = "boton-seguir";
+            btn.textContent = usuario.lo_sigo ? "Dejar de seguir" : "Seguir";
+            btn.onclick = () => location.href = `/usuarios/${id_logado}/seguir/${usuario.id_usuario}`;
+            seguimientoDiv.appendChild(btn);
+          }
+            console.log(usuario);
 
-        function cargarPublicaciones(id_artista) {
-            fetch(`/artistas/${id_artista}/publicaciones`)
-                .then(res => res.json())
-                .then(publicaciones => {
-                    const contenedor = document.getElementById('contenedor-publicaciones');
-                    contenedor.innerHTML = '';
-                    publicaciones.forEach(pub => {
-                        contenedor.appendChild(crearPublicacionHTML(pub));
+          if (!usuario.es_artista) {
+                console.log("Usuario NO es artista. Ocultando publicaciones.");
+
+                // Oculta la columna derecha
+                document.querySelector('.columna-derecha').classList.add('oculta');
+
+                // Expande la izquierda
+                document.querySelector('.columna-izquierda').classList.add('expandida');
+                document.querySelector('.caja-descripcion-tags').classList.add('expandir');
+          }
+
+          if (usuario.es_artista) {
+              console.log("Es artista, obteniendo categorías...");
+
+              const tagsCont = document.getElementById("contenedor-tags");
+                console.log("ID de usuario para categorías:", usuario.id_usuario);
+
+              // Llamada al endpoint para obtener categorías del artista
+              fetch(`/artistas/${usuario.id_usuario}/categorias`)
+                .then(res => {
+                    console.log("Respuesta categorias:", res);
+                    return res.json();
+                  })
+                .then(categorias => {
+                  console.log("Categorias obtenidas:", categorias);
+                  if (Array.isArray(categorias)) {
+                    categorias.forEach(c => {
+                      const span = document.createElement("span");
+                      span.className = "tag";
+                      span.textContent = c.nombre_categoria;
+                      tagsCont.appendChild(span);
                     });
+                  }
                 });
-        }
 
-        function crearPublicacionHTML(pub) {
-            const div = document.createElement('div');
-            div.className = 'publicacion';
-
-            const cabecera = `
-                <div class="publicacion-cabecera">
-                    <span class="nombre-autor">Usuario</span>
-                    <span class="fecha-publicacion">${formatearFecha(pub.fecha_publicacion)}</span>
-                </div>
-            `;
-
-            const imagen = `<img src="/static/img/${pub.dibujo}" alt="imagen publicación" class="imagen-publicacion">`;
-
-            let descripcionHTML = '';
-            if (es_logado && id_logado === pub.artista && id_editando === pub.id_publicacion) {
-                descripcionHTML = `
-                    <form method="POST" action="/publicacion/actualizar/${pub.id_publicacion}">
-                        <textarea name="descripcion">${pub.descripcion}</textarea>
-                        <div class="botones-edicion">
-                            <button type="submit" class="btn-guardar">✔</button>
-                            <a href="/perfil" class="btn-cancelar">✖</a>
-                        </div>
-                    </form>
-                `;
-            } else {
-                descripcionHTML = `
-                    <p>${pub.descripcion}</p>
-                    ${
-                      es_logado && id_logado === pub.artista
-                        ? `<form method="GET" action="/perfil?editar_pub=${pub.id_publicacion}">
-                            <button class="btn-editar">✎</button>
-                          </form>`
-                        : ''
-                    }
-                `;
+            if (es_logado && id_logado === usuario.id_usuario) {
+              document.getElementById("btn-crear-publicacion").style.display = "inline-block";
+              document.getElementById("btn-crear-publicacion").onclick = () => location.href = "/crear_publicacion";
             }
 
-            const acciones = `<div class="acciones-publicacion"><span>👍 ${pub.num_likes}</span></div>`;
+            if (!es_logado || id_logado !== usuario.id_usuario) {
+              document.getElementById("btn-abrir-comision").style.display = "inline-block";
+              document.getElementById("btn-abrir-comision").onclick = () => location.href = `/abrir_comision/${usuario.id_usuario}`;
+            }
 
-            div.innerHTML = cabecera + imagen + `<div class="texto-publicacion">${descripcionHTML}</div>` + acciones;
-            return div;
-        }
+            fetch(`/artistas/${usuario.id_usuario}/publicaciones`)
+              .then(res => res.json())
+              .then(data => {
+                const cont = document.querySelector(".publicaciones-artista");
+                data.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = "publicacion";
+                    div.innerHTML = `
+                      <div class="info-usuario">
+                        <div class="avatar-circulo">
+                          <i class="fa-solid fa-user avatar icono-perfil"></i>
+                        </div>
+                        <div>
+                          <div><strong>${item.username}</strong></div>
+                          <div>${formatearFecha(item.fecha_publicacion)}</div>
+                        </div>
+                      </div>
+                      <div class="cuerpo-publicacion">
+                        <img src="/static/${item.dibujo}" alt="Imagen subida">
+                        <div class="lado-derecho">
+                          <div class="descripcion">${item.descripcion || ''}</div>
+                          <div class="likes">
+                            <button class="like-btn" data-id="${item.id_publicacion}"><i class="fa fa-thumbs-up"></i></button>
+                            <span>${item.num_likes}</span>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                    cont.appendChild(div);
+                });
+              });
+          }
+        });
     });
-</script>
 
+    document.addEventListener("click", async (e) => {
+      if (e.target.closest(".like-btn")) {
+        const btn = e.target.closest(".like-btn");
+        const id = btn.getAttribute("data-id");
+        const countSpan = btn.nextElementSibling;
+
+        try {
+          const response = await fetch(`/publicaciones/${id}/like`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.num_likes !== undefined) {
+            btn.classList.add("liked");
+            countSpan.textContent = data.num_likes;
+          } else {
+            console.error("Error del servidor:", data.error);
+          }
+        } catch (error) {
+          console.error("Error de red al dar like:", error);
+        }
+      }
+    });
+
+</script>
+</body>
 </html>
