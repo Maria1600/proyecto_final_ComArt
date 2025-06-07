@@ -88,3 +88,9 @@ def seleccionar_tags():
 
     return render_template('seleccionar_tags.html')
 
+@vista_bp.route('/crear_publicacion')
+def crear_publicacion():
+    if 'id_usuario' not in session:
+        return redirect(url_for('login'))
+
+    return render_template('crear_publicacion.html')

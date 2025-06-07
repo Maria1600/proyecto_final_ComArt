@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 from Servicios.PublicacionServicio import PublicacionServicio
 
@@ -48,11 +50,16 @@ def crear_publicacion():
     data = request.get_json()
     descripcion = data.get("descripcion")
     dibujo = data.get("dibujo")
-    fecha = data.get("fecha_publicacion")
-    nlikes = data.get("nlikes")
+    fecha_str = data.get("fecha_publicacion")
+    nlikes = data.get("nlikes", 0)
     id_artista = data.get("id_artista")
 
-    if descripcion and dibujo and fecha and nlikes and id_artista:
+    try:
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return jsonify({"error": "Fecha inválida"}), 400
+
+    if descripcion and dibujo and fecha and id_artista:
         nueva = PublicacionServicio.crear_publicacion(descripcion,dibujo,fecha,nlikes,id_artista)
         data_json = {
             "id_publicacion": nueva.id_publicacion,

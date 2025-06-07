@@ -1,6 +1,6 @@
 import secrets
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from Controladores.ComisionControlador import comision_bp
 from Controladores.MensajeControlador import mensaje_bp
 from Controladores.PublicacionControlador import publicacion_bp
@@ -12,6 +12,8 @@ from Controladores.UsuarioControlador import usuario_bp
 from Controladores.CategoriaControlador import categoria_bp
 from config import Config
 import os
+from werkzeug.utils import secure_filename
+
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
@@ -68,6 +70,21 @@ def comisiones():
 @app.route('/seleccionar_tags')
 def seleccionar_tags():
     return render_template('seleccionar_tags.html')
+
+#Ruta para subir imagenes
+@app.route('/subir_imagen', methods=['POST'])
+def subir_imagen():
+    imagen = request.files['imagen']
+    if imagen and imagen.filename.lower().endswith(('.png', '.jpg')):
+        filename = secure_filename(imagen.filename)
+        ruta = os.path.join('static/img', filename)
+        imagen.save(ruta)
+        data = {"ruta": f"img/{filename}"}
+        http = 200
+    else:
+        data = {"error": "Formato no permitido"}
+        http = 400
+    return jsonify(data), http
 
 # Ejecutar
 if __name__ == '__main__':

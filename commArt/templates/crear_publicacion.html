@@ -6,56 +6,185 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/creaPubliStyle.css') }}">
 </head>
 <body>
-<!-- Fondo opaco -->
-<div class="fondo-opaco"></div>
+<!-- Fondo opaco
+<div class="fondo-opaco"></div>-->
 
-<!-- Caja modal -->
+<!-- Navbar -->
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="titulo-app">ComArt</span>
+    </div>
+
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda">
+    </div>
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
 <div class="modal-publicacion">
 
-    <!-- NAV dentro del modal -->
-    <nav class="nav">
-        <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
-            <span class="titulo-app">ComArt</span>
-        </div>
-
-        <div class="search-container">
-            <input type="text" placeholder="Búsqueda">
-        </div>
-
-        <div class="perfil-icono" onclick="toggleDropdown()">
-            <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
-            <div id="dropdown" class="dropdown-menu hidden">
-                <a href="{{ url_for('perfil') }}">Ver perfil</a>
-                <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Contenido del modal -->
     <div class="contenido-modal">
         <div class="header-modal">
             <h2 class="titulo-gradiente">CREAR PUBLICACIÓN</h2>
-            <button class="cerrar-modal" onclick="location.href='{{ url_for('perfil') }}'">✕</button>
+            <button class="cerrar-modal" onclick="window.history.back()">✕</button>
         </div>
 
         <label for="descripcion">Describe tu dibujo:</label>
         <textarea id="descripcion" name="descripcion" rows="6"></textarea>
+        <div id="error-descripcion" class="error-msg"></div>
+        <div id="error-imagen" class="error-msg"></div>
 
         <div class="zona-subida">
-            <button class="btn-subir-img">
+            <button class="btn-subir-img" id="btn-subir">
                 <i class="fa fa-upload"></i> Cargar dibujo
             </button>
-
-            <!-- Solo se muestra si hay imagen cargada -->
-            <div class="archivo-subido">
+            <input type="file" id="input-img" accept=".jpg,.png" style="display:none;">
+            <div class="archivo-subido hidden" id="archivo-subido">
                 <i class="fa fa-image"></i>
-                <span>Comisión.jpg</span>
+                <span id="nombre-archivo">Nombre.jpg</span>
             </div>
         </div>
 
-        <button class="btn-publicar" onclick="location.href='{{ url_for('perfil') }}'">Publicar</button>
+        <button class="btn-publicar" id="btn-publicar">Publicar</button>
     </div>
 </div>
+
+<!-- Modal de imagen ampliada -->
+<div id="modal-img">
+    <img id="imagen-ampliada" src="">
+</div>
+
 </body>
+
+<script>
+    const btnSubir = document.getElementById('btn-subir');
+    const inputImg = document.getElementById('input-img');
+    const archivoSubido = document.getElementById('archivo-subido');
+    const nombreArchivo = document.getElementById('nombre-archivo');
+    const btnPublicar = document.getElementById('btn-publicar');
+    const modalImg = document.getElementById('modal-img');
+    const imagenAmpliada = document.getElementById('imagen-ampliada');
+
+    // Mostrar el modal solo al hacer clic en la caja de archivo subido
+    archivoSubido.addEventListener('click', () => {
+      if (rutaImagen) {
+        modalImg.classList.add('mostrar');
+      }
+    });
+
+    // Ocultar el modal al hacer clic en él
+    modalImg.addEventListener('click', () => {
+      modalImg.classList.remove('mostrar');
+    });
+
+    let rutaImagen = "";
+
+    btnSubir.addEventListener('click', () => inputImg.click());
+
+    inputImg.addEventListener('change', async function () {
+        const archivo = this.files[0];
+        const errorImagen = document.getElementById('error-imagen');
+        if (!archivo) return;
+
+        const extension = archivo.name.split('.').pop().toLowerCase();
+        if (!['jpg', 'png'].includes(extension)) {
+            errorImagen.textContent = "Formato no válido. Solo .jpg o .png";
+            return;
+        }
+        errorImagen.textContent = "";
+
+        // Mostrar nombre
+        nombreArchivo.textContent = archivo.name;
+        archivoSubido.classList.remove('hidden');
+
+        // Subir imagen vía fetch
+        const formData = new FormData();
+        formData.append('imagen', archivo);
+
+        try {
+            const response = await fetch('/subir_imagen', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (response.ok) {
+                rutaImagen = data.ruta;
+                imagenAmpliada.src = `/static/${rutaImagen}`;
+            } else {
+                errorImagen.textContent = data.error || "Error al subir imagen";
+            }
+        } catch (e) {
+            console.error(e);
+            errorImagen.textContent = "Fallo al conectar con el servidor";
+        }
+    });
+
+    archivoSubido.addEventListener('click', () => {
+        if (rutaImagen) {
+            modalImg.classList.remove('hidden');
+        }
+    });
+
+    modalImg.addEventListener('click', () => {
+        modalImg.classList.add('hidden');
+    });
+
+    btnPublicar.addEventListener('click', async () => {
+        const descripcion = document.getElementById('descripcion').value.trim();
+        const errorDesc = document.getElementById('error-descripcion');
+        const errorImg = document.getElementById('error-imagen');
+        errorDesc.textContent = "";
+        errorImg.textContent = "";
+
+        if (!descripcion) {
+            errorDesc.textContent = "La descripción es obligatoria.";
+            return;
+        }
+        if (!rutaImagen) {
+            errorImg.textContent = "Debes subir una imagen válida.";
+            return;
+        }
+
+        const payload = {
+            descripcion: descripcion.replace(/\n/g, "\\n"),
+            dibujo: rutaImagen,
+            fecha_publicacion: new Date().toISOString().split('T')[0],
+            nlikes: 0,
+            id_artista: {{ session['id_usuario'] }}
+        };
+
+        try {
+            const response = await fetch('/publicaciones', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                window.location.href = document.referrer;
+                window.location.replace(document.referrer);
+            } else {
+                alert(data.error || "Error al crear la publicación");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error de red");
+        }
+    });
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+</script>
+
 </html>
