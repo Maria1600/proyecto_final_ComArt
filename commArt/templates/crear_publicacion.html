@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>Crear Publicacion</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/creaPubliStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<!-- Fondo opaco
-<div class="fondo-opaco"></div>-->
+<!-- Fondo con blur -->
+<div class="fondo-oscuro"></div>
 
 <!-- Navbar -->
 <nav class="nav">
@@ -29,14 +30,17 @@
     </div>
 </nav>
 
-<div class="modal-publicacion">
+<div class="modal-caja">
+
+
+    <div class="modal-header">
+        <h2 class="titulo-gradiente">CREAR PUBLICACIÓN</h2>
+        <button class="cerrar-modal" onclick="window.history.back()">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
 
     <div class="contenido-modal">
-        <div class="header-modal">
-            <h2 class="titulo-gradiente">CREAR PUBLICACIÓN</h2>
-            <button class="cerrar-modal" onclick="window.history.back()">✕</button>
-        </div>
-
         <label for="descripcion">Describe tu dibujo:</label>
         <textarea id="descripcion" name="descripcion" rows="6"></textarea>
         <div id="error-descripcion" class="error-msg"></div>
@@ -49,7 +53,7 @@
             <input type="file" id="input-img" accept=".jpg,.png" style="display:none;">
             <div class="archivo-subido hidden" id="archivo-subido">
                 <i class="fa fa-image"></i>
-                <span id="nombre-archivo">Nombre.jpg</span>
+                <span id="nombre-archivo"></span>
             </div>
         </div>
 
@@ -72,6 +76,11 @@
     const btnPublicar = document.getElementById('btn-publicar');
     const modalImg = document.getElementById('modal-img');
     const imagenAmpliada = document.getElementById('imagen-ampliada');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        archivoSubido.classList.add('hidden');
+    });
+
 
     // Mostrar el modal solo al hacer clic en la caja de archivo subido
     archivoSubido.addEventListener('click', () => {
@@ -103,7 +112,6 @@
 
         // Mostrar nombre
         nombreArchivo.textContent = archivo.name;
-        archivoSubido.classList.remove('hidden');
 
         // Subir imagen vía fetch
         const formData = new FormData();
@@ -116,10 +124,12 @@
             });
             const data = await response.json();
             if (response.ok) {
+                archivoSubido.classList.remove('hidden');
                 rutaImagen = data.ruta;
                 imagenAmpliada.src = `/static/${rutaImagen}`;
             } else {
                 errorImagen.textContent = data.error || "Error al subir imagen";
+                archivoSubido.classList.add('hidden');
             }
         } catch (e) {
             console.error(e);
