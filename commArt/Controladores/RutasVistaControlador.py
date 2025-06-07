@@ -58,6 +58,7 @@ def perfil(id_usuario):
         return redirect(url_for('usuario_bp.login'))
 
     if id_logado and not es_logado:
+        # Marca si el usuario esta siguiendo ya a alguien
         sigue = UsuarioServicio.comprobar_si_sigue(id_logado, id_usuario)
 
     return render_template(
@@ -70,11 +71,14 @@ def perfil(id_usuario):
         sigue=sigue
     )
 
+@vista_bp.route('/lista_usuarios/<tipo>/<int:id_usuario>')
+def lista_usuarios(tipo, id_usuario):
+    return render_template("lista_usuarios.html")
 
 @vista_bp.route('/perfil')
 def perfil_redirect():
     if 'id_usuario' not in session:
-        return redirect(url_for('usuario_bp.login'))  # O una página de error/login
+        return redirect(url_for('usuario_bp.login'))
     return redirect(url_for('vista_bp.perfil', id_usuario=session['id_usuario']))
 
 @vista_bp.route('/seleccionar_tags')

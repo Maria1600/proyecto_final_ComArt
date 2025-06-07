@@ -142,7 +142,8 @@ def obtener_seguidores(id_usuario):
         data = [
             {
                 "id_usuario": u.id_usuario,
-                "username": u.username
+                "username": u.username,
+                "es_artista": 1 if u.artista else 0
             }
             for u in usuarios
         ]
@@ -160,7 +161,8 @@ def obtener_seguidos(id_usuario):
         data = [
             {
                 "id_usuario": u.id_usuario,
-                "username": u.username
+                "username": u.username,
+                "es_artista": 1 if u.artista else 0
             }
             for u in usuarios
         ]

@@ -75,6 +75,7 @@
     const id_usuario = {{ id_usuario }};
     const id_logado = {{ id_logado }};
     const es_logado = {{ 'true' if es_logado else 'false' }};
+    const sigue = {{ 'true' if sigue else 'false' }};
 
     function toggleDropdown() {
       document.getElementById('dropdown').classList.toggle('hidden');
@@ -107,17 +108,56 @@
 
           const seguimientoDiv = document.getElementById("info-seguimiento");
           seguimientoDiv.innerHTML = `
-            <div>Seguidores<br><strong>${usuario.n_seguidores}</strong></div>
-            <div>Seguidos<br><strong>${usuario.n_seguidos}</strong></div>
+            <div class="seguidores">Seguidores<br><strong>${usuario.n_seguidores}</strong></div>
+            <div class="seguidos">Seguidos<br><strong>${usuario.n_seguidos}</strong></div>
           `;
 
+          seguimientoDiv.addEventListener("click", (e) => {
+              const seguidoresDiv = e.target.closest(".seguidores");
+              const seguidosDiv = e.target.closest(".seguidos");
+
+              if (seguidoresDiv) {
+                location.href = `/lista_usuarios/seguidores/${id_usuario}`;
+              } else if (seguidosDiv) {
+                location.href = `/lista_usuarios/seguidos/${id_usuario}`;
+              }
+          });
+
           if (es_logado && id_logado !== usuario.id_usuario) {
-            const btn = document.createElement("button");
-            btn.className = "boton-seguir";
-            btn.textContent = usuario.lo_sigo ? "Dejar de seguir" : "Seguir";
-            btn.onclick = () => location.href = `/usuarios/${id_logado}/seguir/${usuario.id_usuario}`;
-            seguimientoDiv.appendChild(btn);
-          }
+              const btn = document.createElement("button");
+              btn.className = "boton-seguir";
+              btn.textContent = sigue ? "Dejar de seguir" : "Seguir";
+              seguimientoDiv.appendChild(btn);
+
+              btn.onclick = async () => {
+                const estaSiguiendo = btn.textContent === "Dejar de seguir";
+                const endpoint = estaSiguiendo
+                  ? `/usuarios/${id_logado}/dejar_de_seguir/${usuario.id_usuario}`
+                  : `/usuarios/${id_logado}/seguir/${usuario.id_usuario}`;
+
+                try {
+                  const response = await fetch(endpoint, { method: "POST" });
+                  const data = await response.json();
+
+                  if (response.ok) {
+                    // Cambiar el texto del botón
+                    btn.textContent = estaSiguiendo ? "Seguir" : "Dejar de seguir";
+
+                    // Actualizar el número de seguidores en el DOM
+                    const seguidorDiv = document.querySelector("#info-seguimiento div:first-child strong");
+                    let numeroActual = parseInt(seguidorDiv.textContent);
+
+                    // Sumar o restar según la acción
+                    seguidorDiv.textContent = estaSiguiendo ? numeroActual - 1 : numeroActual + 1;
+                  } else {
+                    console.error("Error:", data.mensaje);
+                  }
+                } catch (err) {
+                  console.error("Error de red:", err);
+                }
+              };
+            }
+
             console.log(usuario);
 
           if (!usuario.es_artista) {

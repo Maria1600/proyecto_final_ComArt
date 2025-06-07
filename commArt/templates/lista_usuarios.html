@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seguidores/Seguidos</title>
+    <link rel="stylesheet" href="/static/css/perfilStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="titulo-app">ComArt</span>
+    </div>
+
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda">
+    </div>
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Título -->
+<h2 class="titulo-seccion" id="titulo-listado"></h2>
+
+<!-- Contenedor de usuarios -->
+<div id="contenedor-usuarios" class="lista-usuarios"></div>
+
+</body>
+
+<script>
+    const pathParts = window.location.pathname.split("/");
+    const tipo = pathParts[2]; // 'seguidores' o 'seguidos'
+    const id_usuario = parseInt(pathParts[3]);
+
+    function toggleDropdown() {
+      document.getElementById('dropdown').classList.toggle('hidden');
+    }
+
+    const titulo = document.getElementById("titulo-listado");
+    titulo.textContent = tipo === "seguidores" ? "Seguidores" : "Seguidos";
+
+    const endpoint = `/usuarios/${id_usuario}/${tipo}`;
+    fetch(endpoint)
+      .then(res => res.json())
+      .then(data => {
+        const contenedor = document.getElementById("contenedor-usuarios");
+
+        if (!Array.isArray(data) || data.length === 0) {
+          contenedor.innerHTML = `
+            <div class="mensaje-vacio">
+              Por ahora no ${tipo === 'seguidos' ? 'sigues a nadie' : 'tienes seguidores'}.
+            </div>
+          `;
+          return;
+        }
+
+        data.forEach(u => {
+          const card = document.createElement("div");
+          card.className = "usuario-card";
+          card.innerHTML = `
+            <div class="avatar-circulo" onclick="location.href='/perfil/${u.id_usuario}'">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="usuario-info">
+              <span class="username" onclick="location.href='/perfil/${u.id_usuario}'">${u.username}</span>
+              <div class="tag-contenedor">
+                  <span class="tag ${u.es_artista ? 'artista' : 'normal'}">
+                    ${u.es_artista ? 'ARTISTA' : 'USUARIO'}
+                  </span>
+              </div>
+            </div>
+          `;
+          contenedor.appendChild(card);
+        });
+      });
+</script>
+
+</html>
