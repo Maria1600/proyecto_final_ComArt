@@ -95,12 +95,13 @@ def actualizar_usuario(id_usuario):
     data = request.get_json()
     correo = data.get("correo")
     username = data.get("username")
+    descripcion = data.get("descripcion")
     contrasenia = data.get("contrasenia")
     fecha = data.get("fecha_nacimiento")
 
-    if correo and username and contrasenia and fecha:
+    if correo and username and fecha:
 
-        actualizada = UsuarioServicio.actualizar(id_usuario, correo, username ,contrasenia, fecha)
+        actualizada = UsuarioServicio.actualizar(id_usuario, correo, username ,contrasenia, fecha, descripcion)
 
         if actualizada:
             data_json = {
@@ -108,8 +109,8 @@ def actualizar_usuario(id_usuario):
                 "es_artista": 1 if actualizada.artista else 0,
                 "correo": actualizada.correo,
                 "username": actualizada.username,
-                "contrasenia": actualizada.contrasenia,
-                "fecha_nacimiento": actualizada.fecha_nacimiento
+                "fecha_nacimiento": actualizada.fecha_nacimiento,
+                "descripcion": actualizada.descripcion
             }
             http = 200
         else:

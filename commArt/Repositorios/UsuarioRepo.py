@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import joinedload
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -52,16 +54,25 @@ class UsuarioRepositorio:
         return operacion_exitosa
 
     @staticmethod
-    def actualizar(user_id, correo, username ,contrasenia, fecha,descripcion):
+    def actualizar(user_id, correo, username, contrasenia, fecha, descripcion):
         usuario = Usuario.query.get(user_id)
-        if usuario:
-            usuario.correo=correo,
-            usuario.username=username,
-            usuario.descripcion=descripcion
-            usuario.contrasenia=contrasenia,
-            usuario.fecha_nacimiento=fecha
-            db.session.commit()
-        return usuario if usuario else None
+        if not usuario:
+            return None
+
+        fecha_f = datetime.strptime(fecha, "%Y-%m-%d").date()
+        usuario.correo = correo
+        usuario.username = username
+        usuario.descripcion = descripcion
+        usuario.fecha_nacimiento = fecha_f
+
+        # Solo actualizar la contraseña si viene una nueva
+        if contrasenia:
+            hash_pass = generate_password_hash(contrasenia)
+            usuario.contrasenia = hash_pass
+
+        db.session.commit()
+        return usuario
+
 
     @staticmethod
     def seguir(user_id_a_seguir,id_user_seguidor):

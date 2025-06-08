@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración de perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/detallePerfilStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="titulo-app">ComArt</span>
+    </div>
+
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda">
+    </div>
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="header">
+        <h1 class="titulo-gradiente">Configuración de perfil</h1>
+        <button id="btn-editar" class="btn-editar">
+            <i class="fa fa-pencil-alt"></i> Editar perfil
+        </button>
+    </div>
+
+    <form id="form-perfil">
+        <div class="campo">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" disabled>
+            <span class="error-msg" id="error-username"></span>
+        </div>
+
+        <div class="campo">
+            <label for="fecha">Fecha de nacimiento:</label>
+            <input type="date" id="fecha" name="fecha" disabled>
+            <span class="error-msg" id="error-fecha"></span>
+        </div>
+
+        <div class="campo">
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" name="correo" disabled>
+            <span class="error-msg" id="error-correo"></span>
+        </div>
+
+        <div class="campo">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="4" disabled></textarea>
+            <span class="error-msg" id="error-descripcion"></span>
+        </div>
+
+        <div class="campo" id="campo-tags">
+            <label>Tags:</label>
+            <div class="tags-artista" id="contenedor-tags"></div>
+            <select id="selector-tags" class="hidden">
+                <option value="" disabled selected>Selecciona una categoría</option>
+            </select>
+        </div>
+
+        <fieldset  class="contrasenia-campo hidden">
+            <legend>Cambiar contraseña</legend>
+            <div class="campo">
+                <label for="nueva-pass">Nueva contraseña:</label>
+                <input type="password" id="nueva-pass" name="nueva-contra" disabled>
+                <span class="error-msg" id="error-contrasenia"></span>
+            </div>
+            <div class="campo">
+                <label for="confirmar-pass">Confirmar contraseña:</label>
+                <input type="password" id="confirmar-pass" name="confirmar-contra" disabled>
+                <span class="error-msg" id="error-confirmar"></span>
+            </div>
+        </fieldset>
+
+        <div class="acciones">
+            <button type="submit" class="btn-guardar hidden" id="btn-guardar">Guardar cambios</button>
+            <button type="button" class="btn-descartar hidden" id="btn-descartar">Descartar cambios</button>
+        </div>
+    </form>
+</div>
+
+</body>
+
+<script>
+    const idUsuario = {{ session['id_usuario'] }};
+    let usuarioActual = {};
+    let categoriasAsignadas = [];
+    let todasCategorias = [];
+    let valoresOriginales = {};
+    let modoEdicion = false;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await cargarDatosUsuario();
+      document.getElementById("btn-editar").addEventListener("click", () => {
+        modoEdicion = true;
+        document.querySelector(".contrasenia-campo").classList.remove("hidden");
+        document.querySelector(".btn-guardar").classList.remove("hidden");
+        document.querySelector(".btn-descartar").classList.remove("hidden");
+        document.getElementById('selector-tags').classList.remove("hidden");
+        guardarValoresOriginales();
+        activarEdicion();
+      });
+      document.querySelector('.btn-guardar').addEventListener('click', (e) => {
+        e.preventDefault();
+        guardarCambios();
+      });
+      document.getElementById('btn-descartar').addEventListener('click', () => {
+        modoEdicion = false;
+        document.querySelector('.contrasenia-campo').classList.add('hidden');
+        document.querySelector(".btn-guardar").classList.add('hidden');
+        document.querySelector(".btn-descartar").classList.add('hidden');
+        document.getElementById('selector-tags').classList.add('hidden');
+        document.getElementById('selector-tags').value = "";
+        restaurarValoresIniciales();
+        desactivarEdicion();
+      });
+    });
+
+    function restaurarValoresIniciales() {
+      document.getElementById('username').value = valoresOriginales.username;
+      document.getElementById('correo').value = valoresOriginales.correo;
+      document.getElementById('fecha').value = valoresOriginales.fecha;
+      document.getElementById('descripcion').value = valoresOriginales.descripcion;
+      categoriasAsignadas = [...valoresOriginales.categorias];
+
+      const contenedorTags = document.getElementById('contenedor-tags');
+      contenedorTags.innerHTML = '';
+      categoriasAsignadas.forEach(cat => agregarTagVisual(cat));
+    }
+
+    function guardarValoresOriginales() {
+      valoresOriginales = {
+        username: document.getElementById('username').value,
+        correo: document.getElementById('correo').value,
+        fecha: document.getElementById('fecha').value,
+        descripcion: document.getElementById('descripcion').value,
+        categorias: [...categoriasAsignadas]
+      };
+    }
+
+    async function cargarDatosUsuario() {
+      try {
+        const res = await fetch(`/usuarios/${idUsuario}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        usuarioActual = data;
+        document.getElementById('username').value = data.username;
+        document.getElementById('correo').value = data.correo;
+        const fechaBD = new Date(data.fecha_nacimiento);
+        document.getElementById('fecha').value = fechaBD.toISOString().split('T')[0];
+        document.getElementById('descripcion').value = data.descripcion || '';
+
+        if (data.es_artista) {
+          await cargarTags(data.id_usuario);
+          document.getElementById('campo-tags').classList.remove('hidden');
+        }
+      } catch (e) {
+        console.error('Error al cargar datos del usuario:', e);
+      }
+    }
+
+    async function cargarTags(idArtista) {
+      const [resActuales, resTodas] = await Promise.all([
+        fetch(`/artistas/${idArtista}/categorias`),
+        fetch('/categorias')
+      ]);
+
+      categoriasAsignadas = (await resActuales.json()) || [];
+      todasCategorias = (await resTodas.json()) || [];
+
+      const contenedorTags = document.getElementById('contenedor-tags');
+      contenedorTags.innerHTML = '';
+
+      categoriasAsignadas.forEach(cat => agregarTagVisual(cat));
+    }
+
+    function agregarTagVisual(cat) {
+        const contenedor = document.getElementById('contenedor-tags');
+
+        const tag = document.createElement('div');
+        tag.className = 'tag-item';
+        tag.textContent = cat.nombre_categoria;
+
+        if (!document.getElementById("selector-tags").classList.contains("hidden")) {
+            const close = document.createElement('span');
+            close.textContent = '×';
+            close.className = 'tag-close';
+            close.onclick = () => {
+                categoriasAsignadas = categoriasAsignadas.filter(c => c.id_categoria !== cat.id_categoria);
+                tag.remove();
+                cargarSelectorCategorias(); // refresca las opciones del selector
+            };
+            tag.appendChild(close);
+        }
+
+        contenedor.appendChild(tag);
+    }
+
+    function activarEdicion() {
+        ['username', 'correo', 'fecha', 'descripcion', 'nueva-pass', 'confirmar-pass'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.removeAttribute('disabled');
+        });
+
+        document.getElementById('selector-tags')?.classList.remove('hidden');
+        cargarSelectorCategorias();
+
+        // Volver a renderizar los tags para que incluyan el botón de eliminar
+        const contenedorTags = document.getElementById('contenedor-tags');
+        contenedorTags.innerHTML = '';
+        categoriasAsignadas.forEach(cat => agregarTagVisual(cat));
+    }
+
+
+    async function guardarCambios() {
+      const username = document.getElementById('username').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const fecha = document.getElementById('fecha').value.trim();
+      const nuevaPass = document.getElementById('nueva-pass').value.trim();
+      const confirmarPass = document.getElementById('confirmar-pass').value;
+      const descripcion = document.getElementById('descripcion').value.trim();
+
+      if (!modoEdicion) return;
+
+      if (!validarFormulario()) {
+        return;
+      }
+
+      if (nuevaPass && nuevaPass !== confirmarPass) {
+        alert("Las contraseñas no coinciden");
+        return;
+      }
+
+      try {
+        const payload = {
+          correo,
+          username,
+          fecha_nacimiento: fecha,
+          descripcion
+        };
+
+        // Solo incluye la contraseña si se escribió una nueva
+        if (nuevaPass) {
+            console.log("He entrado en contraseña :(");
+          payload.contrasenia = nuevaPass;
+        }
+
+        const res = await fetch(`/usuarios/${idUsuario}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al actualizar perfil');
+
+        // Si es artista, actualizamos tags
+        if (usuarioActual.es_artista) {
+          const originales = new Set(valoresOriginales.categorias.map(c => c.id_categoria));
+          const actuales = new Set(categoriasAsignadas.map(c => c.id_categoria));
+
+          for (const id of actuales) {
+            if (!originales.has(id)) {
+              await fetch(`/artistas/${idUsuario}/categorias/${id}`, { method: 'POST' });
+            }
+          }
+
+          for (const id of originales) {
+            if (!actuales.has(id)) {
+              await fetch(`/artistas/${idUsuario}/categorias/${id}`, { method: 'DELETE' });
+            }
+          }
+        }
+
+        alert("Cambios guardados correctamente");
+        location.reload();
+      } catch (e) {
+        console.error(e);
+        alert("Error al guardar cambios");
+      }
+    }
+
+    function desactivarEdicion() {
+      ['username', 'correo', 'fecha', 'descripcion', 'nueva-pass', 'confirmar-pass'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.setAttribute('disabled', true);
+      });
+    }
+
+    function validarFormulario() {
+      let esValido = true;
+
+      // Limpiar mensajes previos
+      document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
+
+      const username = document.getElementById('username').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const fecha = document.getElementById('fecha').value.trim();
+      const descripcion = document.getElementById('descripcion').value.trim();
+      const pass = document.getElementById('nueva-pass').value.trim();
+      const confirmar = document.getElementById('confirmar-pass').value.trim();
+
+      // Validación username
+      if (username.length < 4) {
+        document.getElementById('error-username').textContent = "Debe tener al menos 4 caracteres.";
+        esValido = false;
+      }
+
+      // Validación correo
+      const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!correoRegex.test(correo)) {
+        document.getElementById('error-correo').textContent = "Correo no válido.";
+        esValido = false;
+      }
+
+      // Validación fecha (simple: que no esté vacía y sea pasada)
+      if (!fecha || isNaN(Date.parse(fecha))) {
+        document.getElementById('error-fecha').textContent = "Fecha inválida.";
+        esValido = false;
+      }
+
+      // Validación descripción
+      if (descripcion === "") {
+        document.getElementById('error-descripcion').textContent = "La descripción no puede estar vacía.";
+        esValido = false;
+      } else if (descripcion.length > 800) {
+        document.getElementById('error-descripcion').textContent = "Máximo 500 caracteres.";
+        esValido = false;
+      }
+
+      // Validación contraseña
+       if (pass !== "" || confirmar !== "") {
+            if (pass.length < 6) {
+                document.getElementById('error-contrasenia').textContent = "Debe tener al menos 6 caracteres.";
+                esValido = false;
+            }
+
+            if (pass !== confirmar) {
+                document.getElementById('error-confirmar').textContent = "Las contraseñas no coinciden.";
+                esValido = false;
+            }
+       }
+
+      return esValido;
+    }
+
+    function cargarSelectorCategorias() {
+        const viejoSelector = document.getElementById('selector-tags');
+        const selector = viejoSelector.cloneNode(true); // Clona limpio
+        viejoSelector.parentNode.replaceChild(selector, viejoSelector); // Reemplaza en DOM
+
+        selector.innerHTML = `<option value="" disabled selected>Selecciona una categoría</option>`;
+
+        todasCategorias.forEach(cat => {
+            if (!categoriasAsignadas.some(c => c.id_categoria === cat.id_categoria)) {
+                const opt = document.createElement('option');
+                opt.value = cat.id_categoria;
+                opt.textContent = cat.nombre_categoria;
+                selector.appendChild(opt);
+            }
+        });
+
+        selector.addEventListener('change', manejarSeleccionTag);
+    }
+
+    function manejarSeleccionTag(event) {
+        const selectedId = parseInt(event.target.value);
+        const selectedText = event.target.options[event.target.selectedIndex].text;
+
+        if (categoriasAsignadas.length >= 3) {
+            alert('Solo puedes seleccionar hasta 3 tags.');
+            event.target.value = "";
+            return;
+        }
+
+        const nuevaTag = {
+            id_categoria: selectedId,
+            nombre_categoria: selectedText
+        };
+
+        categoriasAsignadas.push(nuevaTag);
+        agregarTagVisual(nuevaTag);
+        event.target.value = "";
+        cargarSelectorCategorias();
+    }
+
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+</script>
+
+</html>

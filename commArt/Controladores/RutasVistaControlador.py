@@ -47,7 +47,10 @@ def notificaciones():
 
 @vista_bp.route('/detalles_perfil')
 def detalles_perfil():
-    return "<h1>detalles_perfil en construcción</h1>"
+    if 'id_usuario' not in session:
+        return redirect(url_for('login'))
+
+    return render_template("detalles_perfil.html")
 
 @vista_bp.route('/perfil/<int:id_usuario>')
 def perfil(id_usuario):
