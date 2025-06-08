@@ -31,19 +31,21 @@
 <main class="busqueda-main">
     <h1>¡Busca a tus artistas favoritos!</h1>
 
-    <div class="busqueda-barra">
+    <div class="busqueda-caja">
+        <!-- Caja de búsqueda -->
+        <div class="busqueda-barra">
+            <div class="input-con-boton">
+                <button id="buscar-btn" class="boton-lupa">
+                    <i class="fa fa-search"></i>
+                </button>
+                <input type="text" id="busqueda-input" placeholder="Busca a tus artistas favoritos..." />
+            </div>
+            <div id="tags-seleccionadas" class="tags-contenedor"></div>
+        </div>
 
-        <button id="buscar-btn" class="boton-lupa">
-            <i class="fa fa-search"></i>
-        </button>
-        <!-- Campo de búsqueda -->
-        <input type="text" id="busqueda-input" placeholder="Busca a tus artistas favoritos..."/>
-        <!-- Tags seleccionadas -->
-        <div id="tags-seleccionadas" class="tags-contenedor"></div>
-
-        <!-- Dropdown de tags -->
+        <!-- Selector de categorías fuera de la caja -->
         <select id="selector-categorias">
-            <option value="" disabled selected>Selecciona una categoría</option>
+            <option value="" disabled selected> Selecciona una categoría ▼ </option>
         </select>
     </div>
 
@@ -74,8 +76,8 @@
     }
 
     function toggleDropdown() {
-        const dropdown = document.getElementById("tagsDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        const dropdown = document.getElementById("dropdown");
+        dropdown.classList.toggle("hidden");
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -208,7 +210,7 @@
                 div.onclick = () => location.href = `/perfil/${user.id_usuario}`;
 
                 div.innerHTML = `
-                    <span class="icono-usuario">👤</span>
+                    <span class="icono-usuario"><i class="fas fa-user"></i></span>
                     <span class="nombre-usuario">${user.username}</span>
                     <div class="tags">
                         ${user.tags.map(t => `<span class="tag">${t.nombre_categoria}</span>`).join('')}
