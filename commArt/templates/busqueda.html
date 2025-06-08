@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Busqueda</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/notisStyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/busquedaStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
-        <span class="nombre-app">ComArt</span>
+        <span class="titulo-app">ComArt</span>
     </div>
-    <div class="buscador">
-        <input type="text" placeholder="Buscar...">
+
+    <div class="search-container">
+        <input type="text" id="nav-search" placeholder="Búsqueda" onkeydown="handleNavSearch(event)">
     </div>
-    <div class="icono-usuario" onclick="toggleDropdown()" >
-        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -29,71 +32,193 @@
     <h1>¡Busca a tus artistas favoritos!</h1>
 
     <div class="busqueda-barra">
-        <!-- Campo de búsqueda -->
-        <input type="text" name="busqueda" value="{{ busqueda }}" placeholder="Busca a tus artistas favoritos..." />
 
-        <!-- Filtros activos -->
-        <div class="filtros-activos">
-            {% for filtro in filtros_activos %}
-            <span class="filtro-activo">
-                {{ filtro }}
-                <button type="submit" name="eliminar_filtro" value="{{ filtro }}">×</button>
-            </span>
-            {% endfor %}
-        </div>
+        <button id="buscar-btn" class="boton-lupa">
+            <i class="fa fa-search"></i>
+        </button>
+        <!-- Campo de búsqueda -->
+        <input type="text" id="busqueda-input" placeholder="Busca a tus artistas favoritos..."/>
+        <!-- Tags seleccionadas -->
+        <div id="tags-seleccionadas" class="tags-contenedor"></div>
 
         <!-- Dropdown de tags -->
-        <div class="dropdown-tags">
-            <button type="button" onclick="toggleDropdown()">Tags ▾</button>
-            <div id="tagsDropdown" class="dropdown-content">
-                {% for tag in todos_los_tags %}
-                <label>
-                    <input type="checkbox" name="filtros" value="{{ tag }}"
-                           {% if tag in filtros_activos %}checked{% endif %}>
-                    {{ tag }}
-                </label><br />
-                {% endfor %}
-                <button type="submit">Filtrar</button>
-            </div>
-        </div>
+        <select id="selector-categorias">
+            <option value="" disabled selected>Selecciona una categoría</option>
+        </select>
     </div>
 
-    <div class="resultados">
-        {% if perfiles %}
-        <div class="resultados">
-            {% for perfil in perfiles %}
-            <div class="resultado-perfil" onclick="location.href='{{ url_for('perfil/perfil.id') }}'">
-                <span class="icono-usuario">👤</span>
-                <span class="nombre-usuario">{{ perfil.nombre }}</span>
-                <div class="tags">
-                    {% for tag in perfil.tags %}
-                    <span class="tag">{{ tag }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p class="sin-resultados">¡No se encontraron resultados!</p>
-        {% endif %}
-    </div>
+    <!-- Resultados dinámicos -->
+    <div id="contenedor-resultados" class="resultados"></div>
 </main>
 
 <!-- Footer -->
 <footer class="footer">
-    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
-    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
-    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil_redirect') }}'" class="boton-footer">Perfil</button>
 </footer>
 
 </body>
 
 <script>
+
+    function handleNavSearch(event) {
+        if (event.key === "Enter") {
+            const termino = event.target.value.trim();
+            if (termino) {
+                // Redirige a /busqueda?q=lo_que_se_escribio
+                window.location.href = `/busqueda?q=${encodeURIComponent(termino)}`;
+            }
+        }
+    }
+
     function toggleDropdown() {
         const dropdown = document.getElementById("tagsDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const selector = document.getElementById("selector-categorias");
+        const inputBusqueda = document.getElementById("busqueda-input");
+        const buscarBtn = document.getElementById("buscar-btn");
+        const contenedorResultados = document.getElementById("contenedor-resultados");
+        const tagsContenedor = document.getElementById("tags-seleccionadas");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const terminoBusqueda = urlParams.get("q") || "";
+        const tagsURL = (urlParams.get("tags") || "")
+            .split(",")
+            .filter(Boolean)
+            .map(id => parseInt(id));
+
+        inputBusqueda.value = terminoBusqueda;
+
+        const seleccionadas = [];
+
+        // Cargar categorías y reconstruir tags desde URL
+        try {
+            const res = await fetch("/categorias");
+            const categorias = await res.json();
+
+            categorias.forEach(cat => {
+                const option = document.createElement("option");
+                option.value = cat.id_categoria;
+                option.textContent = cat.nombre_categoria;
+                selector.appendChild(option);
+
+                if (tagsURL.includes(cat.id_categoria)) {
+                    seleccionadas.push({ id: cat.id_categoria, nombre: cat.nombre_categoria });
+                }
+            });
+
+            renderizarTags();
+            await cargarUsuarios(); // Esperar para mostrar resultados después de renderizar filtros
+
+        } catch (err) {
+            console.error("Error cargando categorías:", err);
+        }
+
+        selector.addEventListener("change", () => {
+            const selectedId = parseInt(selector.value);
+            const selectedText = selector.options[selector.selectedIndex].text;
+
+            if (seleccionadas.some(tag => tag.id === selectedId)) return;
+            if (seleccionadas.length >= 3) {
+                alert("Solo puedes seleccionar hasta 3 tags.");
+                return;
+            }
+
+            seleccionadas.push({ id: selectedId, nombre: selectedText });
+            renderizarTags();
+        });
+
+        function renderizarTags() {
+            tagsContenedor.innerHTML = "";
+            seleccionadas.forEach((tag, index) => {
+                const div = document.createElement("div");
+                div.classList.add("tag");
+                div.innerHTML = `
+                    ${tag.nombre}
+                    <span class="eliminar-tag" onclick="eliminarTag(${index})">✕</span>
+                `;
+                tagsContenedor.appendChild(div);
+            });
+        }
+
+        window.eliminarTag = function(index) {
+            seleccionadas.splice(index, 1);
+            renderizarTags();
+        };
+
+        function aplicarBusqueda() {
+            const query = inputBusqueda.value.trim();
+            const tags = seleccionadas.map(t => t.id);
+
+            const params = new URLSearchParams();
+            if (query) params.set("q", query);
+            if (tags.length > 0) params.set("tags", tags.join(","));
+
+            window.location.href = `/busqueda?${params.toString()}`;
+        }
+
+        buscarBtn.addEventListener("click", aplicarBusqueda);
+        inputBusqueda.addEventListener("keydown", e => {
+            if (e.key === "Enter") aplicarBusqueda();
+        });
+
+        async function cargarUsuarios() {
+            const res = await fetch('/usuarios');
+            const usuarios = await res.json();
+
+            const resultados = [];
+
+            for (const usuario of usuarios) {
+                if (terminoBusqueda && !usuario.username.toLowerCase().includes(terminoBusqueda.toLowerCase())) continue;
+
+                if (usuario.es_artista) {
+                    const resCat = await fetch(`/artistas/${usuario.id_usuario}/categorias`);
+                    if (resCat.status !== 200) continue;
+                    const tags = await resCat.json();
+                    const idsTags = tags.map(t => t.id_categoria);
+
+                    const cumpleFiltro = tagsURL.every(id => idsTags.includes(id));
+                    if (!cumpleFiltro) continue;
+
+                    resultados.push({ ...usuario, tags });
+                } else if (tagsURL.length === 0) {
+                    resultados.push({ ...usuario, tags: [] });
+                }
+            }
+
+            mostrarResultados(resultados);
+        }
+
+        function mostrarResultados(lista) {
+            contenedorResultados.innerHTML = "";
+
+            if (lista.length === 0) {
+                contenedorResultados.innerHTML = "<p class='sin-resultados'>¡No se encontraron resultados!</p>";
+                return;
+            }
+
+            lista.forEach(user => {
+                const div = document.createElement("div");
+                div.className = "resultado-perfil";
+                div.onclick = () => location.href = `/perfil/${user.id_usuario}`;
+
+                div.innerHTML = `
+                    <span class="icono-usuario">👤</span>
+                    <span class="nombre-usuario">${user.username}</span>
+                    <div class="tags">
+                        ${user.tags.map(t => `<span class="tag">${t.nombre_categoria}</span>`).join('')}
+                    </div>
+                `;
+                contenedorResultados.appendChild(div);
+            });
+        }
+    });
+
 </script>
 
 </html>

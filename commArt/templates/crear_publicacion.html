@@ -18,7 +18,7 @@
     </div>
 
     <div class="search-container">
-        <input type="text" placeholder="Búsqueda">
+        <input type="text" id="nav-search" placeholder="Búsqueda" onkeydown="handleNavSearch(event)">
     </div>
 
     <div class="perfil-icono" onclick="toggleDropdown()">
@@ -195,6 +195,17 @@
         const menu = document.getElementById('dropdown');
         menu.classList.toggle('hidden');
     }
+
+    function handleNavSearch(event) {
+        if (event.key === "Enter") {
+            const termino = event.target.value.trim();
+            if (termino) {
+                // Redirige a /busqueda?q=lo_que_se_escribio
+                window.location.href = `/busqueda?q=${encodeURIComponent(termino)}`;
+            }
+        }
+    }
+
 </script>
 
 </html>

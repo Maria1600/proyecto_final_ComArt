@@ -45,6 +45,10 @@ def comisiones():
 def notificaciones():
     return "<h1>notificaciones en construcción</h1>"
 
+@vista_bp.route('/busqueda')
+def busqueda():
+    return render_template("busqueda.html")
+
 @vista_bp.route('/detalles_perfil')
 def detalles_perfil():
     if 'id_usuario' not in session:
