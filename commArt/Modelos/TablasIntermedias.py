@@ -11,3 +11,10 @@ seguir = db.Table('seguir',
                   db.Column('id_seguidor', db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True),
                   db.Column('id_seguido', db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True)
                   )
+
+# Tabla intermedia solicitud
+solicitud = db.Table('solicitud',
+                     db.Column('id_solicitante', db.Integer, db.ForeignKey('artistas.id_artista'), primary_key=True),
+                     db.Column('id_comision', db.Integer, db.ForeignKey('comisiones.id_com'), primary_key=True)
+                     )
+

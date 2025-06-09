@@ -49,6 +49,17 @@ def init_db():
     )
     """)
 
+    #Tabla intermedia solicitud
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS solicitud (
+        id_solicitante INTEGER NOT NULL,
+        id_comision INTEGER NOT NULL,
+        PRIMARY KEY (id_solicitante, id_comision),
+        FOREIGN KEY (id_solicitante) REFERENCES artistas(id_artista) ON DELETE CASCADE,
+        FOREIGN KEY (id_comision) REFERENCES comisiones(id_com) ON DELETE CASCADE
+    )
+    """)
+
     #Tabla de comisiones
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS comisiones (

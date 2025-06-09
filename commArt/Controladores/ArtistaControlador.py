@@ -154,3 +154,27 @@ def eliminar_categoria(id_artista, id_categoria):
         return jsonify({"mensaje": "Categoría eliminada correctamente"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@artista_bp.route('/artistas/<int:id_artista>/apuntarse', methods=['POST'])
+def apuntarse_comision(id_artista):
+    data = request.get_json()
+    id_comision = data.get("id_comision")
+
+    if not id_comision:
+        data_json = {"error": "ID de comisión requerido"}
+        http = 400
+    else:
+        exito = ArtistaServicio.apuntarse_a_comision(id_artista, id_comision)
+        if exito:
+            data_json = {
+                "id_artista": id_artista,
+                "id_comision": id_comision
+            }
+            http = 200
+        else:
+            data_json = {
+                "mensaje": "No se pudo apuntar (ya apuntado o datos inválidos)"
+            }
+            http = 400
+
+    return jsonify(data_json), http

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import joinedload
 
-from Modelos import Categoria
+from Modelos import Categoria, Comision
 from Modelos.Artista import Artista
 from Modelos.Usuario import Usuario
 from extensiones import db
@@ -72,3 +72,20 @@ class ArtistaRepositorio:
             c for c in artista.categorias if c.id_categoria != id_categoria
         ]
         db.session.commit()
+
+    @staticmethod
+    def apuntarse_a_comision(id_artista, id_comision):
+        artista = Artista.query.get(id_artista)
+        comision = Comision.query.get(id_comision)
+        exito_transaccion = True
+
+        # Validacion si alguno no existe
+        if not artista or not comision:
+            exito_transaccion = False
+        elif artista in comision.solicitantes: # Validacion si ya está apuntado
+            exito_transaccion = False
+        else:
+            comision.solicitantes.append(artista)
+            db.session.commit()
+
+        return exito_transaccion

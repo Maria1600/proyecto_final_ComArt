@@ -1,4 +1,4 @@
-from Modelos.TablasIntermedias import artista_categoria
+from Modelos.TablasIntermedias import artista_categoria, solicitud
 from extensiones import db
 
 class Artista(db.Model):
@@ -16,6 +16,11 @@ class Artista(db.Model):
         "Categoria",
         secondary=artista_categoria,
         back_populates="artistas"
+    )
+    comisiones_solicitadas = db.relationship(
+        "Comision",
+        secondary=solicitud,
+        back_populates="solicitantes"
     )
 
     #Funcion para debugg futuro para imprimir datos en consola

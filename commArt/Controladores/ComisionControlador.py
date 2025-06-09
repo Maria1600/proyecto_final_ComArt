@@ -262,6 +262,24 @@ def obtener_mensajes(id_comision):
 
     return jsonify({"mensajes": data}), http
 
+@comision_bp.route('/comisiones/<int:id_comision>/solicitantes', methods=['GET'])
+def obtener_solicitantes(id_comision):
+    solicitantes = ComisionServicio.obtener_solicitantes(id_comision)
+    if solicitantes:
+        data = [
+            {
+                "id_solicitante": s.id_artista,
+                "username": s.usuario.username
+            }
+            for s in solicitantes
+        ]
+        http = 200
+    else:
+        data = {"No se encontraron solicitantes"}
+        http = 400
+
+    return jsonify(data), http
+
 @comision_bp.route('/comisiones/usuario/<int:id_usuario>', methods=['GET'])
 def obtener_comisiones_usuario(id_usuario):
     comisiones = ComisionServicio.obtener_comisiones_de_usuario(id_usuario)

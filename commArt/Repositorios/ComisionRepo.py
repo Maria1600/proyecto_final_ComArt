@@ -92,3 +92,8 @@ class ComisionRepositorio:
             (Comision.id_cliente_com == id_usuario) |
             (Comision.id_artista_com == id_usuario)
         ).all()
+
+    @staticmethod
+    def obtener_solicitantes(comision_id):
+        comision = Comision.query.options(joinedload(Comision.solicitantes)).filter_by(id_com=comision_id).first()
+        return comision.solicitantes if comision else []

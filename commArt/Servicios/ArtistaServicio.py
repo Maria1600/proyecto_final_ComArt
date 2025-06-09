@@ -37,3 +37,7 @@ class ArtistaServicio:
     @staticmethod
     def desvincular_categoria(id_artista, id_categoria):
         return ArtistaRepositorio.desvincular_categoria(id_artista, id_categoria)
+
+    @staticmethod
+    def apuntarse_a_comision(id_artista, id_comision):
+        return ArtistaRepositorio.apuntarse_a_comision(id_artista, id_comision)

@@ -1,3 +1,4 @@
+from Modelos.TablasIntermedias import solicitud
 from extensiones import db
 
 class Comision(db.Model):
@@ -15,10 +16,14 @@ class Comision(db.Model):
     id_artista_com = db.Column(db.Integer, db.ForeignKey('artistas.id_artista'))
 
     #Relaciones
-    #Faltan lista de mensajes
     artista = db.relationship("Artista", back_populates="comisiones_realizadas")
     cliente = db.relationship("Usuario", back_populates="comisiones_solicitadas")
     mensajes =  db.relationship("Mensaje", back_populates="comision_asociada")
+    solicitantes = db.relationship(
+        "Artista",
+        secondary=solicitud,
+        back_populates="comisiones_solicitadas"
+    )
 
 #Funcion para debugg futuro para imprimir datos en consola
     def __repr__(self):
