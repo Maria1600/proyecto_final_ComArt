@@ -11,20 +11,22 @@
 <!-- Fondo con blur -->
 <div class="fondo-oscuro"></div>
 
-<!-- NAV -->
+<!-- Navbar -->
 <nav class="nav">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <span class="titulo-app">ComArt</span>
     </div>
+
     <div class="search-container">
-        <input type="text" placeholder="Búsqueda">
+        <input type="text" id="nav-search" placeholder="Búsqueda" onkeydown="handleNavSearch(event)">
     </div>
+
     <div class="perfil-icono" onclick="toggleDropdown()">
-        <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="Usuario">
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -100,4 +102,24 @@
 </div>
 
 </body>
+
+<script>
+
+    function handleNavSearch(event) {
+        if (event.key === "Enter") {
+            const termino = event.target.value.trim();
+            if (termino) {
+                // Redirige a /busqueda?q=lo_que_se_escribio
+                window.location.href = `/busqueda?q=${encodeURIComponent(termino)}`;
+            }
+        }
+    }
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+</script>
+
 </html>
