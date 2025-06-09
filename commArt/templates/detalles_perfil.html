@@ -37,22 +37,24 @@
     </div>
 
     <form id="form-perfil">
-        <div class="campo">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" disabled>
-            <span class="error-msg" id="error-username"></span>
-        </div>
+        <div class="campos-basicos">
+            <div class="campo">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" disabled>
+                <span class="error-msg" id="error-username"></span>
+            </div>
 
-        <div class="campo">
-            <label for="fecha">Fecha de nacimiento:</label>
-            <input type="date" id="fecha" name="fecha" disabled>
-            <span class="error-msg" id="error-fecha"></span>
-        </div>
+            <div class="campo">
+                <label for="fecha">Fecha de nacimiento:</label>
+                <input type="date" id="fecha" name="fecha" disabled>
+                <span class="error-msg" id="error-fecha"></span>
+            </div>
 
-        <div class="campo">
-            <label for="correo">Correo:</label>
-            <input type="email" id="correo" name="correo" disabled>
-            <span class="error-msg" id="error-correo"></span>
+            <div class="campo">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo" disabled>
+                <span class="error-msg" id="error-correo"></span>
+            </div>
         </div>
 
         <div class="campo">
@@ -61,24 +63,26 @@
             <span class="error-msg" id="error-descripcion"></span>
         </div>
 
-        <div class="campo" id="campo-tags">
-            <label>Tags:</label>
-            <div class="tags-artista" id="contenedor-tags"></div>
-            <select id="selector-tags" class="hidden">
-                <option value="" disabled selected>Selecciona una categoría</option>
-            </select>
+        <div id="bloque-artista" class="tags-linea hidden">
+            <div class="campo" id="campo-tags">
+                <label>Tags:</label>
+                <div class="tags-artista" id="contenedor-tags"></div>
+                <select id="selector-tags" class="hidden">
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                </select>
+            </div>
         </div>
 
         <fieldset  class="contrasenia-campo hidden">
             <legend>Cambiar contraseña</legend>
             <div class="campo">
                 <label for="nueva-pass">Nueva contraseña:</label>
-                <input type="password" id="nueva-pass" name="nueva-contra" disabled>
+                <input type="password" id="nueva-pass" name="nueva-contra" autocomplete="new-password" disabled>
                 <span class="error-msg" id="error-contrasenia"></span>
             </div>
             <div class="campo">
                 <label for="confirmar-pass">Confirmar contraseña:</label>
-                <input type="password" id="confirmar-pass" name="confirmar-contra" disabled>
+                <input type="password" id="confirmar-pass" name="confirmar-contra" autocomplete="new-password" disabled>
                 <span class="error-msg" id="error-confirmar"></span>
             </div>
         </fieldset>
@@ -163,9 +167,10 @@
         document.getElementById('descripcion').value = data.descripcion || '';
 
         if (data.es_artista) {
+          document.getElementById('bloque-artista').classList.remove('hidden');
           await cargarTags(data.id_usuario);
-          document.getElementById('campo-tags').classList.remove('hidden');
         }
+
       } catch (e) {
         console.error('Error al cargar datos del usuario:', e);
       }

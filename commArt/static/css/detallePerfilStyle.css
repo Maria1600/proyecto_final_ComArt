@@ -6,7 +6,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* === Navbar === */
@@ -111,6 +111,208 @@ body {
   color: #f8536b;
 }
 
+/* === Header === */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px 40px 20px;
+}
+
+.titulo-gradiente {
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #53bef8, #669ff4, #5b71f0, #71c5f2, #81f5e3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === Botón Editar === */
+#btn-editar {
+  background-color: #5e60ce;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 15px;
+}
+
+#btn-editar:hover {
+  background-color: #6930c3;
+}
+
+/* === Formulario === */
+form#form-perfil {
+  padding: 0 40px 50px;
+  font-size: 1.1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.campo label {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.campo input,
+.campo textarea {
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  background-color: transparent;
+  resize: vertical;
+}
+
+.campos-basicos {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.campos-basicos .campo {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Estilos activos para inputs cuando están habilitados */
+.campo input:enabled,
+.campo textarea:enabled {
+  border: 1px solid #a3bffa;
+  background-color: #f0f7ff;
+}
+
+/* === Descripción === */
+#descripcion {
+  min-height: 200px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* === Tags === */
+#campo-tags label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.tags-artista {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.tag-item {
+  background-color: rgba(47, 74, 229, 0.2);
+  color: #2f4ae5;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.tag-close {
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tags-linea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tags-linea label {
+  margin-bottom: 0;
+}
+
+/* Tags estilo */
+#tags-contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* === Selector de tags === */
+#selector-tags {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #477bc9;
+  color: white;
+  font-size: 14px;
+  border-radius: 5px;
+  border: none;
+  margin-left: 0;
+  margin-top: 10px;
+  width: auto;
+  max-width: 300px;
+}
+
+/* === Cambiar contraseña === */
+.contrasenia-campo legend {
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+fieldset.contrasenia-campo {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+/* Sección de contraseña */
+#seccion-password {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ccc;
+}
+
+/* === Botones guardar y descartar === */
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.btn-guardar,
+.btn-descartar {
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-guardar {
+  background-color: #27d3b9;
+  color: white;
+}
+
+.btn-descartar {
+  background-color: #f8536b;
+  color: white;
+}
 
 /* Estilo general del contenedor */
 #contenedor-perfil {
@@ -137,24 +339,7 @@ body {
   font-weight: bold;
 }
 
-#btn-editar {
-  background-color: #5e60ce;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#btn-editar:hover {
-  background-color: #6930c3;
-}
-
-/* Estilo para etiquetas e inputs */
+/* Estilo para inputs */
 .label-input {
   margin-bottom: 1.2rem;
 }
@@ -184,43 +369,6 @@ body {
   cursor: not-allowed;
 }
 
-/* Tags estilo */
-#tags-contenedor {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.tag-item {
-  background-color: #dcd6f7;
-  color: #333;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  position: relative;
-}
-
-.tag-close {
-  margin-left: 0.6rem;
-  cursor: pointer;
-  color: #7400b8;
-  font-weight: bold;
-}
-
-#selector-tags {
-  margin-top: 1rem;
-}
-
-/* Sección de contraseña */
-#seccion-password {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #ccc;
-}
-
 /* Botones finales */
 .botones-finales {
   display: flex;
@@ -237,55 +385,4 @@ body {
   cursor: pointer;
 }
 
-#btn-guardar {
-  background-color: #06d6a0;
-  color: white;
-}
-
-#btn-guardar:hover {
-  background-color: #04b48c;
-}
-
-#btn-descartar {
-  background-color: #ef476f;
-  color: white;
-}
-
-#btn-descartar:hover {
-  background-color: #d9335a;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .perfil-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .botones-finales {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-.tags-artista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tag-item {
-  background-color: #eee;
-  border-radius: 16px;
-  padding: 4px 10px;
-  font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.tag-close {
-  margin-left: 8px;
-  cursor: pointer;
-}
 
