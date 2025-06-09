@@ -56,6 +56,17 @@ def detalles_perfil():
 
     return render_template("detalles_perfil.html")
 
+@vista_bp.route('/detalle_comision/<int:id_comision>')
+def detalle_comision(id_comision):
+    if 'id_usuario' not in session:
+        return redirect(url_for('usuario_bp.login'))
+
+    return render_template(
+        "detalle_comision.html",
+        id_usuario=session['id_usuario'],
+        username=session['username']
+    )
+
 @vista_bp.route('/perfil/<int:id_usuario>')
 def perfil(id_usuario):
     id_logado = session.get('id_usuario')

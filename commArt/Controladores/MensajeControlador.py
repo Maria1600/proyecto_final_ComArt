@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 
 from Servicios.MensajeServicio import MensajeServicio
@@ -46,8 +48,13 @@ def crear_mensaje():
     data = request.get_json()
     texto = data.get("texto")
     id_creador = data.get("id_creador")
-    fecha = data.get("fecha_creacion")
+    fecha_str = data.get("fecha_creacion")
     id_comision = data.get("id_comision")
+
+    try:
+        fecha = datetime.fromisoformat(fecha_str.replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Fecha inválida"}), 400
 
     if texto and id_creador and fecha and id_comision:
         nueva = MensajeServicio.crear_mensaje(texto,fecha,id_creador,id_comision)

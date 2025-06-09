@@ -38,7 +38,9 @@ def obtener_comision(id_comision):
             "fecha_creacion": comision.fecha_creacion,
             "tipo": comision.tipo,
             "artista": comision.artista.usuario.username,
-            "cliente": comision.cliente.username
+            "cliente": comision.cliente.username,
+            "id_artista": comision.id_artista_com,
+            "id_cliente": comision.id_cliente_com
         }
         http = 200
     else:
@@ -256,9 +258,9 @@ def obtener_mensajes(id_comision):
         http = 200
     else:
         data = {"mensaje": "No se encontraron mensajes"}
-        http = 404
+        http = 400
 
-    return jsonify(data), http
+    return jsonify({"mensajes": data}), http
 
 @comision_bp.route('/comisiones/usuario/<int:id_usuario>', methods=['GET'])
 def obtener_comisiones_usuario(id_usuario):

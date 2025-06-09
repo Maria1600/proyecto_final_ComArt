@@ -116,13 +116,12 @@
         comFiltradas.forEach(c => {
             const caja = document.createElement('div');
             caja.classList.add('comision-caja');
-            caja.onclick = () => location.href = `/detalle_comision/${c.id_comision}`;
 
             const esAsignadaAlArtistaLogado = c.artista === username;
 
             let icono = (esAsignadaAlArtistaLogado && c.estado === 'En espera')
-                ? '<div class="icono-generico"><i class="fa-solid fa-envelope-open-text"></i></div>'
-                : '<div class="icono-generico"><i class="fa-solid fa-folder"></i></div>';
+                ? '<div class="icono-generico clickable"><i class="fa-solid fa-envelope-open-text"></i></div>'
+                : '<div class="icono-generico clickable"><i class="fa-solid fa-folder"></i></div>';
 
             let acciones = '';
             if (c.estado === 'En espera' && esAsignadaAlArtistaLogado) {
@@ -141,15 +140,25 @@
             caja.innerHTML = `
                 <div class="comision-icono">${icono}</div>
                 <div class="comision-contenido">
-                    <p class="comision-descripcion">${c.descripcion.slice(0, 70)}...</p>
+                    <p class="comision-descripcion clickable">${c.descripcion.slice(0, 70)}...</p>
                     <p class="comision-meta">Creado por ${c.cliente} el ${formatearFecha(c.fecha_creacion)}</p>
                 </div>
                 <div class="comision-estado-o-acciones">${acciones}</div>
             `;
 
-            caja.onclick = () => location.href = '/detalle_comision/' + c.id_comision;
+            const iconElement = caja.querySelector('.icono-generico');
+            const descElement = caja.querySelector('.comision-descripcion');
+
+            [iconElement, descElement].forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', () => {
+                    location.href = `/detalle_comision/${c.id_comision}`;
+                });
+            });
+
             lista.appendChild(caja);
         });
+
     }
 
     async function actualizarEstado(id, nuevoEstado) {

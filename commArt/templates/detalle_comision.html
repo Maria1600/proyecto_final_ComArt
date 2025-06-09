@@ -35,81 +35,39 @@
 <div class="detalle-comision">
     <div class="detalle-header">
         <h2 class="titulo">DETALLES DE COMISIÓN</h2>
-        <button class="cerrar" onclick="location.href='{{ url_for('comisiones') }}'" >&times;</button>
+        <button class="cerrar" onclick="window.history.back()">&times;</button>
     </div>
 
-    <!-- Información de la comisión desde backend -->
-    <div class="detalle-info">
-        <p class="info-meta">
-            Creada por <strong>{{ creador }}</strong> el {{ fecha }}
-            {% if artista_asignado %}
-            y aceptada por <strong>{{ artista_asignado }}</strong>
-            {% endif %}
-        </p>
-
-        <p class="info-desc">{{ descripcion_completa }}</p>
-
-        <p class="estado"><strong>Estado actual:</strong> {{ estado }}</p>
-
-        {% if entrega_realizada %}
-        <div class="archivo-entregado">
-            <span class="icono-foto"></span>
-            <a href="{{ entrega_url }}" target="_blank">{{ entrega_nombre }}</a>
-        </div>
-        {% endif %}
-
-        <!-- Botones controlados por lógica -->
-        {% if es_artista and estado == "En proceso" %}
-        <div class="botones">
-            <button class="btn-entregar"><span class="icono-subir"></span> Entregar </button>
-            <button class="btn-cancelar">Cancelar entrega</button>
-        </div>
-        {% elif es_cliente and estado == "En proceso" %}
-        <div class="botones">
-            <button class="btn-cancelar">Cancelar</button>
-        </div>
-        {% elif es_cliente and estado == "Entregada" %}
-        <div class="boton-aceptar">
-            <button class="btn-aceptar">Aceptar entrega</button>
-            <button class="btn-cancelar">Cancelar entrega</button>
-        </div>
-        {% endif %}
+    <div class="detalle-info" id="detalle-info">
+        <!-- Aquí se inyecta desde JS -->
     </div>
 
     <!-- CHAT -->
     <div class="chat-container">
         <h3 class="titulo-chat">CHAT</h3>
-        <div class="chat-mensajes">
-            {% for mensaje in mensajes %}
-            <div class="mensaje {% if mensaje.de_usuario_actual %}propio{% else %}otro{% endif %}">
-                {{ mensaje.texto }}
-            </div>
-            {% endfor %}
-        </div>
+        <div class="chat-mensajes" id="chat-mensajes"></div>
         <div class="chat-input">
-            <textarea placeholder="Escribe un mensaje..."></textarea>
-            <button class="btn-enviar"><span class="icono-avion"></span></button>
+            <textarea placeholder="Escribe un mensaje..." id="chat-textarea"></textarea>
+            <button class="btn-enviar" id="chat-enviar"><i class="fas fa-paper-plane"></i></span></button>
         </div>
     </div>
 </div>
 
-<!-- MODAL para imagen (emergente si se hace clic en el archivo) -->
-<div class="modal-imagen" id="modalEntrega" style="display: none;">
-    <div class="modal-contenido">
-        <span class="cerrar-modal" onclick="document.getElementById('modalEntrega').style.display='none'">&times;</span>
-        <img src="{{ url_for('static', filename=comision.imagen_entregada) }}" alt="Entrega" />
-    </div>
+<input type="file" id="input-dibujo" accept=".jpg,.png" style="display:none;">
+
+<!-- Modal de imagen ampliada -->
+<div id="modal-img" class="modal-imagen-ampliada" style="display: none;" onclick="cerrarModalImg()">
+    <img id="imagen-ampliada" src="">
 </div>
+
 
 </body>
 
 <script>
-
     function handleNavSearch(event) {
         if (event.key === "Enter") {
             const termino = event.target.value.trim();
             if (termino) {
-                // Redirige a /busqueda?q=lo_que_se_escribio
                 window.location.href = `/busqueda?q=${encodeURIComponent(termino)}`;
             }
         }
@@ -119,6 +77,261 @@
         const menu = document.getElementById('dropdown');
         menu.classList.toggle('hidden');
     }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const idComision = window.location.pathname.split("/").pop();
+        if (!idComision) {
+            alert("Comisión no especificada.");
+            return;
+        }
+
+        const detalleInfo = document.getElementById("detalle-info");
+        const chatMensajes = document.getElementById("chat-mensajes");
+        const chatTextarea = document.getElementById("chat-textarea");
+        const chatEnviar = document.getElementById("chat-enviar");
+        const inputDibujo = document.getElementById("input-dibujo");
+
+        let usuarioActual = {{ username | tojson }};
+        let idUsuarioActual = {{ id_usuario | tojson }};
+        let comision = null;
+
+        async function cargarComision() {
+            const res = await fetch(`/api/comisiones/${idComision}`);
+            comision = await res.json();
+
+            let html = `
+                <p class="info-meta">
+                    Creada por <strong>${comision.cliente}</strong> el ${comision.fecha}
+                    ${comision.artista ? ` y aceptada por <strong>${comision.artista}</strong>` : ""}
+                </p>
+                <p class="info-desc">${comision.descripcion}</p>
+                <p class="estado"><strong>Estado actual:</strong> ${comision.estado}</p>
+            `;
+
+            if (comision.dibujo) {
+                html += `
+                    <div class="archivo-entregado">
+                        <span class="icono-foto"></span>
+                        <span class="ver-imagen-entregada" data-src="/static/${comision.dibujo}">
+                            ${comision.dibujo.split("/").pop()}
+                        </span>
+                    </div>
+                `;
+            }
+
+            if (comision.estado === "En proceso") {
+                if (usuarioActual === comision.artista) {
+                    html += `
+                        <div class="botones">
+                            <button class="btn-entregar" id="btn-entregar"><span class="icono-subir"></span> Entregar </button>
+                            <button class="btn-cancelar" id="btn-cancelar-comision">Cancelar comisión</button>
+                        </div>
+                    `;
+                } else if (usuarioActual === comision.cliente) {
+                    html += `<button class="btn-cancelar" id="btn-cancelar-comision">Cancelar comisión</button>`;
+                }
+            }
+
+            if (comision.estado === "Entregada" && usuarioActual === comision.cliente) {
+                html += `
+                    <div class="boton-aceptar">
+                        <button class="btn-aceptar" id="btn-aceptar">Aceptar entrega</button>
+                        <button class="btn-cancelar" id="btn-rechazar-entrega">Cancelar entrega</button>
+                    </div>
+                `;
+            }
+
+            detalleInfo.innerHTML = html;
+
+            // === ENLACE MODAL ===
+            const entregaLink = document.getElementById("entrega-link");
+            if (entregaLink) {
+                entregaLink.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    document.getElementById("modal-img").src = entregaLink.href;
+                    document.getElementById("modalEntrega").style.display = "block";
+                });
+            }
+
+            // === BOTÓN ENTREGAR ===
+            const entregaBtn = document.getElementById("btn-entregar");
+            if (entregaBtn) {
+                entregaBtn.addEventListener("click", () => inputDibujo.click());
+            }
+
+            // === ACEPTAR ENTREGA ===
+            const aceptarBtn = document.getElementById("btn-aceptar");
+            if (aceptarBtn) {
+                aceptarBtn.addEventListener("click", async () => {
+                    const res = await fetch(`/comisiones/${idComision}/estado`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ estado: "Terminada" })
+                    });
+                    if (res.ok) {
+                        alert("Entrega aceptada.");
+                        await cargarComision();
+                    } else {
+                        alert("Error al aceptar la entrega.");
+                    }
+                });
+            }
+
+            // === CANCELAR ENTREGA (cliente) ===
+            const rechazarBtn = document.getElementById("btn-rechazar-entrega");
+            if (rechazarBtn) {
+                rechazarBtn.addEventListener("click", async () => {
+                    if (!confirm("¿Rechazar entrega y volver a 'En proceso'?")) return;
+                    const res = await fetch(`/comisiones/${idComision}/estado`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ estado: "En proceso" })
+                    });
+                    if (res.ok) {
+                        alert("Entrega rechazada.");
+                        await cargarComision();
+                    } else {
+                        alert("Error al rechazar la entrega.");
+                    }
+                });
+            }
+
+            // === CANCELAR COMISIÓN ===
+            const cancelarBtn = document.getElementById("btn-cancelar-comision");
+            if (cancelarBtn) {
+                cancelarBtn.addEventListener("click", async () => {
+                    if (!confirm("¿Seguro que deseas cancelar esta comisión?")) return;
+                    const res = await fetch(`/comisiones/${idComision}/estado`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ estado: "Cancelada" })
+                    });
+                    if (res.ok) {
+                        alert("Comisión cancelada.");
+                        window.location.href = "/mis-comisiones";
+                    } else {
+                        alert("Error al cancelar la comisión.");
+                    }
+                });
+            }
+
+            // === VISIBILIDAD DEL BOTÓN ENVIAR MENSAJE ===
+            console.log(comision.estado)
+            if (["En proceso", "Entregada"].includes(comision.estado)) {
+                chatEnviar.disabled = false;
+                chatEnviar.style.display = "inline-block";
+                console.log("BOTON HABILITADO")
+            } else {
+                chatEnviar.disabled = true;
+                chatEnviar.style.display = "none";
+                console.log("BOTON DESHABILITADO")
+            }
+        }
+
+        async function cargarChat() {
+            const res = await fetch(`/comisiones/${idComision}/mensaje`);
+            const data = await res.json();
+            const mensajes = Array.isArray(data.mensajes) ? data.mensajes : [];
+            chatMensajes.innerHTML = mensajes.map(msg => `
+                <div class="mensaje ${msg.creador === usuarioActual ? "propio" : "otro"}">
+                    ${msg.mensaje}
+                </div>
+            `).join("");
+        }
+
+        chatEnviar.addEventListener("click", async () => {
+            const texto = chatTextarea.value.trim();
+            if (!texto) return;
+
+            if (texto.length > 100) {
+                alert("El mensaje no puede superar los 100 caracteres.");
+                return;
+            }
+
+            console.log(idUsuarioActual)
+
+            const mensajePayload = {
+                texto,
+                id_creador: idUsuarioActual,
+                fecha_creacion: new Date().toISOString(),
+                id_comision: parseInt(idComision)
+            };
+
+            await fetch(`/mensajes`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(mensajePayload)
+            });
+
+            chatTextarea.value = "";
+            await cargarChat();
+        });
+
+
+        inputDibujo.addEventListener("change", async () => {
+            const file = inputDibujo.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('imagen', file);
+
+            try {
+                const uploadRes = await fetch('/subir_imagen', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await uploadRes.json();
+
+                if (!uploadRes.ok) {
+                    alert(data.error || "Error al subir imagen.");
+                    return;
+                }
+
+                const ruta = data.ruta;  // Ej: "img/foto.png"
+
+                // 1. Actualiza la comisión con la imagen
+                await fetch(`/comisiones/${idComision}/dibujo`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ dibujo: ruta })
+                });
+
+                // 2. Cambia el estado a "Entregada"
+                await fetch(`/comisiones/${idComision}/estado`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ estado: "Entregada" })
+                });
+
+                await cargarComision();
+
+            } catch (error) {
+                console.error(error);
+                alert("Error al subir imagen.");
+            }
+        });
+
+        // Inicial
+        await cargarComision();
+        await cargarChat();
+    });
+
+    function cerrarModalImg() {
+        const modal = document.getElementById("modal-img");
+        modal.style.display = "none";
+        document.getElementById("imagen-ampliada").src = "";
+    }
+
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("ver-imagen-entregada")) {
+            const ruta = e.target.getAttribute("data-src");
+            const modal = document.getElementById("modal-img");
+            const img = document.getElementById("imagen-ampliada");
+            img.src = ruta;
+            modal.style.display = "flex";
+        }
+    });
 
 </script>
 
