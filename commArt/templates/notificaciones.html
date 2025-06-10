@@ -34,20 +34,12 @@
 
 <!-- Cuerpo principal -->
 <main class="contenedor-notificaciones">
-    {% if notificaciones %}
-    <div class="lista-notificaciones">
-        {% for notificacion in notificaciones %}
-        <div class="notificacion-caja">
-            <span class="icono-campana">🔔</span>
-            <span class="texto-notificacion">{{ notificacion }}</span>
-        </div>
-        {% endfor %}
+    <div id="lista-notificaciones" class="lista-notificaciones">
+        <!-- Aquí se insertarán dinámicamente las notificaciones -->
     </div>
-    {% else %}
-    <div class="no-notificaciones">
+    <div id="no-notis" class="no-notificaciones hidden">
         <p>¡No tienes ninguna notificación!</p>
     </div>
-    {% endif %}
 </main>
 
 <!-- Footer -->
@@ -76,6 +68,44 @@
         const menu = document.getElementById('dropdown');
         menu.classList.toggle('hidden');
     }
+
+    const idUsuario = {{ session['id_usuario'] }};
+
+    async function cargarNotificaciones() {
+        const contenedor = document.getElementById("lista-notificaciones");
+        const sinNotis = document.getElementById("no-notis");
+
+        try {
+            const response = await fetch(`/usuarios/${idUsuario}/notificaciones`);
+            const data = await response.json();
+
+            if (Array.isArray(data) && data.length > 0) {
+                [...data].reverse().forEach(noti => {
+                    const notiDiv = document.createElement("div");
+                    notiDiv.classList.add("notificacion-caja");
+
+                    const icono = document.createElement("i");
+                    icono.classList.add("fa-solid", "fa-bell", "icono-campana");
+
+                    const texto = document.createElement("span");
+                    texto.classList.add("texto-notificacion");
+                    texto.textContent = noti.texto;
+
+                    notiDiv.appendChild(icono);
+                    notiDiv.appendChild(texto);
+                    contenedor.appendChild(notiDiv);
+                });
+                sinNotis.classList.add("hidden");
+            } else {
+                sinNotis.classList.remove("hidden");
+            }
+        } catch (error) {
+            console.error("Error cargando notificaciones:", error);
+            sinNotis.classList.remove("hidden");
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", cargarNotificaciones);
 
 </script>
 

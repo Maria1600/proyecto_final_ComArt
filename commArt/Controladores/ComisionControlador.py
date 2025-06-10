@@ -212,7 +212,7 @@ def actualizar_estado(id_comision):
             mensajin = "Tu comision con el usuario " + comision.cliente.username + " a pasado al estado" + comision.estado
             NotisServicio.crear_noti(mensajin,comision.id_artista_com)
 
-            mensajin = "Tu comision con el usuario " + comision.artista.usuario.username + " a pasado al estado" + comision.estado
+            mensajin = "Tu comision con el usuario " + comision.artista.usuario.username + " a pasado al estado " + comision.estado
             NotisServicio.crear_noti(mensajin,comision.id_cliente_com)
 
             if comision:
@@ -294,8 +294,8 @@ def obtener_solicitantes(id_comision):
         ]
         http = 200
     else:
-        data = {"No se encontraron solicitantes"}
-        http = 400
+        data = {"mensaje": "No se encontraron solicitantes"}
+        http = 200
 
     return jsonify(data), http
 
