@@ -41,3 +41,7 @@ class ArtistaServicio:
     @staticmethod
     def apuntarse_a_comision(id_artista, id_comision):
         return ArtistaRepositorio.apuntarse_a_comision(id_artista, id_comision)
+
+    @staticmethod
+    def obtener_comisiones_apuntadas(id_artista):
+        return ArtistaRepositorio.obtener_ids_comisiones_apuntadas(id_artista)

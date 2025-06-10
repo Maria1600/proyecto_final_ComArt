@@ -74,6 +74,7 @@ def crear_usuario():
         #Guarda el usuario en la sesión para saber quien es el user logeado en cualquier momento
         session['id_usuario'] = nueva.id_usuario
         session['username'] = nueva.username
+        session['es_artista'] = 1 if nueva.artista else 0
 
         data_json = {
             "id_usuario": nueva.id_usuario,
@@ -236,11 +237,13 @@ def login_user():
             #Guarda el usuario en la sesión para saber quien es el user logeado en cualquier momento
             session['id_usuario'] = usuario.id_usuario
             session['username'] = usuario.username
+            session['es_artista'] = 1 if usuario.artista else 0
 
             data_json = {
                 "id_usuario": usuario.id_usuario,
                 "correo": usuario.correo,
-                "username": usuario.username
+                "username": usuario.username,
+                "es_artista": 1 if usuario.artista else 0
             }
             http = 200
         else:

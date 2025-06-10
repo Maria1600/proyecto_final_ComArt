@@ -178,3 +178,9 @@ def apuntarse_comision(id_artista):
             http = 400
 
     return jsonify(data_json), http
+
+@artista_bp.route('/artistas/<int:id_artista>/comisiones-apuntadas', methods=['GET'])
+def obtener_comisiones_apuntadas(id_artista):
+    comisiones = ArtistaServicio.obtener_comisiones_apuntadas(id_artista)
+    return jsonify(comisiones), 200
+

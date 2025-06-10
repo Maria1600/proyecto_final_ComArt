@@ -89,3 +89,8 @@ class ArtistaRepositorio:
             db.session.commit()
 
         return exito_transaccion
+
+    @staticmethod
+    def obtener_ids_comisiones_apuntadas(id_artista):
+        artista = Artista.query.get(id_artista)
+        return [com.id_com for com in artista.comisiones_solicitadas] if artista else []

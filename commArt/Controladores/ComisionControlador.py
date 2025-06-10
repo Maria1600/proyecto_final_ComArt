@@ -37,7 +37,7 @@ def obtener_comision(id_comision):
             "estado": comision.estado,
             "fecha_creacion": comision.fecha_creacion,
             "tipo": comision.tipo,
-            "artista": comision.artista.usuario.username,
+            "artista": comision.artista.usuario.username if comision.artista else None,
             "cliente": comision.cliente.username,
             "id_artista": comision.id_artista_com,
             "id_cliente": comision.id_cliente_com

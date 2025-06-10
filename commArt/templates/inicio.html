@@ -70,6 +70,15 @@
 
     document.addEventListener("DOMContentLoaded", async () => {
         const contenedor = document.getElementById("muro-contenido");
+        const es_artista = {{ 'true' if session.get('es_artista') else 'false' }}
+        let comisionesApuntadas = [];
+        const idUsuarioLogeado = {{ session['id_usuario'] }}
+
+        // Hacemos consulta rapida de comisiones a las que se apunto el user logado
+        if (es_artista) {
+            const res = await fetch(`/artistas/${idUsuarioLogeado}/comisiones-apuntadas`);
+            comisionesApuntadas = await res.json();
+        }
 
         // Fetch de publicaciones y comisiones para que vayan generandose aleatoriamente
         const [pubsRes, comsRes] = await Promise.all([
@@ -124,25 +133,61 @@
 
             } else if (item.tipe === "comision") {
                 div.classList.add("comision-global");
+
+                let boton = "";
+                if (es_artista) {
+                    if (comisionesApuntadas.includes(item.id_comision)) {
+                        boton = `<button class="boton-comision" disabled>Apuntado</button>`;
+                    } else {
+                        boton = `<button class="boton-comision" onclick="apuntarseAComision(${item.id_comision})">Apuntarse</button>`;
+                    }
+                }
+
                 div.innerHTML = `
                     <div class="etiqueta">COMISIÓN GLOBAL</div>
                     <div class="info-usuario">
                         <div class="avatar-circulo">
-                            <i class="fa-solid fa-user avatar icono-perfil"  onclick="location.href='/perfil/${item.id_cliente}'"></i>
+                            <i class="fa-solid fa-user avatar icono-perfil" onclick="location.href='/perfil/${item.id_cliente}'"></i>
                         </div>
                         <div>
-                            <div  onclick="location.href='/perfil/${item.id_cliente}''"><strong>${item.cliente}</strong></div>
+                            <div onclick="location.href='/perfil/${item.id_cliente}'"><strong>${item.cliente}</strong></div>
                             <div>${formatearFecha(item.fecha_creacion)}</div>
                         </div>
                     </div>
                     <div class="descripcion">${item.descripcion || "Sin descripción"}</div>
-                    <button class="boton-comision">Apuntarse</button>
+                    ${boton}
                 `;
             }
 
             contenedor.appendChild(div);
         }
     });
+
+    function apuntarseAComision(idComision) {
+        const idUsuarioLogeado = {{ session['id_usuario'] }}
+        console.log("Intentando apuntarse a comisión:", idComision);
+        fetch(`/artistas/${idUsuarioLogeado}/apuntarse`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id_comision: idComision })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Datos recibidos:", data);
+            if (data.id_comision) {
+                alert("Te has apuntado correctamente a la comisión.");
+                location.reload(); // opcional
+            } else {
+                alert(data.mensaje || "Error al apuntarse.");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error en la conexión.");
+        });
+    }
 
     function toggleDropdown() {
         const menu = document.getElementById('dropdown');
