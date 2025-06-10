@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request, session, redirect, url_for
+
+from Servicios.NotisServicio import NotisServicio
 from Servicios.UsuarioServicio import UsuarioServicio
 
 #Blueprint
@@ -199,11 +201,26 @@ def obtener_comisiones_solicitadas(id_usuario):
 
     return jsonify(data), http
 
+@usuario_bp.route('/usuarios/<int:id_usuario>/notificaciones', methods=['GET'])
+def obtener_notificaciones(id_usuario):
+    notificaciones = UsuarioServicio.obtener_notificaciones_usuario(id_usuario)
+
+    data = [
+        {
+            "id_notificacion": n.id_noti,
+            "texto": n.texto
+        }
+        for n in notificaciones
+    ]
+
+    return jsonify(data), 200
+
 @usuario_bp.route('/usuarios/<int:id_usuario>/seguir/<int:user_id_a_seguir>', methods=['POST'])
 def seguir_usuario(id_usuario, user_id_a_seguir):
     exito = UsuarioServicio.seguir(user_id_a_seguir, id_usuario)
 
     if exito:
+        NotisServicio.crear_noti("¡Tienes un nuevo seguidor!",user_id_a_seguir)
         data = {"mensaje": "Usuario seguido correctamente"}
         http = 200
     else:

@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from Servicios.ComisionServicio import ComisionServicio
+from Servicios.NotisServicio import NotisServicio
 
 #Blueprint
 comision_bp = Blueprint('comision_bp', __name__)
@@ -88,6 +89,10 @@ def crear_comision():
 
         if estado_valido and tipo_valido:
             nueva = ComisionServicio.crear_comision(descripcion,estado,fecha,tipo,id_cliente,id_artista)
+            if nueva.tipo == "Individual":
+                mensaje = "El usuario " + nueva.cliente.username + " te ha abierto una comisión"
+                NotisServicio.crear_noti(mensaje,nueva.id_artista_com)
+
             data_json = {
                 "id_comision": nueva.id_com,
                 "descripcion": nueva.descripcion_com,
@@ -166,6 +171,9 @@ def asignar_artista(id_comision):
     else:
         comision = ComisionServicio.actualizar_artista_global(id_comision, id_artista)
 
+        mensajin = "¡¡El usuario " + comision.cliente.username + " te ha aceptado tu solicitud a su comision global!!"
+        NotisServicio.crear_noti(mensajin,comision.id_artista_com)
+
         if comision:
             data_json = {
                 "id_comision": comision.id_com,
@@ -199,6 +207,13 @@ def actualizar_estado(id_comision):
 
         if estado_valido:
             comision = ComisionServicio.actualizar_estado(id_comision, estado)
+
+            # Notificamos tanto al artista como al cliente
+            mensajin = "Tu comision con el usuario " + comision.cliente.username + " a pasado al estado" + comision.estado
+            NotisServicio.crear_noti(mensajin,comision.id_artista_com)
+
+            mensajin = "Tu comision con el usuario " + comision.artista.usuario.username + " a pasado al estado" + comision.estado
+            NotisServicio.crear_noti(mensajin,comision.id_cliente_com)
 
             if comision:
                 data_json = {

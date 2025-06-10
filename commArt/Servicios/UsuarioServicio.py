@@ -62,6 +62,10 @@ class UsuarioServicio:
         return UsuarioRepositorio.obtener_comisiones_solicitadas(user_id)
 
     @staticmethod
+    def obtener_notificaciones_usuario(user_id):
+        return UsuarioRepositorio.obtener_notificaciones_usuario(user_id)
+
+    @staticmethod
     def verificar_login(correo,contrasenia):
         return UsuarioRepositorio.verificar_login(correo,contrasenia)
 

@@ -60,6 +60,16 @@ def init_db():
     )
     """)
 
+    #Tabla de notificaciones
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS notificaciones (
+        id_noti INTEGER PRIMARY KEY AUTOINCREMENT,
+        texto TEXT NOT NULL,
+        id_usuario INTEGER NOT NULL,
+        FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    )
+    """)
+
     #Tabla de comisiones
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS comisiones (

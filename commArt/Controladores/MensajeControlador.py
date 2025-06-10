@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 
 from Servicios.MensajeServicio import MensajeServicio
+from Servicios.NotisServicio import NotisServicio
 
 #Blueprint
 mensaje_bp = Blueprint('mensaje_bp', __name__)
@@ -58,6 +59,13 @@ def crear_mensaje():
 
     if texto and id_creador and fecha and id_comision:
         nueva = MensajeServicio.crear_mensaje(texto,fecha,id_creador,id_comision)
+
+        mensajin = "Tienes un nuevo mensaje en tu comision con " + nueva.creador.username
+        if nueva.id_user_creador == nueva.comision.id_artista_com:
+            NotisServicio.crear_noti(mensajin,nueva.comision.id_cliente_com)
+        elif nueva.id_user_creador == nueva.comision.id_cliente_com:
+            NotisServicio.crear_noti(mensajin,nueva.comision.id_artista_com)
+
         data_json = {
             "id_mensaje": nueva.id_mensaje,
             "texto": nueva.texto,

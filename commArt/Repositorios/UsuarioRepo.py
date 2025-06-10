@@ -73,7 +73,6 @@ class UsuarioRepositorio:
         db.session.commit()
         return usuario
 
-
     @staticmethod
     def seguir(user_id_a_seguir,id_user_seguidor):
         seguidor = Usuario.query.get(id_user_seguidor)
@@ -127,6 +126,11 @@ class UsuarioRepositorio:
     def obtener_comisiones_solicitadas(user_id):
         usuario = Usuario.query.options(joinedload(Usuario.comisiones_solicitadas)).filter_by(id_usuario=user_id).first()
         return usuario.comisiones_solicitadas if usuario else []
+
+    @staticmethod
+    def obtener_notificaciones_usuario(user_id):
+        usuario = Usuario.query.options(joinedload(Usuario.lista_notificaciones)).filter_by(id_usuario=user_id).first()
+        return usuario.lista_notificaciones if usuario else []
 
     @staticmethod
     def verificar_login(correo, contrasenia):

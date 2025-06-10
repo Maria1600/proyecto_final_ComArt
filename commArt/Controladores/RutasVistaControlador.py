@@ -43,10 +43,16 @@ def comisiones():
 
 @vista_bp.route('/notificaciones')
 def notificaciones():
-    return "<h1>notificaciones en construcción</h1>"
+    if 'id_usuario' not in session:
+        return redirect(url_for('login')) # Por seguridad, si no hay sesión
+
+    return render_template("notificaciones.html")
 
 @vista_bp.route('/busqueda')
 def busqueda():
+    if 'id_usuario' not in session:
+        return redirect(url_for('login')) # Por seguridad, si no hay sesión
+
     return render_template("busqueda.html")
 
 @vista_bp.route('/detalles_perfil')

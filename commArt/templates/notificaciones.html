@@ -5,23 +5,26 @@
     <title>Notificaciones</title>
     <link rel="icon" href="{{ url_for('static', filename='img/iconNav.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/notisStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar">
-    <div class="logo" onclick="location.href='{{ url_for('inicio') }}'">
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
         <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
-        <span class="nombre-app">ComArt</span>
+        <span class="titulo-app">ComArt</span>
     </div>
-    <div class="buscador">
-        <input type="text" placeholder="Buscar...">
+
+    <div class="search-container">
+        <input type="text" id="nav-search" placeholder="Búsqueda" onkeydown="handleNavSearch(event)">
     </div>
-    <div class="icono-usuario" onclick="toggleDropdown()">
-        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Usuario">
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
         <div id="dropdown" class="dropdown-menu hidden">
-            <a href="{{ url_for('perfil') }}">Ver perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
         </div>
     </div>
 </nav>
@@ -42,7 +45,6 @@
     </div>
     {% else %}
     <div class="no-notificaciones">
-        <div class="globo-vacio">🎈</div>
         <p>¡No tienes ninguna notificación!</p>
     </div>
     {% endif %}
@@ -50,11 +52,31 @@
 
 <!-- Footer -->
 <footer class="footer">
-    <button onclick="location.href='{{ url_for('inicio') }}'" class="boton-footer">Inicio</button>
-    <button onclick="location.href='{{ url_for('comisiones') }}'" class="boton-footer">Comisiones</button>
-    <button onclick="location.href='{{ url_for('notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
-    <button onclick="location.href='{{ url_for('perfil') }}'" class="boton-footer">Perfil</button>
+    <button onclick="location.href='{{ url_for('vista_bp.inicio') }}'" class="boton-footer">Inicio</button>
+    <button onclick="location.href='{{ url_for('vista_bp.comisiones') }}'" class="boton-footer">Comisiones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.notificaciones') }}'" class="boton-footer activo">Notificaciones</button>
+    <button onclick="location.href='{{ url_for('vista_bp.perfil_redirect') }}'" class="boton-footer">Perfil</button>
 </footer>
 
 </body>
+
+<script>
+
+    function handleNavSearch(event) {
+        if (event.key === "Enter") {
+            const termino = event.target.value.trim();
+            if (termino) {
+                // Redirige a /busqueda?q=lo_que_se_escribio
+                window.location.href = `/busqueda?q=${encodeURIComponent(termino)}`;
+            }
+        }
+    }
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+</script>
+
 </html>

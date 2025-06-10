@@ -25,8 +25,12 @@ class Usuario(db.Model):
     )#Los joins son consultas para poder sacar las lista de seguidos y seguidores comparando ids
     comisiones_solicitadas = db.relationship("Comision", back_populates="cliente")
     mensajes = db.relationship("Mensaje", back_populates="creador")
+    lista_notificaciones = db.relationship(
+        "Notificacion",
+        back_populates="usuario",
+        cascade="all, delete-orphan"
+    )
 
-
-#Funcion para debugg futuro para imprimir datos en consola
+    #Funcion para debugg futuro para imprimir datos en consola
     def __repr__(self):
         return f"<Usuario {self.username} - {self.correo} - {self.contrasenia} - {self.fecha_nacimiento}>"
