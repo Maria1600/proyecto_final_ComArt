@@ -168,12 +168,16 @@ def asignar_artista(id_comision):
 
         if comision:
             data_json = {
-                "id_publicacion": comision.id_publicacion,
-                "descripcion": comision.descripcion_publicacion,
+                "id_comision": comision.id_com,
+                "descripcion": comision.descripcion_com,
                 "dibujo": comision.dibujo,
-                "fecha_publicacion": comision.fecha_publicacion,
-                "num_likes": comision.num_likes,
-                "artista": comision.artista.usuario.username
+                "estado": comision.estado,
+                "fecha_creacion": comision.fecha_creacion,
+                "tipo": comision.tipo,
+                "artista": comision.artista.usuario.username if comision.artista else None,
+                "cliente": comision.cliente.username,
+                "id_artista": comision.id_artista_com,
+                "id_cliente": comision.id_cliente_com
             }
             http = 200
         else:

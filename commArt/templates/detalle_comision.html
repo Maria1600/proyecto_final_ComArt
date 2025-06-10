@@ -145,11 +145,11 @@
                 }
             }
 
-            if (comision.estado === "En espera") {
+            if (comision.estado === "En espera"){
                 // NUEVO: Mostrar botón si es global y sin artista
                 if (comision.tipo === "Global" && !comision.artista) {
                     html += `
-                        <button class="btn-ver-solicitantes" onclick="location.href='/solicitantes.html'">Ver lista de solicitantes</button>
+                        <button class="btn-ver-solicitantes" onclick="location.href='/solicitantes/${idComision}'">Ver lista de solicitantes</button>
                     `;
                 }
             }

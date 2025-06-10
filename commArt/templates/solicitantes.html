@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comisiones</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/iconNav.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/solicitantesStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="nav">
+    <div class="logo" onclick="location.href='{{ url_for('vista_bp.inicio') }}'">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <span class="titulo-app">ComArt</span>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="nav-search" placeholder="Búsqueda" onkeydown="handleNavSearch(event)">
+    </div>
+
+    <div class="perfil-icono" onclick="toggleDropdown()">
+        <i class="fa-solid fa-user avatar"></i>
+        <div id="dropdown" class="dropdown-menu hidden">
+            <a href="{{ url_for('vista_bp.perfil_redirect') }}">Ver perfil</a>
+            <a href="{{ url_for('usuario_bp.logout') }}"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<main class="contenedor-comisiones">
+
+    <h1 class="titulo">Lista de solicitantes de tu comision</h1>
+
+    <div class="lista-users" id="lista-usuarios">
+        <!-- Aquí se inyectarán los usuarios automaticamente -->
+    </div>
+
+</main>
+
+<script>
+
+    function handleNavSearch(event) {
+        if (event.key === "Enter") {
+            const termino = event.target.value.trim();
+            if (termino) {
+                // Redirige a /busqueda?q=lo_que_se_escribio
+                window.location.href = `/busqueda?q=${encodeURIComponent(termino)}`;
+            }
+        }
+    }
+
+    function toggleDropdown() {
+        const menu = document.getElementById('dropdown');
+        menu.classList.toggle('hidden');
+    }
+
+    const idComision = window.location.pathname.split("/").pop();
+
+    async function fetchSolicitantes() {
+        try {
+            const response = await fetch(`/comisiones/${idComision}/solicitantes`);
+            if (!response.ok) throw new Error("Error al obtener solicitantes");
+
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                renderSolicitantes(data);
+            } else {
+                document.getElementById('lista-usuarios').innerHTML = `<p>${data["No se encontraron solicitantes"] || "No hay solicitantes"}</p>`;
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('lista-usuarios').innerHTML = `<p>Error cargando solicitantes.</p>`;
+        }
+    }
+
+    function renderSolicitantes(solicitantes) {
+        const contenedor = document.getElementById('lista-usuarios');
+        contenedor.innerHTML = '';
+
+        solicitantes.forEach(item => {
+            const userBox = document.createElement('div');
+            userBox.classList.add('user-box');
+
+            userBox.innerHTML = `
+                <div class="user-info" onclick="location.href='/perfil/${item.id_solicitante}'" style="cursor:pointer;">
+                    <div class="avatar-circulo">
+                        <i class="fa-solid fa-user avatar icono-perfil"></i>
+                    </div>
+                    <div class="username">
+                        ${item.username}
+                    </div>
+                </div>
+                <button class="btn-tick" title="Asignar artista">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+            `;
+
+            // Añadimos evento al botón tick
+            userBox.querySelector('.btn-tick').addEventListener('click', () => asignarArtista(item.id_solicitante));
+
+            contenedor.appendChild(userBox);
+        });
+    }
+
+    async function asignarArtista(id_artista) {
+        try {
+            // PUT asignar artista
+            let res = await fetch(`/comisiones/${idComision}/artista`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id_artista})
+            });
+
+            if (!res.ok) throw new Error("Error asignando artista");
+
+            // PUT actualizar estado a "En proceso"
+            res = await fetch(`/comisiones/${idComision}/estado`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({estado: "En proceso"})
+            });
+
+            if (!res.ok) throw new Error("Error actualizando estado");
+
+            alert('Artista asignado y estado actualizado a "En proceso"');
+
+            window.location.href = `/detalle_comision/${idComision}`;
+
+        } catch (error) {
+            console.error(error);
+            alert('Hubo un error realizando la operación.');
+        }
+    }
+
+    // Carga inicial
+    fetchSolicitantes();
+
+</script>
+
+</body>
+</html>
