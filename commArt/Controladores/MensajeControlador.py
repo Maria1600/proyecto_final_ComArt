@@ -61,10 +61,13 @@ def crear_mensaje():
         nueva = MensajeServicio.crear_mensaje(texto,fecha,id_creador,id_comision)
 
         mensajin = "Tienes un nuevo mensaje en tu comision con " + nueva.creador.username
-        if nueva.id_user_creador == nueva.comision.id_artista_com:
-            NotisServicio.crear_noti(mensajin,nueva.comision.id_cliente_com)
-        elif nueva.id_user_creador == nueva.comision.id_cliente_com:
-            NotisServicio.crear_noti(mensajin,nueva.comision.id_artista_com)
+        print("Se hizo un mensajin")
+        if nueva.id_user_creador == nueva.comision_asociada.id_artista_com:
+            print("Entro es el artista")
+            NotisServicio.crear_noti(mensajin,nueva.comision_asociada.id_cliente_com)
+        elif nueva.id_user_creador == nueva.comision_asociada.id_cliente_com:
+            print("Entro es el cliente")
+            NotisServicio.crear_noti(mensajin,nueva.comision_asociada.id_artista_com)
 
         data_json = {
             "id_mensaje": nueva.id_mensaje,

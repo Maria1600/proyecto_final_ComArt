@@ -68,7 +68,7 @@
             if (Array.isArray(data)) {
                 renderSolicitantes(data);
             } else {
-                document.getElementById('lista-usuarios').innerHTML = `<p>${data["No se encontraron solicitantes"] || "No hay solicitantes"}</p>`;
+                document.getElementById('lista-usuarios').innerHTML = `<p class="no-soli" >${data["No se encontraron solicitantes"] || "No hay solicitantes"}</p>`;
             }
         } catch (error) {
             console.error(error);

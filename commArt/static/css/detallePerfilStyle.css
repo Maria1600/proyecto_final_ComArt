@@ -385,4 +385,10 @@ fieldset.contrasenia-campo {
   cursor: pointer;
 }
 
-
+/* === Para errores === */
+.error-msg {
+    color: #f8536b;
+    font-size: 0.9em;
+    margin-top: 4px;
+    display: block;
+}

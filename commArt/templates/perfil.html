@@ -115,7 +115,13 @@
             contenedorNombre.appendChild(iconoConfig);
           }
 
-          document.getElementById("descripcion-usuario").innerHTML = `<p>${(usuario.descripcion || '').replace(/\n/g, '<br>')}</p>`;
+          const descripcionCaja = document.getElementById("descripcion-usuario");
+
+            if (id_logado === usuario.id_usuario && (!usuario.descripcion || usuario.descripcion.trim() === "")) {
+                descripcionCaja.innerHTML = `<p>Aún no tienes una descripción. ¡Escríbela desde la configuración!</p>`;
+            } else {
+                descripcionCaja.innerHTML = `<p>${(usuario.descripcion || '').replace(/\n/g, '<br>')}</p>`;
+            }
 
           const seguimientoDiv = document.getElementById("info-seguimiento");
           seguimientoDiv.innerHTML = `

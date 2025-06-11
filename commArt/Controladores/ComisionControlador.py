@@ -209,7 +209,7 @@ def actualizar_estado(id_comision):
             comision = ComisionServicio.actualizar_estado(id_comision, estado)
 
             # Notificamos tanto al artista como al cliente
-            mensajin = "Tu comision con el usuario " + comision.cliente.username + " a pasado al estado" + comision.estado
+            mensajin = "Tu comision con el usuario " + comision.cliente.username + " a pasado al estado " + comision.estado
             NotisServicio.crear_noti(mensajin,comision.id_artista_com)
 
             mensajin = "Tu comision con el usuario " + comision.artista.usuario.username + " a pasado al estado " + comision.estado

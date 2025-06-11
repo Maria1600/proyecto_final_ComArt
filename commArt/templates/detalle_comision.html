@@ -35,7 +35,7 @@
 <div class="contenedor-detalle">
     <div class="detalle-header">
         <h2 class="titulo">DETALLES DE COMISIÓN</h2>
-        <button class="cerrar" onclick="window.history.back()">&times;</button>
+        <button class="cerrar" onclick="window.location.href='/comisiones'">&times;</button>
     </div>
 
     <div class="detalle-comision">
@@ -203,7 +203,7 @@
             const rechazarBtn = document.getElementById("btn-rechazar-entrega");
             if (rechazarBtn) {
                 rechazarBtn.addEventListener("click", async () => {
-                    if (!confirm("¿Rechazar entrega y volver a 'En proceso'?")) return;
+                    if (!confirm("¿Rechazar entrega y volver al estado 'En proceso'?")) return;
                     const res = await fetch(`/comisiones/${idComision}/estado`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
@@ -230,7 +230,7 @@
                     });
                     if (res.ok) {
                         alert("Comisión cancelada.");
-                        window.location.href = "/mis-comisiones";
+                        await cargarComision();
                     } else {
                         alert("Error al cancelar la comisión.");
                     }

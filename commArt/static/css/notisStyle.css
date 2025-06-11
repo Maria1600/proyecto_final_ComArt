@@ -117,14 +117,12 @@ body {
 
 /* Título */
 .titulo-notificaciones {
-    color: #4bdec7;
-    text-align: center;
-    margin: 40px 0 20px;
-    text-shadow: 0 0 2px #3ba798,
-                 0 0 4px #2d9183,
-                 0 0 8px rgba(35, 122, 110, 0.5),
-                 0 0 12px rgba(35, 122, 110, 0.4),
-                 0 0 16px rgba(35, 122, 110, 0.3);
+    text-align: left;
+    margin: 30px;
+    margin-left: 60px;
+    background: linear-gradient(to right,  #53bef8, #5b71f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Contenedor de todas las notificaciones */
@@ -145,6 +143,8 @@ body {
     padding: 12px 20px;
     border-radius: 16px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-left:40px;
+    margin-right:40px;
 }
 
 .icono-campana {
@@ -158,7 +158,6 @@ body {
     text-align: center;
     margin-top: 100px;
     font-size: 20px;
-    color: #5b71f0;
 }
 
 .globo-vacio {

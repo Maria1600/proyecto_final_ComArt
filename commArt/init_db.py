@@ -22,7 +22,7 @@ def init_db():
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
         correo TEXT UNIQUE NOT NULL,
         username TEXT UNIQUE NOT NULL,
-        descripcion TEXT NOT NULL,
+        descripcion TEXT,
         contrasenia TEXT NOT NULL,
         fecha_nacimiento TIMESTAMP NOT NULL,
         activo INTEGER CHECK(activo IN (1,0)) NOT NULL
