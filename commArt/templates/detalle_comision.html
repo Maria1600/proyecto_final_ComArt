@@ -259,6 +259,7 @@
                     ${msg.mensaje}
                 </div>
             `).join("");
+            chatMensajes.scrollTop = chatMensajes.scrollHeight;
         }
 
         chatEnviar.addEventListener("click", async () => {

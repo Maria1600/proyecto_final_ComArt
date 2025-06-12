@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request
 
+from Servicios.ComisionServicio import ComisionServicio
 from Servicios.PublicacionServicio import PublicacionServicio
 from Servicios.UsuarioServicio import UsuarioServicio
 
@@ -75,8 +76,14 @@ def detalle_comision(id_comision):
 
 @vista_bp.route('/solicitantes/<int:id_comision>')
 def solicitantes(id_comision):
+    comision = ComisionServicio.buscar_comision(id_comision)
+
     if 'id_usuario' not in session:
         return redirect(url_for('usuario_bp.login'))
+
+    # Si ya tiene artista, deniega el acceso
+    if comision.artista:
+        return "<h1>Esta comisión ya tiene un artista asignado.</h1>"
 
     return render_template("solicitantes.html")
 

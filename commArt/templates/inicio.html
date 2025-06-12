@@ -135,7 +135,7 @@
                 div.classList.add("comision-global");
 
                 let boton = "";
-                if (es_artista) {
+                if (es_artista && item.id_cliente !== idUsuarioLogeado) {
                     if (comisionesApuntadas.includes(item.id_comision)) {
                         boton = `<button class="boton-comision" disabled>Apuntado</button>`;
                     } else {

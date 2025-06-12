@@ -169,28 +169,36 @@ def asignar_artista(id_comision):
         data_json = {"error": "Falta el ID del artista"}
         http = 400
     else:
-        comision = ComisionServicio.actualizar_artista_global(id_comision, id_artista)
 
-        mensajin = "¡¡El usuario " + comision.cliente.username + " te ha aceptado tu solicitud a su comision global!!"
-        NotisServicio.crear_noti(mensajin,comision.id_artista_com)
+        # Verificamos si la comisión ya tiene artista asignado
+        comision_existente = ComisionServicio.buscar_comision(id_comision)
 
-        if comision:
-            data_json = {
-                "id_comision": comision.id_com,
-                "descripcion": comision.descripcion_com,
-                "dibujo": comision.dibujo,
-                "estado": comision.estado,
-                "fecha_creacion": comision.fecha_creacion,
-                "tipo": comision.tipo,
-                "artista": comision.artista.usuario.username if comision.artista else None,
-                "cliente": comision.cliente.username,
-                "id_artista": comision.id_artista_com,
-                "id_cliente": comision.id_cliente_com
-            }
-            http = 200
+        if comision_existente.id_artista_com:  # Ya tiene artista asignado
+            data_json = {"error": "La comisión ya tiene un artista asignado"}
+            http = 403
         else:
-            data_json = {"error": "Comisión no encontrada o no es de tipo Global"}
-            http = 404
+            comision = ComisionServicio.actualizar_artista_global(id_comision, id_artista)
+
+            mensajin = "¡¡El usuario " + comision.cliente.username + " te ha aceptado tu solicitud a su comision global!!"
+            NotisServicio.crear_noti(mensajin,comision.id_artista_com)
+
+            if comision:
+                data_json = {
+                    "id_comision": comision.id_com,
+                    "descripcion": comision.descripcion_com,
+                    "dibujo": comision.dibujo,
+                    "estado": comision.estado,
+                    "fecha_creacion": comision.fecha_creacion,
+                    "tipo": comision.tipo,
+                    "artista": comision.artista.usuario.username if comision.artista else None,
+                    "cliente": comision.cliente.username,
+                    "id_artista": comision.id_artista_com,
+                    "id_cliente": comision.id_cliente_com
+                }
+                http = 200
+            else:
+                data_json = {"error": "Comisión no encontrada o no es de tipo Global"}
+                http = 404
 
     return jsonify(data_json), http
 
