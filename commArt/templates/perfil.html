@@ -225,6 +225,7 @@
               .then(data => {
                 const cont = document.querySelector(".publicaciones-artista");
                 data.forEach(item => {
+                    const alreadyLiked = sessionStorage.getItem(`liked_${item.id_publicacion}`) ? "liked" : "";
                     const div = document.createElement("div");
                     div.className = "publicacion";
                     div.innerHTML = `
@@ -242,7 +243,7 @@
                         <div class="lado-derecho">
                           <div class="descripcion">${item.descripcion || ''}</div>
                           <div class="likes">
-                            <button class="like-btn" data-id="${item.id_publicacion}"><i class="fa fa-thumbs-up"></i></button>
+                            <button class="like-btn ${alreadyLiked}" data-id="${item.id_publicacion}"><i class="fa fa-thumbs-up"></i></button>
                             <span>${item.num_likes}</span>
                           </div>
                         </div>
@@ -261,6 +262,12 @@
         const id = btn.getAttribute("data-id");
         const countSpan = btn.nextElementSibling;
 
+        // Prevenir like duplicado por sesión
+        const likedKey = `liked_${id}`;
+        if (sessionStorage.getItem(likedKey)) {
+          return;
+        }
+
         try {
           const response = await fetch(`/publicaciones/${id}/like`, {
             method: "PUT",
@@ -272,6 +279,7 @@
           const data = await response.json();
 
           if (response.ok && data.num_likes !== undefined) {
+            sessionStorage.setItem(likedKey, "true"); // Marca como likeda
             btn.classList.add("liked");
             countSpan.textContent = data.num_likes;
           } else {
